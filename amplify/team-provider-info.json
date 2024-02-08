@@ -14,7 +14,9 @@
     "categories": {
       "api": {
         "unirent": {},
-        "accommodationApi": {}
+        "accommodationApi": {},
+        "googleMapsApi": {},
+        "locationSearchApi": {}
       },
       "auth": {
         "unirenta9aa32e0": {}
@@ -28,6 +30,14 @@
         "recommendationHandler": {
           "deploymentBucketName": "amplify-unirent-staging-195410-deployment",
           "s3Key": "amplify-builds/recommendationHandler-32664c564d5a74436f6b-build.zip"
+        },
+        "geocodingHandler": {
+          "deploymentBucketName": "amplify-unirent-staging-195410-deployment",
+          "s3Key": "amplify-builds/geocodingHandler-346b4842383137652f6f-build.zip"
+        },
+        "locationSearchApi": {
+          "deploymentBucketName": "amplify-unirent-staging-195410-deployment",
+          "s3Key": "amplify-builds/locationSearchApi-4b5633544e4938785253-build.zip"
         }
       },
       "storage": {
