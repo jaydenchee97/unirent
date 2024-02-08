@@ -8,7 +8,43 @@
             "Arn"
           ],
           "category": "function",
+          "resourceName": "recommendationHandler"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
           "resourceName": "accommodationFunction"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "API Gateway"
+    },
+    "googleMapsApi": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "geocodingHandler"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "API Gateway"
+    },
+    "locationSearchApi": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "locationSearchApi"
         }
       ],
       "providerPlugin": "awscloudformation",
@@ -68,6 +104,16 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
+    "geocodingHandler": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "locationSearchApi": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "recommendationHandler": {
       "build": true,
       "providerPlugin": "awscloudformation",
@@ -88,6 +134,38 @@
         {
           "category": "function",
           "resourceName": "accommodationFunction"
+        }
+      ]
+    },
+    "AMPLIFY_function_geocodingHandler_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "geocodingHandler"
+        }
+      ]
+    },
+    "AMPLIFY_function_geocodingHandler_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "geocodingHandler"
+        }
+      ]
+    },
+    "AMPLIFY_function_locationSearchApi_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "locationSearchApi"
+        }
+      ]
+    },
+    "AMPLIFY_function_locationSearchApi_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "locationSearchApi"
         }
       ]
     },
