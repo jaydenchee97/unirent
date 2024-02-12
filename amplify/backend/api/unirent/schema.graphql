@@ -1,0 +1,56 @@
+type SavedAccommodation @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  Accommodations: [Accommodation] @manyToMany(relationName: "SavedAccommodationAccommodation")
+  User: User @belongsTo
+}
+
+type ChatRoom @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  Users: [User] @manyToMany(relationName: "UserChatRoom")
+  Messages: [Message] @hasMany(indexName: "byChatRoom", fields: ["id"])
+  LastMessage: Message @hasOne
+  Accommodation: Accommodation @hasOne
+}
+
+type Message @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  createdAt: AWSDateTime!
+  text: String!
+  chatRoomId: ID! @index(name: "byChatRoom")
+  userId: ID! @index(name: "byUser")
+}
+
+enum PropertyEnum {
+  HDB
+  CONDO
+  LANDED
+}
+
+type Accommodation @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  availableDate: AWSDate
+  description: String!
+  images: [String!]
+  price: Int!
+  propertyType: PropertyEnum
+  rented: Boolean
+  createdAt: AWSDateTime!
+  title: String!
+  address: AWSJSON
+  userId: ID! @index(name: "byUser")
+  unitFeature: [String]
+  latitude: Float
+  longitude: Float
+  savedaccommodations: [SavedAccommodation] @manyToMany(relationName: "SavedAccommodationAccommodation")
+  User: User @belongsTo(fields: ["userId"])
+}
+
+type User @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  name: String!
+  status: String
+  Accommodations: [Accommodation] @hasMany(indexName: "byUser", fields: ["id"])
+  ChatRooms: [ChatRoom] @manyToMany(relationName: "UserChatRoom")
+  Messages: [Message] @hasMany(indexName: "byUser", fields: ["id"])
+  SavedAccommodation: SavedAccommodation @hasOne
+}
