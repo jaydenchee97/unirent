@@ -5,7 +5,7 @@ describe("Authenticator:", function () {
 
   describe("Sign In:", () => {
     it("allows a user to sign in and sign out", () => {
-      cy.get(selectors.usernameInput).type("tommy");
+      cy.get(selectors.usernameInput).type("chee");
       cy.get(selectors.signInPasswordInput).type("12345678");
       cy.get(selectors.signInButton).contains("Sign in").click();
 
