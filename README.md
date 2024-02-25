@@ -44,7 +44,6 @@ npm install -g @aws-amplify/cli
 - Unit test with Jest (automated via Github Actions)
 - E2E test with Cypress (automated via Amplify Hosting)
 - Deployment of web app with Amplify
-- Load test with Artillery (automated via Github Actions in a [seperate repo](https://github.com/akumid/unirent-load-testing))
 
 ## Tools/libraries documentation
 
