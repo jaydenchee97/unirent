@@ -33,7 +33,7 @@
         },
         "geocodingHandler": {
           "deploymentBucketName": "amplify-unirent-staging-195410-deployment",
-          "s3Key": "amplify-builds/geocodingHandler-346b4842383137652f6f-build.zip"
+          "s3Key": "amplify-builds/geocodingHandler-75696a48457143557734-build.zip"
         },
         "locationSearchApi": {
           "deploymentBucketName": "amplify-unirent-staging-195410-deployment",

@@ -89,7 +89,7 @@ app.post("/geocoding", function (req, res) {
       params: {
         address:
           req.body.street + " " + req.body.country + " " + req.body.postalCode,
-        key: process.env.GOOGLE_MAPS_API_KEY,
+        key: process.env.G_PLACES_API_KEY,
       },
       timeout: 5000, // milliseconds
     })
