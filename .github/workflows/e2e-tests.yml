@@ -1,0 +1,93 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+name: Parallel with Cypress
+
+on:
+  push:
+    branches: ["develop"]
+  pull_request:
+    branches: ["develop"]
+
+env:
+  minCoverage: ${{ vars.COVERAGE_VAR }}
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+      - name: Install Amplify CLI
+        run: npm install --quiet --global expo-cli
+      - name: Cypress install
+        uses: cypress-io/github-action@v6
+        with:
+          # Disable running of tests within install job
+          runTests: false
+          build: npx expo export --platform web
+      - name: Save dist folder
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist
+          if-no-files-found: error
+          path: dist
+
+  unit-test:
+    runs-on: ubuntu-latest
+    needs: install
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
+        with:
+          cache: "npm"
+      - name: Install
+        run: npm ci
+      - name: Test
+        run: npm run test:ci
+      - name: Collect code coverage
+        id: collect
+        run: |
+          echo "coverage<<EOF" >> $GITHUB_OUTPUT
+          cat coverage/coverage-summary.json >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+      - name: Archive code coverage
+        uses: actions/upload-artifact@v3
+        with:
+          name: code-coverage-report
+          path: coverage/
+      - name: Check %
+        id: check
+        run: |
+          echo "Min coverage is $minCoverage%"
+          echo "Current coverage is ${{ fromJSON(steps.collect.outputs.coverage).total.lines.pct }}%"
+          echo "pct=${{ fromJSON(steps.collect.outputs.coverage).total.lines.pct }}" >> $GITHUB_OUTPUT
+      - name:
+        if: ${{ steps.check.outputs.pct < env.minCoverage }}
+        run: |
+          exit 1
+
+  e2e-test:
+    runs-on: ubuntu-latest
+    needs: install
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download dist folder
+        uses: actions/download-artifact@v3
+        with:
+          name: dist
+          path: dist
+      - name: Cypress run
+        uses: cypress-io/github-action@v6
+        with:
+          start: npx serve dist
+          browser: chrome
+          wait-on: "http://localhost:3000"
+          wait-on-timeout: 120
