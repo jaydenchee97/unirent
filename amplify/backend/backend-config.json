@@ -61,8 +61,9 @@
           ],
           "defaultAuthentication": {
             "apiKeyConfig": {
-              "apiKeyExpirationDays": 30,
-              "description": "api key description"
+              "apiKeyExpirationDate": "2025-07-31T15:44:56.006Z",
+              "apiKeyExpirationDays": 365,
+              "description": "unirent-api-key"
             },
             "authenticationType": "API_KEY"
           }
