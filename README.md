@@ -1,4 +1,4 @@
-# Team 16 - UniRent app
+# Team 2 - UniRent app
 
 ## Prerequisites
 
