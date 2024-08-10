@@ -1,5 +1,4 @@
 import { useAuthenticator } from "@aws-amplify/ui-react-native";
-import { Auth } from "aws-amplify";
 import { View, StyleSheet, Alert } from "react-native";
 import { Divider, List, Text } from "react-native-paper";
 
@@ -10,6 +9,19 @@ export default function Account({ navigation }) {
       await Auth.signOut({ global: true });
     } catch (error) {
       console.log('Error signing out: ', error);
+    }
+  };
+
+  const handleSignOut = async () => {
+    console.log("Sign out initiated");
+    try {
+      await signOut();
+      console.log("Sign out successful");
+      Alert.alert("Signed Out", "You have been signed out successfully.");
+      navigation.navigate("SignInScreen"); // Redirect to SignInScreen after sign out
+    } catch (error) {
+      Alert.alert("Sign Out Failed", "An error occurred while signing out.");
+      console.error("Sign out error:", error);
     }
   };
 

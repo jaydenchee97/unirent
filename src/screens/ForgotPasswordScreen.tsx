@@ -1,8 +1,6 @@
 import React, { useState } from "react";
-import { View, TextInput, Pressable, Image } from "react-native";
-import { Text } from "react-native-paper";
+import { View, Text, TextInput, StyleSheet, Pressable } from "react-native";
 import { Auth } from "aws-amplify";
-import { useSharedStyles } from "../style/sharedStyles";
 
 export default function ForgotPasswordScreen({ navigation }) {
   const [username, setUsername] = useState("");
@@ -10,7 +8,6 @@ export default function ForgotPasswordScreen({ navigation }) {
   const [newPassword, setNewPassword] = useState("");
   const [step, setStep] = useState(1);
   const [error, setError] = useState("");
-  const sharedStyles = useSharedStyles();
 
   const sendCode = async () => {
     try {
@@ -31,45 +28,83 @@ export default function ForgotPasswordScreen({ navigation }) {
   };
 
   return (
-    <View style={sharedStyles.container}>
-      <Image source={require("../assets/unirent-logo.png")} style={sharedStyles.logo} />
-      <Text style={sharedStyles.title}>Forgot Password</Text>
-      {error && <Text style={sharedStyles.errorText}>{error}</Text>}
+    <View style={styles.container}>
+      <Text style={styles.title}>Forgot Password</Text>
+      {error ? <Text style={styles.error}>{error}</Text> : null}
       {step === 1 ? (
         <>
           <TextInput
+            style={styles.input}
             placeholder="Username"
             value={username}
             onChangeText={setUsername}
-            style={sharedStyles.input}
           />
-          <Pressable onPress={sendCode} style={sharedStyles.button}>
-            <Text style={sharedStyles.buttonText}>Send Code</Text>
+          <Pressable onPress={sendCode} style={styles.pressable}>
+            <Text style={styles.buttonText}>Send Code</Text>
           </Pressable>
         </>
       ) : (
         <>
           <TextInput
+            style={styles.input}
             placeholder="Verification Code"
             value={code}
             onChangeText={setCode}
-            style={sharedStyles.input}
           />
           <TextInput
+            style={styles.input}
             placeholder="New Password"
             value={newPassword}
             onChangeText={setNewPassword}
             secureTextEntry
-            style={sharedStyles.input}
           />
-          <Pressable onPress={resetPassword} style={sharedStyles.button}>
-            <Text style={sharedStyles.buttonText}>Reset Password</Text>
+          <Pressable onPress={resetPassword} style={styles.pressable}>
+            <Text style={styles.buttonText}>Reset Password</Text>
           </Pressable>
         </>
       )}
-      <Pressable onPress={() => navigation.navigate("SignInScreen")} style={sharedStyles.link}>
-        <Text style={sharedStyles.linkText}>Back to Sign In</Text>
+      <Pressable onPress={() => navigation.navigate("SignInScreen")} style={styles.link}>
+        <Text style={styles.linkText}>Back to Sign In</Text>
       </Pressable>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 20,
+  },
+  title: {
+    fontSize: 24,
+    marginBottom: 20,
+  },
+  input: {
+    borderWidth: 1,
+    padding: 10,
+    marginBottom: 10,
+    borderRadius: 5,
+  },
+  pressable: {
+    backgroundColor: "#2196F3",
+    padding: 10,
+    marginVertical: 10,
+    borderRadius: 5,
+    boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+  },
+  buttonText: {
+    color: "white",
+    textAlign: "center",
+    verticalAlign: "middle",
+  },
+  error: {
+    color: "red",
+    marginBottom: 10,
+  },
+  link: {
+    marginTop: 20,
+    alignItems: "center",
+  },
+  linkText: {
+    color: "#2196F3",
+  },
+});

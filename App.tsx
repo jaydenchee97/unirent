@@ -5,9 +5,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Authenticator } from "@aws-amplify/ui-react-native";
 
 import awsExports from "./src/aws-exports";
-import HomeStack from "./src/navigation/HomeStack";
-import { useEffect, useState } from "react";
-import AppStack from "./src/navigation/AppStack";
+import AuthStack from "./src/navigation/AuthStack";
 
 
 // Amplify configuration
@@ -32,14 +30,11 @@ export default function App() {
   return (
     <PaperProvider>
       <SafeAreaProvider>
-        <NavigationContainer>
-          <Authenticator.Provider>
-              {/* <HomeStack /> */}
-              <AppStack />
-          </Authenticator.Provider>
-          {/* <AppStack /> */}
-
-        </NavigationContainer>
+        <Authenticator.Provider>
+          <NavigationContainer>
+            <AuthStack />
+          </NavigationContainer>
+        </Authenticator.Provider>
       </SafeAreaProvider>
     </PaperProvider>
   );
