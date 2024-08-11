@@ -9,24 +9,24 @@ import HomeStack from "./src/navigation/HomeStack";
 import { useEffect, useState } from "react";
 import AppStack from "./src/navigation/AppStack";
 
+const authConfig =  {
+  oauth: {
+    domain: process.env.EXPO_PUBLIC_OAUTH_DOMAIN, 
+    redirectSignIn: process.env.EXPO_PUBLIC_OAUTH_REDIRECT_SIGN_IN, 
+    redirectSignOut: process.env.EXPO_PUBLIC_OAUTH_REDIRECT_SIGN_OUT, 
+    responseType: process.env.EXPO_PUBLIC_OAUTH_RESPONSE_TYPE 
+  }
+};
 
 // Amplify configuration
 Amplify.configure({
   ...awsExports,
-  Auth: {
-    region: process.env.EXPO_PUBLIC_AMPLIFY_REGION, 
-    userPoolId: process.env.EXPO_PUBLIC_COGNITO_USER_POOL_ID,
-    userPoolWebClientId: process.env.EXPO_PUBLIC_COGNITO_USER_POOL_WEBCLIENT_ID,
-    authenticationFlowType: process.env.EXPO_PUBLIC_AUTHENTICATION_FLOW_TYPE,
-    oauth: {
-      domain: process.env.EXPO_PUBLIC_OAUTH_DOMAIN, 
-      redirectSignIn: process.env.EXPO_PUBLIC_OAUTH_REDIRECT_SIGN_IN, 
-      redirectSignOut: process.env.EXPO_PUBLIC_OAUTH_REDIRECT_SIGN_OUT, 
-      responseType: process.env.EXPO_PUBLIC_OAUTH_RESPONSE_TYPE 
-    }
-  },
+  ...authConfig
   
 });
+
+// Amplify.configure({awsExports});
+
 export default function App() {
 
   return (
