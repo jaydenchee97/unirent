@@ -14,6 +14,9 @@ export default function HomeStack() {
       bypassCache: true,
     });
 
+    console.log("authUser");
+    console.log(authUser);
+
     const userData = await API.graphql(
       graphqlOperation(getUser, { id: authUser.attributes.sub }),
     );
