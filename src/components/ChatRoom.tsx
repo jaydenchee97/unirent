@@ -36,14 +36,21 @@ export default function ChatRoom(props: any) {
     };
   }, [props.chatRoom.id]);
 
+  const user = props.chatRoom.Users?.items?.[0]?.user;
+  const accommodation = chatRoom.Accommodation;
+
+  if (!user || !accommodation) {
+    return null; // or you can return a loading indicator or some fallback UI
+  }
+
   return (
     <Pressable
       onPress={() =>
         navigation.navigate("Chat", {
           id: props.chatRoom.id,
-          name: props.chatRoom.Users.items[0].user.name,
-          title: chatRoom.Accommodation.title,
-          price: chatRoom.Accommodation.price,
+          name: user.name,
+          title: accommodation.title,
+          price: accommodation.price,
         })
       }
     >
@@ -51,9 +58,9 @@ export default function ChatRoom(props: any) {
         <Avatar.Text size={50} label="U" />
         <View style={{ flexDirection: "column", marginHorizontal: 15 }}>
           <Text variant="labelMedium" style={{ color: "gray" }}>
-            {props.chatRoom.Users.items[0].user.name}
+            {user.name}
           </Text>
-          <Text variant="titleMedium"> {chatRoom.Accommodation.title} </Text>
+          <Text variant="titleMedium"> {accommodation.title} </Text>
           <Text variant="labelMedium" style={{ color: "gray" }}>
             {chatRoom.LastMessage?.text}
           </Text>

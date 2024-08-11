@@ -201,7 +201,12 @@ export default function AccommodationDetailScreen({ navigation, route }) {
               Location
             </Text>
 
-            <Map latitude={address.geo.lat} longitude={address.geo.lng} />
+
+            {address?.geo?.lat && address?.geo?.lng ? (
+              <Map latitude={address.geo.lat} longitude={address.geo.lng} />
+            ) : (
+              <Text variant="bodyMedium">Location data not available</Text>
+            )}
 
             <Text variant="titleMedium" style={{ fontWeight: "bold" }}>
               441B Clementi Avenue
