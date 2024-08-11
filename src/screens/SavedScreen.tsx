@@ -1,5 +1,3 @@
-import { useIsFocused } from "@react-navigation/native";
-import { API, Auth, graphqlOperation, Storage } from "aws-amplify";
 import React, { useEffect, useState } from "react";
 import { ScrollView, View } from "react-native";
 import {
@@ -8,8 +6,11 @@ import {
   Card,
   Text,
   ActivityIndicator,
+  useTheme,
 } from "react-native-paper";
+import { useIsFocused } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { API, Auth, graphqlOperation, Storage } from "aws-amplify";
 
 import AccommodationCard from "../components/AccommodationCard";
 import { getUser } from "../graphql/queries";
@@ -17,6 +18,7 @@ import IAccommodation from "../model/IAccommodation";
 import { getSavedAccommodationsById } from "../services/SavedAccommodationService";
 
 const SavedScreen = (props: any) => {
+  const theme = useTheme();
   const insets = useSafeAreaInsets();
   const [savedAccommodationId, setSavedAccommodationId] = useState("");
   const [saved, setSaved] = useState<any[]>([]);
@@ -115,7 +117,7 @@ const SavedScreen = (props: any) => {
           paddingBottom: insets.bottom,
           paddingLeft: insets.left,
           paddingRight: insets.right,
-          backgroundColor: "#000000",
+          backgroundColor: theme.colors.background, 
         }}
       >
         <View style={{ marginTop: 25, marginBottom: 10, marginHorizontal: 20 }}>

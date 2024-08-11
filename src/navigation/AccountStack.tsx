@@ -11,14 +11,17 @@ import HostingStep3 from "../screens/HostingStep3";
 import HostingStep4 from "../screens/HostingStep4";
 import ListingDetailScreen from "../screens/ListingDetailScreen";
 import ListingScreen from "../screens/ListingScreen";
+import { useTheme } from "react-native-paper";
 
 const Stack = createStackNavigator();
 
 export default function AccountStack({ navigation, route }) {
+  const theme = useTheme();
+
   return (
     <Stack.Navigator
       screenOptions={{
-        cardStyle: { backgroundColor: "#000000" },
+        cardStyle: { backgroundColor: theme.colors.background },
       }}
     >
       <Stack.Screen
