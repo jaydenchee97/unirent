@@ -1,9 +1,17 @@
 import { useAuthenticator } from "@aws-amplify/ui-react-native";
+import { Auth } from "aws-amplify";
 import { View, StyleSheet } from "react-native";
 import { Divider, List, Text } from "react-native-paper";
 
 export default function Account({ navigation }) {
-  const { signOut } = useAuthenticator((context) => [context.user]);
+
+  const handleSignOut = async () => {
+    try {
+      await Auth.signOut({ global: true });
+    } catch (error) {
+      console.log('Error signing out: ', error);
+    }
+  };
 
   return (
     <View style={styles.view}>
@@ -44,7 +52,7 @@ export default function Account({ navigation }) {
         <List.Item
           title={<Text> Sign out </Text>}
           left={() => <List.Icon icon="logout" />}
-          onPress={signOut}
+          onPress={handleSignOut}
           style={{ alignSelf: "center" }}
         />
         <Divider />
