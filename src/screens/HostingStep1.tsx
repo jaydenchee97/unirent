@@ -13,39 +13,26 @@ import {
   TextInput,
 } from "react-native-paper";
 
-import Counter from "../components/Counter";
 import EPropertyType from "../model/EPropertyType";
 import IAddress from "../model/IAddress";
 import { useHostStore } from "../store/host";
 
 export default function HostingStep1({ navigation, route }) {
-  if (route.state) {
-    navigation.setOptions({
-      tabBarVisible: !(route.state.index > 0),
-    });
-  }
-  // console.log(navigation);
-  // console.log(route);
-
   const [propertyType, setPropertyType] = useState("");
   const [address, setAddress] = useState<IAddress>();
-  // const [guest, setGuest] = useState(0);
-  // const [bed, setBed] = useState(0);
-  // const [bath, setBath] = useState(0);
 
   // initialize zustand store methods
   const updatePropertyType = useHostStore((state) => state.updatePropertyType);
-  // const updateMaxGuest = useHostStore((state) => state.updateMaxGuest);
-  // const updateMaxBed = useHostStore((state) => state.updateMaxBed);
-  // const updateMaxBath = useHostStore((state) => state.updateMaxBath);
   const updateAddress = useHostStore((state) => state.updateAddress);
 
   const onNavigate = () => {
+    if (!propertyType) {
+      alert("Please select a property type before proceeding.");
+      return;
+    }
+
     // update zustand store
     updatePropertyType(propertyType);
-    // updateMaxGuest(guest);
-    // updateMaxBed(bed);
-    // updateMaxBath(bath);
     updateAddress(address);
     navigation.navigate("HostingStep2");
   };
@@ -86,6 +73,7 @@ export default function HostingStep1({ navigation, route }) {
           ]}
         />
 
+        {/* Address input fields */}
         <Text
           variant="headlineMedium"
           style={{ marginBottom: 10, marginTop: 20 }}
@@ -138,41 +126,13 @@ export default function HostingStep1({ navigation, route }) {
           value={address?.aptName}
           onChangeText={(text) => setAddress({ ...address, aptName: text })}
         />
-
-        {/* <Text variant="headlineMedium">How many people can stay here?</Text>
-        <View style={styles.counter}>
-          <Text> Maximum occupancy</Text>
-          <Counter
-            result={guest}
-            onMinus={(value) => setGuest(value)}
-            onPlus={(value) => setGuest(value)}
-          />
-        </View>
-
-        <View style={styles.counter}>
-          <Text> No. of bedrooms</Text>
-          <Counter
-            result={bed}
-            onMinus={(value) => setBed(value)}
-            onPlus={(value) => setBed(value)}
-          />
-        </View>
-
-        <View style={styles.counter}>
-          <Text> No. of bathrooms</Text>
-          <Counter
-            result={bath}
-            onMinus={(value) => setBath(value)}
-            onPlus={(value) => setBath(value)}
-          />
-        </View> */}
       </ScrollView>
 
       <View style={styles.next}>
         <PaperButton
           mode="contained"
           onPress={() => onNavigate()}
-          style={undefined}
+          disabled={!propertyType} // Disable button if no property type is selected
         >
           Next
         </PaperButton>
@@ -188,11 +148,6 @@ const styles = StyleSheet.create({
   scroll: {
     flex: 1,
     paddingHorizontal: 20,
-  },
-  counter: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
   },
   next: {
     flexDirection: "row",
