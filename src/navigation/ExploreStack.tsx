@@ -1,4 +1,6 @@
+import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
+import { useTheme } from "react-native-paper";
 
 import AccommodationDetailScreen from "../screens/AccommodationDetailScreen";
 import ChatScreen from "../screens/ChatScreen";
@@ -9,12 +11,14 @@ import Welcome from "../screens/Welcome";
 const Stack = createStackNavigator();
 
 export default function ExploreStack() {
+  const theme = useTheme();
+
   return (
     <Stack.Navigator
       initialRouteName="Welcome"
       screenOptions={{
         headerShown: false,
-        cardStyle: { backgroundColor: "#000000" },
+        cardStyle: { backgroundColor: theme.colors.background }, 
       }}
     >
       <Stack.Screen name="Welcome" component={Welcome} />
