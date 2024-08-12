@@ -41,6 +41,11 @@ export default function HostingStep1({ navigation, route }) {
   const updateAddress = useHostStore((state) => state.updateAddress);
 
   const onNavigate = () => {
+    if (!propertyType) {
+      alert("Please select a property type before proceeding.");
+      return;
+    }
+
     // update zustand store
     updatePropertyType(propertyType);
     // updateMaxGuest(guest);
@@ -172,7 +177,7 @@ export default function HostingStep1({ navigation, route }) {
         <PaperButton
           mode="contained"
           onPress={() => onNavigate()}
-          style={undefined}
+          disabled={!propertyType} // Disable button if no property type is selected
         >
           Next
         </PaperButton>

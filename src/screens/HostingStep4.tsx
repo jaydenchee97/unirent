@@ -99,6 +99,12 @@ export default function HostingStep4({ navigation }) {
     //     },
     //   ]);
     // }
+    
+    const propertyType = EPropertyType[hostStore.propertyType];
+    if (!propertyType) {
+      console.error("Invalid property type:", hostStore.propertyType);
+      return; // Handle the error accordingly
+    }
 
     // change to graphql
     console.log("Creating new accommodation");
