@@ -1,24 +1,44 @@
 import { Authenticator } from "@aws-amplify/ui-react-native";
 import { NavigationContainer } from "@react-navigation/native";
-import { Amplify } from "aws-amplify";
+import { Amplify, Auth } from "aws-amplify";
 import { PaperProvider } from "react-native-paper";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import awsExports from "./src/aws-exports";
 import HomeStack from "./src/navigation/HomeStack";
+import { useEffect, useState } from "react";
+import AppStack from "./src/navigation/AppStack";
 
-Amplify.configure(awsExports);
+const authConfig =  {
+  oauth: {
+    domain: process.env.EXPO_PUBLIC_OAUTH_DOMAIN, 
+    redirectSignIn: process.env.EXPO_PUBLIC_OAUTH_REDIRECT_SIGN_IN, 
+    redirectSignOut: process.env.EXPO_PUBLIC_OAUTH_REDIRECT_SIGN_OUT, 
+    responseType: process.env.EXPO_PUBLIC_OAUTH_RESPONSE_TYPE 
+  }
+};
+
+// Amplify configuration
+Amplify.configure({
+  ...awsExports,
+  ...authConfig
+  
+});
+
+// Amplify.configure({awsExports});
 
 export default function App() {
+
   return (
     <PaperProvider>
       <SafeAreaProvider>
         <NavigationContainer>
           <Authenticator.Provider>
-            <Authenticator>
-              <HomeStack />
-            </Authenticator>
+              {/* <HomeStack /> */}
+              <AppStack />
           </Authenticator.Provider>
+          {/* <AppStack /> */}
+
         </NavigationContainer>
       </SafeAreaProvider>
     </PaperProvider>

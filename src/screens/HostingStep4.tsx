@@ -51,6 +51,7 @@ export default function HostingStep4({ navigation }) {
   const [formattedAddress, setFormattedAddress] = useState("");
 
   async function invokeGoogleMaps(address: object) {
+    console.log("getting geocode")
     const resp = await getGeocode(address);
     console.log(resp);
     setGeocode(resp?.geometry?.location);
