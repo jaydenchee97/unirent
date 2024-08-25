@@ -2,12 +2,33 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { useEffect, useState } from 'react';
 import { Auth } from 'aws-amplify';
 import HomeStack from './HomeStack';
+import { Dimensions, StyleSheet } from "react-native";
+import { useTheme } from 'react-native-paper';
+
 
 
 const Stack = createStackNavigator();
 
 export default function AppStack() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const { width, height } = Dimensions.get('window');
+  const aspectRatio = height / width;
+
+  const isTabletOrWebView = aspectRatio < 1.6; // Assumes 4:3 aspect ratio for tablets
+
+  const theme = useTheme(); // Move useTheme inside the component
+
+  const styles = StyleSheet.create({
+    webViewStyles: {
+      backgroundColor: theme.colors.background,
+      paddingHorizontal: "20%"
+    },
+    phoneViewStyles: {
+      backgroundColor: theme.colors.background
+    }
+  });
+
+
   const handleAuth = async () => {
     try {
 
@@ -28,12 +49,13 @@ export default function AppStack() {
   }
 
   return (
-    <Stack.Navigator>
+    <Stack.Navigator screenOptions={{cardStyle: isTabletOrWebView ? styles.webViewStyles : styles.phoneViewStyles}}>
       <Stack.Screen
         name="HomeStack"
         component={HomeStack}
-        options={{ headerShown: false }}
+        options={{ headerShown: false,  }}
       />
     </Stack.Navigator>
   );
 }
+
