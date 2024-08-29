@@ -12,12 +12,17 @@ frontend:
           else
             npm install
           fi
-        - echo "Installing Java 11"
+        - echo "Downloading and installing Java 11"
         - wget https://download.bell-sw.com/java/11.0.18+10/bellsoft-jdk11.0.18+10-linux-amd64.tar.gz
         - tar -xzf bellsoft-jdk11.0.18+10-linux-amd64.tar.gz
         - export JAVA_HOME=$(pwd)/jdk-11.0.18
         - export PATH=$JAVA_HOME/bin:$PATH
         - java -version  # Verify the installation
+        - echo "Downloading OWASP ZAP"
+        - wget https://github.com/zaproxy/zaproxy/releases/download/v2.15.0/ZAP_2.15.0_Linux.tar.gz
+        - tar -xzf AP_2.15.0_Linux.tar.gz
+        - export ZAP_PATH=$(pwd)/ZAP_2.11.1
+        - export PATH=$ZAP_PATH:$PATH
 
     build:
       commands:
@@ -26,11 +31,8 @@ frontend:
 
     postBuild:
       commands:
-        - echo "Installing OWASP ZAP"
-        - wget https://github.com/zaproxy/zaproxy/releases/download/v2.15.0/ZAP_2_15_0_unix.sh -O zap.sh
-        - chmod +x zap.sh
-        - ./zap.sh -cmd -daemon -port 8080 -config api.disablekey=true
         - echo "Running OWASP ZAP Scan"
+        - $ZAP_PATH/zap.sh -daemon -port 8080 -config api.disablekey=true
         - zap-cli start --port 8080
         - zap-cli status --port 8080 --timeout 300
         - zap-cli spider http://localhost:8080
