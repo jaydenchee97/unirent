@@ -20,7 +20,7 @@ frontend:
         - java -version  # Verify the installation
         - echo "Downloading OWASP ZAP"
         - wget https://github.com/zaproxy/zaproxy/releases/download/v2.15.0/ZAP_2.15.0_Linux.tar.gz
-        - tar -xzf AP_2.15.0_Linux.tar.gz
+        - tar -xzf ZAP_2.15.0_Linux.tar.gz
         - export ZAP_PATH=$(pwd)/ZAP_2.11.1
         - export PATH=$ZAP_PATH:$PATH
 
