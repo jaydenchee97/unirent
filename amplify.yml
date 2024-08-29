@@ -12,40 +12,36 @@ frontend:
           else
             npm install
           fi
+
     build:
       commands:
         - echo "EXPO_PUBLIC_GOOGLE_MAPS_API_KEY=$GOOGLE_MAPS_API_KEY" >> .env
         - npx expo export --platform web
+
+    postBuild:
+      commands:
+        - echo "Installing OWASP ZAP"
+        - wget https://github.com/zaproxy/zaproxy/releases/download/v2.15.0/ZAP_2_15_0_unix.sh -O zap.sh
+        - chmod +x zap.sh
+        - ./zap.sh -cmd -daemon -port 8080 -config api.disablekey=true
+        - echo "Running OWASP ZAP Scan"
+        - zap-cli start --port 8080
+        - zap-cli status --port 8080 --timeout 300
+        - zap-cli spider http://localhost:8080
+        - zap-cli active-scan http://localhost:8080
+        - zap-cli report -o zap_report.html -f html
+        - zap-cli shutdown
+
   artifacts:
     baseDirectory: dist
     files:
       - "**/*"
+    zapReport:
+      baseDirectory: .
+      files:
+        - zap_report.html
+
   cache:
     paths:
       - node_modules/**/*
       - $(npm root --global)/**/*
-
-# test:
-#   phases:
-#     preTest:
-#       commands:
-#         - npm ci
-#         - npm install -g pm2
-#         - npm install -g wait-on
-#         - npm install mocha mochawesome mochawesome-merge mochawesome-report-generator
-#         - npm install serve
-#         - pm2 start "npx serve dist"
-#         - wait-on http://localhost:3000
-#     test:
-#       commands:
-#         - 'npx cypress run --reporter mochawesome --reporter-options "reportDir=cypress/report/mochawesome-report,overwrite=false,html=false,json=true,timestamp=mmddyyyy_HHMMss"'
-#     postTest:
-#       commands:
-#         - npx mochawesome-merge cypress/report/mochawesome-report/mochawesome*.json > cypress/report/mochawesome.json
-#         - pm2 kill
-#   artifacts:
-#     baseDirectory: cypress
-#     configFilePath: "**/mochawesome.json"
-#     files:
-#       - "**/*.png"
-#       - "**/*.mp4"
