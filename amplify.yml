@@ -21,14 +21,10 @@ frontend:
 
     build:
       commands:
-        - echo "EXPO_PUBLIC_GOOGLE_MAPS_API_KEY=$GOOGLE_MAPS_API_KEY" >> .env
-        - npx expo export --platform web
-
-    postBuild:
-      commands:
         - echo "Running OWASP Dependency-Check"
         - wget https://github.com/jeremylong/DependencyCheck/releases/download/v10.0.3/dependency-check-10.0.3-release.zip
         - unzip dependency-check-10.0.3-release.zip
+        - ls -al
         - ./dependency-check/bin/dependency-check.sh --project MyProject --out ./dependency-report --scan ./unirent
         - if grep -q '<vulnerability>' ./dependency-report/dependency-check-report.xml; then
             echo "Vulnerabilities found in dependencies";
@@ -36,6 +32,11 @@ frontend:
           else
             echo "No vulnerabilities found.";
           fi
+
+    postBuild:
+      commands:
+        - echo "EXPO_PUBLIC_GOOGLE_MAPS_API_KEY=$GOOGLE_MAPS_API_KEY" >> .env
+        - npx expo export --platform web
 
   artifacts:
     baseDirectory: dist
