@@ -12,14 +12,40 @@ frontend:
           else
             npm install
           fi
+        - echo "Installing Java 11"
+        - wget https://download.bell-sw.com/java/11.0.18+10/bellsoft-jdk11.0.18+10-linux-amd64.tar.gz
+        - tar -xzf bellsoft-jdk11.0.18+10-linux-amd64.tar.gz
+        - export JAVA_HOME=$(pwd)/jdk-11.0.18
+        - export PATH=$JAVA_HOME/bin:$PATH
+        - java -version  # Verify the installation
+
     build:
       commands:
         - echo "EXPO_PUBLIC_GOOGLE_MAPS_API_KEY=$GOOGLE_MAPS_API_KEY" >> .env
         - npx expo export --platform web
+
+    postBuild:
+      commands:
+        - echo "Running OWASP Dependency-Check"
+        - wget https://github.com/jeremylong/DependencyCheck/releases/download/v8.3.2/dependency-check-8.3.2-release.zip
+        - unzip dependency-check-8.3.2-release.zip
+        - ./dependency-check/bin/dependency-check.sh --project MyProject --out ./dependency-report --scan ./unirent
+        - if grep -q '<vulnerability>' ./dependency-report/dependency-check-report.xml; then
+            echo "Vulnerabilities found in dependencies";
+            exit 1;
+          else
+            echo "No vulnerabilities found.";
+          fi
+
   artifacts:
     baseDirectory: dist
     files:
       - "**/*"
+    dependencyReport:
+      baseDirectory: ./dependency-report
+      files:
+        - dependency-check-report.html
+
   cache:
     paths:
       - node_modules/**/*
