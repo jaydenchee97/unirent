@@ -13,10 +13,11 @@ frontend:
             npm install
           fi
         - echo "Installing Java 11"
-        - apt-get update
-        - apt-get install -y openjdk-11-jdk
-        - export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+        - wget https://download.bell-sw.com/java/11.0.18+10/bellsoft-jdk11.0.18+10-linux-amd64.tar.gz
+        - tar -xzf bellsoft-jdk11.0.18+10-linux-amd64.tar.gz
+        - export JAVA_HOME=$(pwd)/jdk-11.0.18
         - export PATH=$JAVA_HOME/bin:$PATH
+        - java -version  # Verify the installation
 
     build:
       commands:
