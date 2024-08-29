@@ -12,17 +12,12 @@ frontend:
           else
             npm install
           fi
-        - echo "Downloading and installing Java 11"
+        - echo "Installing Java 11"
         - wget https://download.bell-sw.com/java/11.0.18+10/bellsoft-jdk11.0.18+10-linux-amd64.tar.gz
         - tar -xzf bellsoft-jdk11.0.18+10-linux-amd64.tar.gz
         - export JAVA_HOME=$(pwd)/jdk-11.0.18
         - export PATH=$JAVA_HOME/bin:$PATH
         - java -version  # Verify the installation
-        - echo "Downloading OWASP ZAP"
-        - wget https://github.com/zaproxy/zaproxy/releases/download/v2.15.0/ZAP_2.15.0_Linux.tar.gz
-        - tar -xzf ZAP_2.15.0_Linux.tar.gz
-        - export ZAP_PATH=$(pwd)/ZAP_2.15.0
-        - export PATH=$ZAP_PATH:$PATH
 
     build:
       commands:
@@ -31,23 +26,25 @@ frontend:
 
     postBuild:
       commands:
-        - echo "Running OWASP ZAP Scan"
-        - $ZAP_PATH/zap.sh -daemon -port 8080 -config api.disablekey=true
-        - zap-cli start --port 8080
-        - zap-cli status --port 8080 --timeout 300
-        - zap-cli spider http://localhost:8080
-        - zap-cli active-scan http://localhost:8080
-        - zap-cli report -o zap_report.html -f html
-        - zap-cli shutdown
+        - echo "Running OWASP Dependency-Check"
+        - wget https://github.com/jeremylong/DependencyCheck/releases/download/v8.3.2/dependency-check-8.3.2-release.zip
+        - unzip dependency-check-8.3.2-release.zip
+        - ./dependency-check/bin/dependency-check.sh --project MyProject --out ./dependency-report --scan ./unirent
+        - if grep -q '<vulnerability>' ./dependency-report/dependency-check-report.xml; then
+            echo "Vulnerabilities found in dependencies";
+            exit 1;
+          else
+            echo "No vulnerabilities found.";
+          fi
 
-  artifacts:
-    baseDirectory: dist
-    files:
-      - "**/*"
-    zapReport:
-      baseDirectory: .
+    artifacts:
+      baseDirectory: dist
       files:
-        - zap_report.html
+        - "**/*"
+      dependencyReport:
+        baseDirectory: ./dependency-report
+        files:
+          - dependency-check-report.html
 
   cache:
     paths:
