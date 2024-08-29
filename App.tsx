@@ -9,6 +9,7 @@ import HomeStack from "./src/navigation/HomeStack";
 import { useEffect, useState } from "react";
 import AppStack from "./src/navigation/AppStack";
 
+// auth configuration
 const authConfig =  {
   oauth: {
     domain: process.env.EXPO_PUBLIC_OAUTH_DOMAIN, 
