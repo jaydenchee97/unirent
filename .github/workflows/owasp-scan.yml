@@ -21,10 +21,17 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
+      
+      - name: Install Node Modules for Amplify Functions
+        run: |
+          cd amplify/backend/function/accommodationFunction/src && npm install
+          cd amplify/backend/function/locationSearchApi/src && npm install
+          cd amplify/backend/function/recommendationHandler/src && npm install
+          cd amplify/backend/function/geocodingHandler/src && npm install
 
       - name: Install dependencies
         run: npm ci
-        
+
       - name: Set up Java 11
         uses: actions/setup-java@v3
         with:
