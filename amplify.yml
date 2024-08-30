@@ -25,7 +25,7 @@ frontend:
         - wget https://github.com/jeremylong/DependencyCheck/releases/download/v10.0.3/dependency-check-10.0.3-release.zip
         - unzip dependency-check-10.0.3-release.zip
         - ls -al
-        - ./dependency-check/bin/dependency-check.sh --project Unirent --out ./dependency-report --scan ./unirent
+        - ./dependency-check/bin/dependency-check.sh --project UniRent --out ./dependency-report --scan ./unirent
         - if grep -q '<vulnerability>' ./dependency-report/dependency-check-report.xml; then
             echo "Vulnerabilities found in dependencies";
             exit 1;
