@@ -24,10 +24,22 @@ jobs:
       
       - name: Install Node Modules for Amplify Functions
         run: |
-          cd amplify/backend/function/accommodationFunction/src && npm install
-          cd amplify/backend/function/locationSearchApi/src && npm install
-          cd amplify/backend/function/recommendationHandler/src && npm install
-          cd amplify/backend/function/geocodingHandler/src && npm install
+          if [ -d amplify/backend/function/accommodationFunction/src ]; then
+            cd amplify/backend/function/accommodationFunction/src && npm install
+            cd - # Go back to the previous directory
+          fi
+          if [ -d amplify/backend/function/locationSearchApi/src ]; then
+            cd amplify/backend/function/locationSearchApi/src && npm install
+            cd -
+          fi
+          if [ -d amplify/backend/function/recommendationHandler/src ]; then
+            cd amplify/backend/function/recommendationHandler/src && npm install
+            cd -
+          fi
+          if [ -d amplify/backend/function/geocodingHandler/src ]; then
+            cd amplify/backend/function/geocodingHandler/src && npm install
+            cd -
+          fi
 
       - name: Install dependencies
         run: npm ci
