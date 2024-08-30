@@ -57,7 +57,7 @@ jobs:
 
       - name: Run OWASP Dependency-Check
         run: |
-          ./dependency-check/bin/dependency-check.sh --project MyProject --out ./dependency-report --scan ./
+          ./dependency-check/bin/dependency-check.sh --project UniRent --out ./dependency-report --scan ./
 
       - name: Upload Dependency-Check Report
         uses: actions/upload-artifact@v3
