@@ -44,19 +44,19 @@ jobs:
 
       - name: Run OWASP Dependency-Check for accommodationFunction
         run: |
-          ./dependency-check/bin/dependency-check.sh --project accommodationFunction --out ./dependency-report/accommodationFunction.html --scan .\amplify\backend\function\accommodationFunction\src --nvdApiKey ${{ secrets.NVD_API_KEY }}
+          ./dependency-check/bin/dependency-check.sh --project accommodationFunction --out ./dependency-report/accommodationFunction.html --scan ./amplify/backend/function/accommodationFunction/src --nvdApiKey ${{ secrets.NVD_API_KEY }}
 
       - name: Run OWASP Dependency-Check for geocodingHandler 
         run: |
-          ./dependency-check/bin/dependency-check.sh --project geocodingHandler --out ./dependency-report/geocodingHandler.html --scan .\amplify\backend\function\geocodingHandler\src --nvdApiKey ${{ secrets.NVD_API_KEY }}
+          ./dependency-check/bin/dependency-check.sh --project geocodingHandler --out ./dependency-report/geocodingHandler.html --scan ./amplify/backend/function/geocodingHandler/src --nvdApiKey ${{ secrets.NVD_API_KEY }}
 
       - name: Run OWASP Dependency-Check for locationSearchApi 
         run: |
-          ./dependency-check/bin/dependency-check.sh --project locationSearchApi --out ./dependency-report/locationSearchApi.html --scan .\amplify\backend\function\locationSearchApi\src --nvdApiKey ${{ secrets.NVD_API_KEY }}
+          ./dependency-check/bin/dependency-check.sh --project locationSearchApi --out ./dependency-report/locationSearchApi.html --scan ./amplify/backend/function/locationSearchApi/src --nvdApiKey ${{ secrets.NVD_API_KEY }}
 
       - name: Run OWASP Dependency-Check for recommendationHandler 
         run: |
-          ./dependency-check/bin/dependency-check.sh --project recommendationHandler --out ./dependency-report/recommendationHandler.html --scan .\amplify\backend\function\recommendationHandler\src --nvdApiKey ${{ secrets.NVD_API_KEY }}
+          ./dependency-check/bin/dependency-check.sh --project recommendationHandler --out ./dependency-report/recommendationHandler.html --scan ./amplify/backend/function/recommendationHandler/src --nvdApiKey ${{ secrets.NVD_API_KEY }}
 
       - name: Upload Dependency-Check Reports
         uses: actions/upload-artifact@v3
