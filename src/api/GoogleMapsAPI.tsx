@@ -1,10 +1,15 @@
-import { API } from "aws-amplify";
+import { API, Auth } from "aws-amplify";
 
 const apiName = "googleMapsApi";
 const path = "/geocoding";
 
 export async function getGeocode(request) {
-  const myInit = { body: request };
+  const jwtToken = (await Auth.currentSession()).getAccessToken().getJwtToken();
+  const headers = {
+    Authorization: "Bearer " + jwtToken
+  };
+
+  const myInit = { headers: headers, body: request };
 
   try {
     const response = await API.post(apiName, path, myInit);
@@ -15,14 +20,17 @@ export async function getGeocode(request) {
 }
 
 export async function getGeocodeByPlaceId(query: string) {
-  // const param = {query: query};
+  const jwtToken = (await Auth.currentSession()).getAccessToken().getJwtToken();
+
   const geo = {
     lat: null,
     lng: null,
   };
 
   const myInit = {
-    headers: {}, // OPTIONAL
+    headers: {
+      Authorization : "Bearer " + jwtToken
+    }, 
     response: true, // OPTIONAL (return the entire Axios response object instead of only response.data)
     queryStringParameters: {
       placeId: query, // OPTIONAL
