@@ -10,19 +10,19 @@ import { useEffect, useState } from "react";
 import AppStack from "./src/navigation/AppStack";
 
 // auth configuration
-const authConfig =  {
-  oauth: {
-    domain: process.env.EXPO_PUBLIC_OAUTH_DOMAIN, 
-    redirectSignIn: process.env.EXPO_PUBLIC_OAUTH_REDIRECT_SIGN_IN, 
-    redirectSignOut: process.env.EXPO_PUBLIC_OAUTH_REDIRECT_SIGN_OUT, 
-    responseType: process.env.EXPO_PUBLIC_OAUTH_RESPONSE_TYPE 
-  }
-};
+// const authConfig =  {
+//   oauth: {
+//     domain: process.env.EXPO_PUBLIC_OAUTH_DOMAIN, 
+//     redirectSignIn: process.env.EXPO_PUBLIC_OAUTH_REDIRECT_SIGN_IN, 
+//     redirectSignOut: process.env.EXPO_PUBLIC_OAUTH_REDIRECT_SIGN_OUT, 
+//     responseType: process.env.EXPO_PUBLIC_OAUTH_RESPONSE_TYPE 
+//   }
+// };
 
 // Amplify configuration
 Amplify.configure({
   ...awsExports,
-  ...authConfig
+  // ...authConfig
   
 });
 
