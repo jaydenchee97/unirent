@@ -7,14 +7,21 @@ import { useEffect, useState } from "react";
 import awsExports from "./src/aws-exports";
 import LoginScreen from "./src/screens/LoginScreen";
 import HomeStack from "./src/navigation/HomeStack";
+import { Platform } from "react-native";
 
 // Amplify configuration
 Amplify.configure({
   ...awsExports,
   oauth: {
     domain: process.env.EXPO_PUBLIC_OAUTH_DOMAIN,
-    redirectSignIn: process.env.EXPO_PUBLIC_OAUTH_REDIRECT_SIGN_IN,
-    redirectSignOut: process.env.EXPO_PUBLIC_OAUTH_REDIRECT_SIGN_OUT,
+    redirectSignIn:
+      Platform.OS === "web"
+        ? process.env.EXPO_PUBLIC_OAUTH_REDIRECT_SIGN_IN
+        : process.env.EXPO_PUBLIC_OAUTH_REDIRECT_SIGN_IN_MOBILE,
+    redirectSignOut:
+      Platform.OS === "web"
+        ? process.env.EXPO_PUBLIC_OAUTH_REDIRECT_SIGN_OUT
+        : process.env.EXPO_PUBLIC_OAUTH_REDIRECT_SIGN_OUT_MOBILE,
     responseType: process.env.EXPO_PUBLIC_OAUTH_RESPONSE_TYPE,
   },
   region: process.env.EXPO_PUBLIC_REGION,
@@ -33,7 +40,7 @@ export default function App() {
         if (user) {
           setIsAuthenticated(true);
           // console.log("User is authenticated, signing out...");
-          // await Auth.signOut(); // Sign out for development purposes
+          // await Auth.signOut({ global: true }); // Sign out for development purposes
           // setIsAuthenticated(false); // Ensure UI updates
         }
       } catch {

@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { CognitoHostedUIIdentityProvider } from "@aws-amplify/auth/lib/types";
 import React, { useState } from "react";
-import { Platform, View, TextInput, Button, Text, StyleSheet, TouchableOpacity, Dimensions } from "react-native";
+import { Platform, View, TextInput, Button, Text, StyleSheet, TouchableOpacity, Dimensions, Linking } from "react-native";
 import { Auth } from "aws-amplify";
 import QRCode from "react-native-qrcode-svg";
 
@@ -49,8 +49,9 @@ const LoginScreen = ({ onLoginSuccess } : { onLoginSuccess: () => void}) => {
         setIsConfirming(true); // Switch to MFA/confirmation code state
       } else {
         // Log in
-        const user = await Auth.signIn(username, password);
-        setUser(user);
+        // const user = await Auth.signIn(username, password);
+        // setUser(user);
+        await Auth.federatedSignIn();
         // Check if MFA is required
         if (user.challengeName === 'SOFTWARE_TOKEN_MFA') {
           setIsMFARequired(true); // Switch to MFA code input state
@@ -64,6 +65,37 @@ const LoginScreen = ({ onLoginSuccess } : { onLoginSuccess: () => void}) => {
     }
   };
 
+/*
+  const handleAuth = async () => {
+    setErrorMessage(""); // Clear error message before starting sign-up/sign-in
+    try {
+      if (isSignUp) {
+        // Redirect to the Cognito Hosted UI for Sign-up
+        const signUpUrl = `https://${process.env.EXPO_PUBLIC_OAUTH_DOMAIN}/signup?client_id=${process.env.EXPO_PUBLIC_USER_POOL_WEB_CLIENT_ID}&response_type=code&redirect_uri=${process.env.EXPO_PUBLIC_OAUTH_REDIRECT_SIGN_IN}&scope=email+openid+phone+aws.cognito.signin.user.admin`;
+        window.location.href = signUpUrl;
+      } else {
+        
+        // Redirect to the Cognito Hosted UI for Log-in
+        let loginUrl;
+        // eslint-disable-next-line no-unused-expressions
+        Platform.OS === "web" ? 
+        loginUrl = `https://${process.env.EXPO_PUBLIC_OAUTH_DOMAIN}/login?client_id=${process.env.EXPO_PUBLIC_USER_POOL_WEB_CLIENT_ID}&response_type=code&redirect_uri=${process.env.EXPO_PUBLIC_OAUTH_REDIRECT_SIGN_IN}&identity_provider=COGNITO&scope=`: 
+        loginUrl = `https://${process.env.EXPO_PUBLIC_OAUTH_DOMAIN}/login?client_id=${process.env.EXPO_PUBLIC_USER_POOL_WEB_CLIENT_ID}&response_type=code&redirect_uri=${process.env.EXPO_PUBLIC_OAUTH_REDIRECT_SIGN_IN_MOBILE}&identity_provider=COGNITO&scope=`; 
+        
+        if(Platform.OS === "web") {
+          window.location.href = loginUrl;
+        } else {
+          //await Linking.openURL(loginUrl);
+          await Auth.federatedSignIn();
+        }
+        
+      }
+    } catch (error) {
+      setErrorMessage(isSignUp ? "Error signing up. Please try again." : "Error signing in. Please check your credentials.");
+      console.log("Auth error:", error);
+    }
+  };
+*/
   const handleConfirmCode = async () => {
     setErrorMessage(""); // Clear error message before confirming code
     try {
@@ -192,7 +224,12 @@ const LoginScreen = ({ onLoginSuccess } : { onLoginSuccess: () => void}) => {
           ) : null}
         </View>
         {errorMessage ? <Text style={styles.error}>{errorMessage}</Text> : null}
-        <TouchableOpacity style={styles.button} onPress={() => {setIsSettingUpMFA(false);setIsMFARequired(true);}}>
+        <TouchableOpacity style={styles.button} onPress={() => {
+          Auth.signOut({ global: true });
+          setIsSettingUpMFA(false);
+          setIsMFARequired(false);
+          setIsConfirming(false);
+          }}>
           <Text style={styles.buttonText}>I am done!</Text>
         </TouchableOpacity>
       </>
