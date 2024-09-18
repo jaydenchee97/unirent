@@ -1,6 +1,6 @@
 // App.tsx
 import { NavigationContainer } from "@react-navigation/native";
-import { Amplify, Auth } from "aws-amplify";
+import { Amplify, Auth, Hub } from "aws-amplify";
 import { PaperProvider } from "react-native-paper";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useEffect, useState } from "react";
@@ -24,30 +24,36 @@ Amplify.configure({
         : process.env.EXPO_PUBLIC_OAUTH_REDIRECT_SIGN_OUT_MOBILE,
     responseType: process.env.EXPO_PUBLIC_OAUTH_RESPONSE_TYPE,
   },
-  region: process.env.EXPO_PUBLIC_REGION,
-  userPoolId: process.env.EXPO_PUBLIC_USER_POOL_ID,
-  userPoolWebClientId: process.env.EXPO_PUBLIC_USER_POOL_WEB_CLIENT_ID,
 });
 
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    // Check if the user is already authenticated
     const checkAuthStatus = async () => {
       try {
         const user = await Auth.currentAuthenticatedUser();
         if (user) {
           setIsAuthenticated(true);
-          // console.log("User is authenticated, signing out...");
-          // await Auth.signOut({ global: true }); // Sign out for development purposes
-          // setIsAuthenticated(false); // Ensure UI updates
         }
       } catch {
         setIsAuthenticated(false);
       }
     };
+
+    // Listen for authentication events and check status
+    const authListener = Hub.listen("auth", (data) => {
+      const { payload } = data;
+      if (payload.event === "signIn") {
+        checkAuthStatus();
+      }
+    });
+
+    // Check auth status on mount
     checkAuthStatus();
+
+    // Cleanup the Hub listener on unmount
+    return () => authListener();
   }, []);
 
   return (
@@ -57,7 +63,7 @@ export default function App() {
           {isAuthenticated ? (
             <HomeStack /> // If authenticated, show the main app
           ) : (
-            <LoginScreen onLoginSuccess={() => setIsAuthenticated(true)} />
+            <LoginScreen />
           )}
         </NavigationContainer>
       </SafeAreaProvider>
