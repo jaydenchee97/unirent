@@ -15,7 +15,14 @@ const authConfig =  {
     domain: process.env.EXPO_PUBLIC_OAUTH_DOMAIN, 
     redirectSignIn: process.env.EXPO_PUBLIC_OAUTH_REDIRECT_SIGN_IN, 
     redirectSignOut: process.env.EXPO_PUBLIC_OAUTH_REDIRECT_SIGN_OUT, 
-    responseType: process.env.EXPO_PUBLIC_OAUTH_RESPONSE_TYPE 
+    responseType: process.env.EXPO_PUBLIC_OAUTH_RESPONSE_TYPE,
+    scope: [
+      "phone",
+      "email",
+      "openid",
+      "profile",
+      "aws.cognito.signin.user.admin",
+    ]
   }
 };
 
