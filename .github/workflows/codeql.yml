@@ -25,7 +25,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v2
+        uses: github/codeql-action/init@v3
         with:
           languages: ${{ matrix.language }}
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -34,10 +34,7 @@ jobs:
         run: npm install
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v2
+        uses: github/codeql-action/analyze@v3
         
       - name: Upload CodeQL SARIF report
-        uses: actions/upload-artifact@v3
-        with:
-          name: codeql-sarif-report
-          path: codeql-results/sarif
+        uses: github/codeql-action/upload-sarif@v3
