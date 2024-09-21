@@ -1,0 +1,45 @@
+name: SonarCloud Static Code Analysis
+
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  sonarcloud:
+    name: SonarCloud Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@v2
+        with:
+          args: >
+            -Dsonar.projectKey=jaydenchee97_unirent
+            -Dsonar.organization=jaydenchee97
+            -Dsonar.sources=./src
+            -Dsonar.branch.name=${{ github.ref_name }}
+            -Dsonar.tests=
+            -Dsonar.report.export.path=sonar-report.json 
+        env:
+          SONAR_TOKEN: cf6379bf375bf79ce6f82be7adeeae8dd10c2c53
+
+      - name: Upload SonarCloud Report Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: sonarcloud-report
+          path: sonar-report.json 
