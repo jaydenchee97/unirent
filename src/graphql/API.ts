@@ -298,6 +298,7 @@ export type CreateUserInput = {
   id?: string | null,
   name: string,
   status?: string | null,
+  userType: string | null,
   userSavedAccommodationId?: string | null,
 };
 
@@ -314,6 +315,7 @@ export type UpdateUserInput = {
   id: string,
   name?: string | null,
   status?: string | null,
+  userType: string | null,
   userSavedAccommodationId?: string | null,
 };
 

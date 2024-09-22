@@ -22,6 +22,7 @@ export const getSavedAccommodation = /* GraphQL */ `
         id
         name
         status
+        userType
         Accommodations {
           nextToken
           __typename
@@ -74,6 +75,7 @@ export const listSavedAccommodations = /* GraphQL */ `
           id
           name
           status
+          userType
           createdAt
           updatedAt
           userSavedAccommodationId
@@ -150,6 +152,7 @@ export const getChatRoom = /* GraphQL */ `
           id
           name
           status
+          userType
           createdAt
           updatedAt
           userSavedAccommodationId
@@ -346,6 +349,7 @@ export const getAccommodation = /* GraphQL */ `
         id
         name
         status
+        userType
         Accommodations {
           nextToken
           __typename
@@ -405,6 +409,7 @@ export const listAccommodations = /* GraphQL */ `
           id
           name
           status
+          userType
           createdAt
           updatedAt
           userSavedAccommodationId
@@ -456,6 +461,7 @@ export const accommodationsByUserId = /* GraphQL */ `
           id
           name
           status
+          userType
           createdAt
           updatedAt
           userSavedAccommodationId
@@ -475,6 +481,7 @@ export const getUser = /* GraphQL */ `
       id
       name
       status
+      userType
       Accommodations {
         items {
           id
@@ -532,6 +539,7 @@ export const getUser = /* GraphQL */ `
           id
           name
           status
+          userType
           createdAt
           updatedAt
           userSavedAccommodationId
@@ -560,6 +568,7 @@ export const listUsers = /* GraphQL */ `
         id
         name
         status
+        userType
         Accommodations {
           nextToken
           __typename
@@ -605,6 +614,7 @@ export const getSavedAccommodationAccommodation = /* GraphQL */ `
           id
           name
           status
+          userType
           createdAt
           updatedAt
           userSavedAccommodationId
@@ -638,6 +648,7 @@ export const getSavedAccommodationAccommodation = /* GraphQL */ `
           id
           name
           status
+          userType
           createdAt
           updatedAt
           userSavedAccommodationId
@@ -860,6 +871,7 @@ export const getUserChatRoom = /* GraphQL */ `
         id
         name
         status
+        userType
         Accommodations {
           nextToken
           __typename
@@ -913,6 +925,7 @@ export const listUserChatRooms = /* GraphQL */ `
           id
           name
           status
+          userType
           createdAt
           updatedAt
           userSavedAccommodationId
@@ -958,6 +971,7 @@ export const userChatRoomsByChatRoomId = /* GraphQL */ `
           id
           name
           status
+          userType
           createdAt
           updatedAt
           userSavedAccommodationId
@@ -1003,6 +1017,7 @@ export const userChatRoomsByUserId = /* GraphQL */ `
           id
           name
           status
+          userType
           createdAt
           updatedAt
           userSavedAccommodationId
