@@ -49,6 +49,7 @@ type User @model @auth(rules: [{allow: public}]) {
   id: ID!
   name: String!
   status: String
+  userType: String
   Accommodations: [Accommodation] @hasMany(indexName: "byUser", fields: ["id"])
   ChatRooms: [ChatRoom] @manyToMany(relationName: "UserChatRoom")
   Messages: [Message] @hasMany(indexName: "byUser", fields: ["id"])

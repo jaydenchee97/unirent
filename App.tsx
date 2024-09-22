@@ -33,6 +33,7 @@ Amplify.configure({
   
 });
 
+
 // Amplify.configure({awsExports});
 
 export default function App() {
@@ -43,7 +44,7 @@ export default function App() {
         <NavigationContainer>
           <Authenticator.Provider>
               {/* <HomeStack /> */}
-              <AppStack />
+                <AppStack />
           </Authenticator.Provider>
           {/* <AppStack /> */}
 

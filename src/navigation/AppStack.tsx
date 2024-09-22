@@ -5,6 +5,8 @@ import HomeStack from './HomeStack';
 import { Dimensions, StyleSheet } from "react-native";
 import { useTheme } from 'react-native-paper';
 import LandingScreen from '../screens/LandingScreen';
+import SignUp from '../screens/SignUp';
+import Verify from '../screens/Verify';
 
 const Stack = createStackNavigator();
 
@@ -65,7 +67,8 @@ export default function AppStack() {
   }
 
   return (
-    <Stack.Navigator screenOptions={{ cardStyle: isTabletOrWebView ? styles.webViewStyles : styles.phoneViewStyles }}>
+    // <Stack.Navigator screenOptions={{ cardStyle: isTabletOrWebView ? styles.webViewStyles : styles.phoneViewStyles }}>
+    <Stack.Navigator screenOptions={{ cardStyle: styles.phoneViewStyles }}>
       {isAuthenticated ? (
         <Stack.Screen
           name="HomeStack"
@@ -73,11 +76,13 @@ export default function AppStack() {
           options={{ headerShown: false }}
         />
       ) : (
-        <Stack.Screen
-          name="LandingScreen"
-          component={LandingScreen}
-          options={{ headerShown: false }}
-        />
+        <>
+            <Stack.Screen
+            name="LandingScreen"
+            component={LandingScreen}
+            options={{ headerShown: false }}
+            />
+        </>
       )}
     </Stack.Navigator>
   );

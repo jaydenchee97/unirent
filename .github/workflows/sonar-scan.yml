@@ -37,18 +37,3 @@ jobs:
             -Dsonar.report.export.path=sonar-report.json 
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
-      - name: Fetch SonarCloud report
-        run: |
-          # Fetch the taskId
-          taskId=$(curl -u ${{ secrets.SONAR_TOKEN }}: "https://sonarcloud.io/api/ce/component?component=jaydenchee97_unirent" | jq -r '.currentTask.id')
-          # Fetch the analysisId from the task
-          analysisId=$(curl -u ${{ secrets.SONAR_TOKEN }}: "https://sonarcloud.io/api/ce/task?id=$taskId" | jq -r '.task.analysisId')
-          # Fetch the quality gate result
-          curl -u ${{ secrets.SONAR_TOKEN }}: "https://sonarcloud.io/api/qualitygates/project_status?analysisId=$analysisId" -o sonar-report.json
-
-      - name: Upload SonarCloud Report Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: sonarcloud-report
-          path: sonar-report.json 

@@ -1,10 +1,13 @@
+import { useNavigation } from "@react-navigation/native";
 import { Auth } from "aws-amplify";
 import { View, StyleSheet } from "react-native";
 import { Text, Button } from "react-native-paper";
 
 export default function LandingScreen() {
+  const navigation = useNavigation();
 
   const redirectToHostedUI = async () => {
+
     try {
       await Auth.federatedSignIn();
     } catch (error) {
@@ -29,6 +32,7 @@ export default function LandingScreen() {
         >
           Login
         </Button>
+
       </View>
     </View>
   );

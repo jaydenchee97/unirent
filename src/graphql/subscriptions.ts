@@ -24,6 +24,7 @@ export const onCreateSavedAccommodation = /* GraphQL */ `
         id
         name
         status
+        userType
         Accommodations {
           nextToken
           __typename
@@ -77,6 +78,7 @@ export const onUpdateSavedAccommodation = /* GraphQL */ `
         id
         name
         status
+        userType
         Accommodations {
           nextToken
           __typename
@@ -130,6 +132,7 @@ export const onDeleteSavedAccommodation = /* GraphQL */ `
         id
         name
         status
+        userType
         Accommodations {
           nextToken
           __typename
@@ -222,6 +225,7 @@ export const onCreateChatRoom = /* GraphQL */ `
           id
           name
           status
+          userType
           createdAt
           updatedAt
           userSavedAccommodationId
@@ -299,6 +303,7 @@ export const onUpdateChatRoom = /* GraphQL */ `
           id
           name
           status
+          userType
           createdAt
           updatedAt
           userSavedAccommodationId
@@ -376,6 +381,7 @@ export const onDeleteChatRoom = /* GraphQL */ `
           id
           name
           status
+          userType
           createdAt
           updatedAt
           userSavedAccommodationId
@@ -466,6 +472,7 @@ export const onCreateAccommodation = /* GraphQL */ `
         id
         name
         status
+        userType
         Accommodations {
           nextToken
           __typename
@@ -530,6 +537,7 @@ export const onUpdateAccommodation = /* GraphQL */ `
         id
         name
         status
+        userType
         Accommodations {
           nextToken
           __typename
@@ -594,6 +602,7 @@ export const onDeleteAccommodation = /* GraphQL */ `
         id
         name
         status
+        userType
         Accommodations {
           nextToken
           __typename
@@ -629,6 +638,7 @@ export const onCreateUser = /* GraphQL */ `
       id
       name
       status
+      userType
       Accommodations {
         items {
           id
@@ -686,6 +696,7 @@ export const onCreateUser = /* GraphQL */ `
           id
           name
           status
+          userType
           createdAt
           updatedAt
           userSavedAccommodationId
@@ -709,6 +720,7 @@ export const onUpdateUser = /* GraphQL */ `
       id
       name
       status
+      userType
       Accommodations {
         items {
           id
@@ -766,6 +778,7 @@ export const onUpdateUser = /* GraphQL */ `
           id
           name
           status
+          userType
           createdAt
           updatedAt
           userSavedAccommodationId
@@ -789,6 +802,7 @@ export const onDeleteUser = /* GraphQL */ `
       id
       name
       status
+      userType
       Accommodations {
         items {
           id
@@ -846,6 +860,7 @@ export const onDeleteUser = /* GraphQL */ `
           id
           name
           status
+          userType
           createdAt
           updatedAt
           userSavedAccommodationId
@@ -881,6 +896,7 @@ export const onCreateSavedAccommodationAccommodation = /* GraphQL */ `
           id
           name
           status
+          userType
           createdAt
           updatedAt
           userSavedAccommodationId
@@ -914,6 +930,7 @@ export const onCreateSavedAccommodationAccommodation = /* GraphQL */ `
           id
           name
           status
+          userType
           createdAt
           updatedAt
           userSavedAccommodationId
@@ -946,6 +963,7 @@ export const onUpdateSavedAccommodationAccommodation = /* GraphQL */ `
           id
           name
           status
+          userType
           createdAt
           updatedAt
           userSavedAccommodationId
@@ -979,6 +997,7 @@ export const onUpdateSavedAccommodationAccommodation = /* GraphQL */ `
           id
           name
           status
+          userType
           createdAt
           updatedAt
           userSavedAccommodationId
@@ -1011,6 +1030,7 @@ export const onDeleteSavedAccommodationAccommodation = /* GraphQL */ `
           id
           name
           status
+          userType
           createdAt
           updatedAt
           userSavedAccommodationId
@@ -1044,6 +1064,7 @@ export const onDeleteSavedAccommodationAccommodation = /* GraphQL */ `
           id
           name
           status
+          userType
           createdAt
           updatedAt
           userSavedAccommodationId
@@ -1113,6 +1134,7 @@ export const onCreateUserChatRoom = /* GraphQL */ `
         id
         name
         status
+        userType
         Accommodations {
           nextToken
           __typename
@@ -1198,6 +1220,7 @@ export const onUpdateUserChatRoom = /* GraphQL */ `
         id
         name
         status
+        userType
         Accommodations {
           nextToken
           __typename
@@ -1283,6 +1306,7 @@ export const onDeleteUserChatRoom = /* GraphQL */ `
         id
         name
         status
+        userType
         Accommodations {
           nextToken
           __typename
