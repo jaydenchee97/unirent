@@ -60,6 +60,10 @@ const convertUrlType = (param, type) => {
   }
 };
 
+const endpoint = process.env.GRAPHQL_ENDPOINT;
+const apiKey = process.env.GRAPHQL_API_KEY;
+
+
 /************************************
  * HTTP Get method to list objects *
  ************************************/
@@ -205,23 +209,41 @@ app.put(path, async function (req, res) {
 /************************************
  * HTTP post method for insert object *
  *************************************/
-
 app.post(path, async function (req, res) {
   if (userIdPresent) {
     req.body["userId"] =
       req.apiGateway.event.requestContext.identity.cognitoIdentityId || UNAUTH;
   }
+  const { id, title, address, propertyType, images, description, price, rented, availableDate, unitFeature, latitude, longitude, userId } = req.body;
 
-  let putItemParams = {
-    TableName: tableName,
-    Item: req.body,
+  // Prepare the item for DynamoDB
+  const newAccomm = {
+    id: id || uuidv4(), // Generate UUID if not provided
+    title,
+    address,
+    propertyType,
+    images,
+    description,
+    price,
+    rented: rented || false,
+    availableDate,
+    unitFeature,
+    latitude,
+    longitude,
+    userId,
+    createdAt: new Date().toISOString(),
   };
+
+  const putItemParams = {
+    TableName: tableName,
+    Item: newAccomm,
+  };
+
   try {
-    let data = await ddbDocClient.send(new PutCommand(putItemParams));
-    res.json({ success: "post call succeed!", url: req.url, data: data });
+    const data = await ddbDocClient.send(new PutCommand(putItemParams));
+    res.json({ success: "Accommodation created successfully", data });
   } catch (err) {
-    res.statusCode = 500;
-    res.json({ error: err, url: req.url, body: req.body });
+    res.status(500).json({ error: "Failed to create accommodation", details: err });
   }
 });
 

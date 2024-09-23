@@ -9,7 +9,8 @@
     "axios": "^1.5.1",
     "body-parser": "^1.19.1",
     "express": "^4.17.2",
-    "geolib": "^3.3.4"
+    "geolib": "^3.3.4",
+    "recommendationhandler": "file:"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.92",
@@ -20,4 +21,3 @@
     "supertest": "^6.3.3"
   }
 }
-
