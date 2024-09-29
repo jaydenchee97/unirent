@@ -5,8 +5,9 @@
 export const onCreateSavedAccommodation = /* GraphQL */ `
   subscription OnCreateSavedAccommodation(
     $filter: ModelSubscriptionSavedAccommodationFilterInput
+    $owner: String
   ) {
-    onCreateSavedAccommodation(filter: $filter) {
+    onCreateSavedAccommodation(filter: $filter, owner: $owner) {
       id
       Accommodations {
         items {
@@ -15,6 +16,7 @@ export const onCreateSavedAccommodation = /* GraphQL */ `
           accommodationId
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -42,16 +44,19 @@ export const onCreateSavedAccommodation = /* GraphQL */ `
           createdAt
           updatedAt
           savedAccommodationUserId
+          owner
           __typename
         }
         createdAt
         updatedAt
         userSavedAccommodationId
+        owner
         __typename
       }
       createdAt
       updatedAt
       savedAccommodationUserId
+      owner
       __typename
     }
   }
@@ -59,8 +64,9 @@ export const onCreateSavedAccommodation = /* GraphQL */ `
 export const onUpdateSavedAccommodation = /* GraphQL */ `
   subscription OnUpdateSavedAccommodation(
     $filter: ModelSubscriptionSavedAccommodationFilterInput
+    $owner: String
   ) {
-    onUpdateSavedAccommodation(filter: $filter) {
+    onUpdateSavedAccommodation(filter: $filter, owner: $owner) {
       id
       Accommodations {
         items {
@@ -69,6 +75,7 @@ export const onUpdateSavedAccommodation = /* GraphQL */ `
           accommodationId
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -96,16 +103,19 @@ export const onUpdateSavedAccommodation = /* GraphQL */ `
           createdAt
           updatedAt
           savedAccommodationUserId
+          owner
           __typename
         }
         createdAt
         updatedAt
         userSavedAccommodationId
+        owner
         __typename
       }
       createdAt
       updatedAt
       savedAccommodationUserId
+      owner
       __typename
     }
   }
@@ -113,8 +123,9 @@ export const onUpdateSavedAccommodation = /* GraphQL */ `
 export const onDeleteSavedAccommodation = /* GraphQL */ `
   subscription OnDeleteSavedAccommodation(
     $filter: ModelSubscriptionSavedAccommodationFilterInput
+    $owner: String
   ) {
-    onDeleteSavedAccommodation(filter: $filter) {
+    onDeleteSavedAccommodation(filter: $filter, owner: $owner) {
       id
       Accommodations {
         items {
@@ -123,6 +134,7 @@ export const onDeleteSavedAccommodation = /* GraphQL */ `
           accommodationId
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -150,16 +162,19 @@ export const onDeleteSavedAccommodation = /* GraphQL */ `
           createdAt
           updatedAt
           savedAccommodationUserId
+          owner
           __typename
         }
         createdAt
         updatedAt
         userSavedAccommodationId
+        owner
         __typename
       }
       createdAt
       updatedAt
       savedAccommodationUserId
+      owner
       __typename
     }
   }
@@ -175,6 +190,7 @@ export const onCreateChatRoom = /* GraphQL */ `
           userId
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -229,9 +245,11 @@ export const onCreateChatRoom = /* GraphQL */ `
           createdAt
           updatedAt
           userSavedAccommodationId
+          owner
           __typename
         }
         updatedAt
+        owner
         __typename
       }
       createdAt
@@ -253,6 +271,7 @@ export const onUpdateChatRoom = /* GraphQL */ `
           userId
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -307,9 +326,11 @@ export const onUpdateChatRoom = /* GraphQL */ `
           createdAt
           updatedAt
           userSavedAccommodationId
+          owner
           __typename
         }
         updatedAt
+        owner
         __typename
       }
       createdAt
@@ -331,6 +352,7 @@ export const onDeleteChatRoom = /* GraphQL */ `
           userId
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -385,9 +407,11 @@ export const onDeleteChatRoom = /* GraphQL */ `
           createdAt
           updatedAt
           userSavedAccommodationId
+          owner
           __typename
         }
         updatedAt
+        owner
         __typename
       }
       createdAt
@@ -440,8 +464,9 @@ export const onDeleteMessage = /* GraphQL */ `
 export const onCreateAccommodation = /* GraphQL */ `
   subscription OnCreateAccommodation(
     $filter: ModelSubscriptionAccommodationFilterInput
+    $owner: String
   ) {
-    onCreateAccommodation(filter: $filter) {
+    onCreateAccommodation(filter: $filter, owner: $owner) {
       id
       availableDate
       description
@@ -463,6 +488,7 @@ export const onCreateAccommodation = /* GraphQL */ `
           accommodationId
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -490,14 +516,17 @@ export const onCreateAccommodation = /* GraphQL */ `
           createdAt
           updatedAt
           savedAccommodationUserId
+          owner
           __typename
         }
         createdAt
         updatedAt
         userSavedAccommodationId
+        owner
         __typename
       }
       updatedAt
+      owner
       __typename
     }
   }
@@ -505,8 +534,9 @@ export const onCreateAccommodation = /* GraphQL */ `
 export const onUpdateAccommodation = /* GraphQL */ `
   subscription OnUpdateAccommodation(
     $filter: ModelSubscriptionAccommodationFilterInput
+    $owner: String
   ) {
-    onUpdateAccommodation(filter: $filter) {
+    onUpdateAccommodation(filter: $filter, owner: $owner) {
       id
       availableDate
       description
@@ -528,6 +558,7 @@ export const onUpdateAccommodation = /* GraphQL */ `
           accommodationId
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -555,14 +586,17 @@ export const onUpdateAccommodation = /* GraphQL */ `
           createdAt
           updatedAt
           savedAccommodationUserId
+          owner
           __typename
         }
         createdAt
         updatedAt
         userSavedAccommodationId
+        owner
         __typename
       }
       updatedAt
+      owner
       __typename
     }
   }
@@ -570,8 +604,9 @@ export const onUpdateAccommodation = /* GraphQL */ `
 export const onDeleteAccommodation = /* GraphQL */ `
   subscription OnDeleteAccommodation(
     $filter: ModelSubscriptionAccommodationFilterInput
+    $owner: String
   ) {
-    onDeleteAccommodation(filter: $filter) {
+    onDeleteAccommodation(filter: $filter, owner: $owner) {
       id
       availableDate
       description
@@ -593,6 +628,7 @@ export const onDeleteAccommodation = /* GraphQL */ `
           accommodationId
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -620,21 +656,27 @@ export const onDeleteAccommodation = /* GraphQL */ `
           createdAt
           updatedAt
           savedAccommodationUserId
+          owner
           __typename
         }
         createdAt
         updatedAt
         userSavedAccommodationId
+        owner
         __typename
       }
       updatedAt
+      owner
       __typename
     }
   }
 `;
 export const onCreateUser = /* GraphQL */ `
-  subscription OnCreateUser($filter: ModelSubscriptionUserFilterInput) {
-    onCreateUser(filter: $filter) {
+  subscription OnCreateUser(
+    $filter: ModelSubscriptionUserFilterInput
+    $owner: String
+  ) {
+    onCreateUser(filter: $filter, owner: $owner) {
       id
       name
       status
@@ -656,6 +698,7 @@ export const onCreateUser = /* GraphQL */ `
           latitude
           longitude
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -668,6 +711,7 @@ export const onCreateUser = /* GraphQL */ `
           userId
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -700,23 +744,29 @@ export const onCreateUser = /* GraphQL */ `
           createdAt
           updatedAt
           userSavedAccommodationId
+          owner
           __typename
         }
         createdAt
         updatedAt
         savedAccommodationUserId
+        owner
         __typename
       }
       createdAt
       updatedAt
       userSavedAccommodationId
+      owner
       __typename
     }
   }
 `;
 export const onUpdateUser = /* GraphQL */ `
-  subscription OnUpdateUser($filter: ModelSubscriptionUserFilterInput) {
-    onUpdateUser(filter: $filter) {
+  subscription OnUpdateUser(
+    $filter: ModelSubscriptionUserFilterInput
+    $owner: String
+  ) {
+    onUpdateUser(filter: $filter, owner: $owner) {
       id
       name
       status
@@ -738,6 +788,7 @@ export const onUpdateUser = /* GraphQL */ `
           latitude
           longitude
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -750,6 +801,7 @@ export const onUpdateUser = /* GraphQL */ `
           userId
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -782,23 +834,29 @@ export const onUpdateUser = /* GraphQL */ `
           createdAt
           updatedAt
           userSavedAccommodationId
+          owner
           __typename
         }
         createdAt
         updatedAt
         savedAccommodationUserId
+        owner
         __typename
       }
       createdAt
       updatedAt
       userSavedAccommodationId
+      owner
       __typename
     }
   }
 `;
 export const onDeleteUser = /* GraphQL */ `
-  subscription OnDeleteUser($filter: ModelSubscriptionUserFilterInput) {
-    onDeleteUser(filter: $filter) {
+  subscription OnDeleteUser(
+    $filter: ModelSubscriptionUserFilterInput
+    $owner: String
+  ) {
+    onDeleteUser(filter: $filter, owner: $owner) {
       id
       name
       status
@@ -820,6 +878,7 @@ export const onDeleteUser = /* GraphQL */ `
           latitude
           longitude
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -832,6 +891,7 @@ export const onDeleteUser = /* GraphQL */ `
           userId
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -864,16 +924,19 @@ export const onDeleteUser = /* GraphQL */ `
           createdAt
           updatedAt
           userSavedAccommodationId
+          owner
           __typename
         }
         createdAt
         updatedAt
         savedAccommodationUserId
+        owner
         __typename
       }
       createdAt
       updatedAt
       userSavedAccommodationId
+      owner
       __typename
     }
   }
@@ -881,8 +944,9 @@ export const onDeleteUser = /* GraphQL */ `
 export const onCreateSavedAccommodationAccommodation = /* GraphQL */ `
   subscription OnCreateSavedAccommodationAccommodation(
     $filter: ModelSubscriptionSavedAccommodationAccommodationFilterInput
+    $owner: String
   ) {
-    onCreateSavedAccommodationAccommodation(filter: $filter) {
+    onCreateSavedAccommodationAccommodation(filter: $filter, owner: $owner) {
       id
       savedAccommodationId
       accommodationId
@@ -900,11 +964,13 @@ export const onCreateSavedAccommodationAccommodation = /* GraphQL */ `
           createdAt
           updatedAt
           userSavedAccommodationId
+          owner
           __typename
         }
         createdAt
         updatedAt
         savedAccommodationUserId
+        owner
         __typename
       }
       accommodation {
@@ -934,13 +1000,16 @@ export const onCreateSavedAccommodationAccommodation = /* GraphQL */ `
           createdAt
           updatedAt
           userSavedAccommodationId
+          owner
           __typename
         }
         updatedAt
+        owner
         __typename
       }
       createdAt
       updatedAt
+      owner
       __typename
     }
   }
@@ -948,8 +1017,9 @@ export const onCreateSavedAccommodationAccommodation = /* GraphQL */ `
 export const onUpdateSavedAccommodationAccommodation = /* GraphQL */ `
   subscription OnUpdateSavedAccommodationAccommodation(
     $filter: ModelSubscriptionSavedAccommodationAccommodationFilterInput
+    $owner: String
   ) {
-    onUpdateSavedAccommodationAccommodation(filter: $filter) {
+    onUpdateSavedAccommodationAccommodation(filter: $filter, owner: $owner) {
       id
       savedAccommodationId
       accommodationId
@@ -967,11 +1037,13 @@ export const onUpdateSavedAccommodationAccommodation = /* GraphQL */ `
           createdAt
           updatedAt
           userSavedAccommodationId
+          owner
           __typename
         }
         createdAt
         updatedAt
         savedAccommodationUserId
+        owner
         __typename
       }
       accommodation {
@@ -1001,13 +1073,16 @@ export const onUpdateSavedAccommodationAccommodation = /* GraphQL */ `
           createdAt
           updatedAt
           userSavedAccommodationId
+          owner
           __typename
         }
         updatedAt
+        owner
         __typename
       }
       createdAt
       updatedAt
+      owner
       __typename
     }
   }
@@ -1015,8 +1090,9 @@ export const onUpdateSavedAccommodationAccommodation = /* GraphQL */ `
 export const onDeleteSavedAccommodationAccommodation = /* GraphQL */ `
   subscription OnDeleteSavedAccommodationAccommodation(
     $filter: ModelSubscriptionSavedAccommodationAccommodationFilterInput
+    $owner: String
   ) {
-    onDeleteSavedAccommodationAccommodation(filter: $filter) {
+    onDeleteSavedAccommodationAccommodation(filter: $filter, owner: $owner) {
       id
       savedAccommodationId
       accommodationId
@@ -1034,11 +1110,13 @@ export const onDeleteSavedAccommodationAccommodation = /* GraphQL */ `
           createdAt
           updatedAt
           userSavedAccommodationId
+          owner
           __typename
         }
         createdAt
         updatedAt
         savedAccommodationUserId
+        owner
         __typename
       }
       accommodation {
@@ -1068,13 +1146,16 @@ export const onDeleteSavedAccommodationAccommodation = /* GraphQL */ `
           createdAt
           updatedAt
           userSavedAccommodationId
+          owner
           __typename
         }
         updatedAt
+        owner
         __typename
       }
       createdAt
       updatedAt
+      owner
       __typename
     }
   }
@@ -1082,8 +1163,9 @@ export const onDeleteSavedAccommodationAccommodation = /* GraphQL */ `
 export const onCreateUserChatRoom = /* GraphQL */ `
   subscription OnCreateUserChatRoom(
     $filter: ModelSubscriptionUserChatRoomFilterInput
+    $owner: String
   ) {
-    onCreateUserChatRoom(filter: $filter) {
+    onCreateUserChatRoom(filter: $filter, owner: $owner) {
       id
       chatRoomId
       userId
@@ -1122,6 +1204,7 @@ export const onCreateUserChatRoom = /* GraphQL */ `
           latitude
           longitude
           updatedAt
+          owner
           __typename
         }
         createdAt
@@ -1152,15 +1235,18 @@ export const onCreateUserChatRoom = /* GraphQL */ `
           createdAt
           updatedAt
           savedAccommodationUserId
+          owner
           __typename
         }
         createdAt
         updatedAt
         userSavedAccommodationId
+        owner
         __typename
       }
       createdAt
       updatedAt
+      owner
       __typename
     }
   }
@@ -1168,8 +1254,9 @@ export const onCreateUserChatRoom = /* GraphQL */ `
 export const onUpdateUserChatRoom = /* GraphQL */ `
   subscription OnUpdateUserChatRoom(
     $filter: ModelSubscriptionUserChatRoomFilterInput
+    $owner: String
   ) {
-    onUpdateUserChatRoom(filter: $filter) {
+    onUpdateUserChatRoom(filter: $filter, owner: $owner) {
       id
       chatRoomId
       userId
@@ -1208,6 +1295,7 @@ export const onUpdateUserChatRoom = /* GraphQL */ `
           latitude
           longitude
           updatedAt
+          owner
           __typename
         }
         createdAt
@@ -1238,15 +1326,18 @@ export const onUpdateUserChatRoom = /* GraphQL */ `
           createdAt
           updatedAt
           savedAccommodationUserId
+          owner
           __typename
         }
         createdAt
         updatedAt
         userSavedAccommodationId
+        owner
         __typename
       }
       createdAt
       updatedAt
+      owner
       __typename
     }
   }
@@ -1254,8 +1345,9 @@ export const onUpdateUserChatRoom = /* GraphQL */ `
 export const onDeleteUserChatRoom = /* GraphQL */ `
   subscription OnDeleteUserChatRoom(
     $filter: ModelSubscriptionUserChatRoomFilterInput
+    $owner: String
   ) {
-    onDeleteUserChatRoom(filter: $filter) {
+    onDeleteUserChatRoom(filter: $filter, owner: $owner) {
       id
       chatRoomId
       userId
@@ -1294,6 +1386,7 @@ export const onDeleteUserChatRoom = /* GraphQL */ `
           latitude
           longitude
           updatedAt
+          owner
           __typename
         }
         createdAt
@@ -1324,15 +1417,18 @@ export const onDeleteUserChatRoom = /* GraphQL */ `
           createdAt
           updatedAt
           savedAccommodationUserId
+          owner
           __typename
         }
         createdAt
         updatedAt
         userSavedAccommodationId
+        owner
         __typename
       }
       createdAt
       updatedAt
+      owner
       __typename
     }
   }

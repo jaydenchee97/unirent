@@ -1,10 +1,12 @@
-type SavedAccommodation @model @auth(rules: [{allow: public}]) {
+type SavedAccommodation @model @auth(rules: [
+    { allow: owner, operations: [create, read, update, delete] },  # User can manage their saved accommodations
+  ]) {
   id: ID!
   Accommodations: [Accommodation] @manyToMany(relationName: "SavedAccommodationAccommodation")
   User: User @belongsTo
 }
 
-type ChatRoom @model @auth(rules: [{allow: public}]) {
+type ChatRoom @model @auth(rules: [{allow: private }]) {
   id: ID!
   Users: [User] @manyToMany(relationName: "UserChatRoom")
   Messages: [Message] @hasMany(indexName: "byChatRoom", fields: ["id"])
@@ -12,7 +14,7 @@ type ChatRoom @model @auth(rules: [{allow: public}]) {
   Accommodation: Accommodation @hasOne
 }
 
-type Message @model @auth(rules: [{allow: public}]) {
+type Message @model @auth(rules: [{allow: private }]) {
   id: ID!
   createdAt: AWSDateTime!
   text: String!
@@ -24,9 +26,16 @@ enum PropertyEnum {
   HDB
   CONDO
   LANDED
+  UNIVERSITY
 }
 
-type Accommodation @model @auth(rules: [{allow: public}]) {
+type Accommodation @model @auth(rules: [
+    # allow all authenticated users ability to create accommodation
+    # allow owners ability to update and delete their accommodation
+    { allow: owner }
+    # allow all authenticated users to read accommodation
+    { allow: private, operations: [read] }
+  ]) {
   id: ID!
   availableDate: AWSDate
   description: String!
@@ -45,7 +54,10 @@ type Accommodation @model @auth(rules: [{allow: public}]) {
   User: User @belongsTo(fields: ["userId"])
 }
 
-type User @model @auth(rules: [{allow: public}]) {
+type User @model @auth(rules: [
+    { allow: owner, operations: [read, update, create] },  # only user owner can manage 
+    { allow: private, operations: [read] },  # only user owner can manage 
+  ]) {
   id: ID!
   name: String!
   status: String

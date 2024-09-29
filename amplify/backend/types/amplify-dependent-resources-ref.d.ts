@@ -17,8 +17,7 @@ export type AmplifyDependentResourcesAttributes = {
     },
     "unirent": {
       "GraphQLAPIEndpointOutput": "string",
-      "GraphQLAPIIdOutput": "string",
-      "GraphQLAPIKeyOutput": "string"
+      "GraphQLAPIIdOutput": "string"
     }
   },
   "auth": {

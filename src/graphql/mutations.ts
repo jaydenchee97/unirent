@@ -16,6 +16,7 @@ export const createSavedAccommodation = /* GraphQL */ `
           accommodationId
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -43,16 +44,19 @@ export const createSavedAccommodation = /* GraphQL */ `
           createdAt
           updatedAt
           savedAccommodationUserId
+          owner
           __typename
         }
         createdAt
         updatedAt
         userSavedAccommodationId
+        owner
         __typename
       }
       createdAt
       updatedAt
       savedAccommodationUserId
+      owner
       __typename
     }
   }
@@ -71,6 +75,7 @@ export const updateSavedAccommodation = /* GraphQL */ `
           accommodationId
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -98,16 +103,19 @@ export const updateSavedAccommodation = /* GraphQL */ `
           createdAt
           updatedAt
           savedAccommodationUserId
+          owner
           __typename
         }
         createdAt
         updatedAt
         userSavedAccommodationId
+        owner
         __typename
       }
       createdAt
       updatedAt
       savedAccommodationUserId
+      owner
       __typename
     }
   }
@@ -126,6 +134,7 @@ export const deleteSavedAccommodation = /* GraphQL */ `
           accommodationId
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -153,16 +162,19 @@ export const deleteSavedAccommodation = /* GraphQL */ `
           createdAt
           updatedAt
           savedAccommodationUserId
+          owner
           __typename
         }
         createdAt
         updatedAt
         userSavedAccommodationId
+        owner
         __typename
       }
       createdAt
       updatedAt
       savedAccommodationUserId
+      owner
       __typename
     }
   }
@@ -181,6 +193,7 @@ export const createChatRoom = /* GraphQL */ `
           userId
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -235,9 +248,11 @@ export const createChatRoom = /* GraphQL */ `
           createdAt
           updatedAt
           userSavedAccommodationId
+          owner
           __typename
         }
         updatedAt
+        owner
         __typename
       }
       createdAt
@@ -262,6 +277,7 @@ export const updateChatRoom = /* GraphQL */ `
           userId
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -316,9 +332,11 @@ export const updateChatRoom = /* GraphQL */ `
           createdAt
           updatedAt
           userSavedAccommodationId
+          owner
           __typename
         }
         updatedAt
+        owner
         __typename
       }
       createdAt
@@ -343,6 +361,7 @@ export const deleteChatRoom = /* GraphQL */ `
           userId
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -397,9 +416,11 @@ export const deleteChatRoom = /* GraphQL */ `
           createdAt
           updatedAt
           userSavedAccommodationId
+          owner
           __typename
         }
         updatedAt
+        owner
         __typename
       }
       createdAt
@@ -485,6 +506,7 @@ export const createAccommodation = /* GraphQL */ `
           accommodationId
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -512,14 +534,17 @@ export const createAccommodation = /* GraphQL */ `
           createdAt
           updatedAt
           savedAccommodationUserId
+          owner
           __typename
         }
         createdAt
         updatedAt
         userSavedAccommodationId
+        owner
         __typename
       }
       updatedAt
+      owner
       __typename
     }
   }
@@ -551,6 +576,7 @@ export const updateAccommodation = /* GraphQL */ `
           accommodationId
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -578,14 +604,17 @@ export const updateAccommodation = /* GraphQL */ `
           createdAt
           updatedAt
           savedAccommodationUserId
+          owner
           __typename
         }
         createdAt
         updatedAt
         userSavedAccommodationId
+        owner
         __typename
       }
       updatedAt
+      owner
       __typename
     }
   }
@@ -617,6 +646,7 @@ export const deleteAccommodation = /* GraphQL */ `
           accommodationId
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -644,14 +674,17 @@ export const deleteAccommodation = /* GraphQL */ `
           createdAt
           updatedAt
           savedAccommodationUserId
+          owner
           __typename
         }
         createdAt
         updatedAt
         userSavedAccommodationId
+        owner
         __typename
       }
       updatedAt
+      owner
       __typename
     }
   }
@@ -683,6 +716,7 @@ export const createUser = /* GraphQL */ `
           latitude
           longitude
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -695,6 +729,7 @@ export const createUser = /* GraphQL */ `
           userId
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -727,16 +762,19 @@ export const createUser = /* GraphQL */ `
           createdAt
           updatedAt
           userSavedAccommodationId
+          owner
           __typename
         }
         createdAt
         updatedAt
         savedAccommodationUserId
+        owner
         __typename
       }
       createdAt
       updatedAt
       userSavedAccommodationId
+      owner
       __typename
     }
   }
@@ -768,6 +806,7 @@ export const updateUser = /* GraphQL */ `
           latitude
           longitude
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -780,6 +819,7 @@ export const updateUser = /* GraphQL */ `
           userId
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -812,16 +852,19 @@ export const updateUser = /* GraphQL */ `
           createdAt
           updatedAt
           userSavedAccommodationId
+          owner
           __typename
         }
         createdAt
         updatedAt
         savedAccommodationUserId
+        owner
         __typename
       }
       createdAt
       updatedAt
       userSavedAccommodationId
+      owner
       __typename
     }
   }
@@ -853,6 +896,7 @@ export const deleteUser = /* GraphQL */ `
           latitude
           longitude
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -865,6 +909,7 @@ export const deleteUser = /* GraphQL */ `
           userId
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -897,16 +942,19 @@ export const deleteUser = /* GraphQL */ `
           createdAt
           updatedAt
           userSavedAccommodationId
+          owner
           __typename
         }
         createdAt
         updatedAt
         savedAccommodationUserId
+        owner
         __typename
       }
       createdAt
       updatedAt
       userSavedAccommodationId
+      owner
       __typename
     }
   }
@@ -937,11 +985,13 @@ export const createSavedAccommodationAccommodation = /* GraphQL */ `
           createdAt
           updatedAt
           userSavedAccommodationId
+          owner
           __typename
         }
         createdAt
         updatedAt
         savedAccommodationUserId
+        owner
         __typename
       }
       accommodation {
@@ -971,13 +1021,16 @@ export const createSavedAccommodationAccommodation = /* GraphQL */ `
           createdAt
           updatedAt
           userSavedAccommodationId
+          owner
           __typename
         }
         updatedAt
+        owner
         __typename
       }
       createdAt
       updatedAt
+      owner
       __typename
     }
   }
@@ -1008,11 +1061,13 @@ export const updateSavedAccommodationAccommodation = /* GraphQL */ `
           createdAt
           updatedAt
           userSavedAccommodationId
+          owner
           __typename
         }
         createdAt
         updatedAt
         savedAccommodationUserId
+        owner
         __typename
       }
       accommodation {
@@ -1042,13 +1097,16 @@ export const updateSavedAccommodationAccommodation = /* GraphQL */ `
           createdAt
           updatedAt
           userSavedAccommodationId
+          owner
           __typename
         }
         updatedAt
+        owner
         __typename
       }
       createdAt
       updatedAt
+      owner
       __typename
     }
   }
@@ -1079,11 +1137,13 @@ export const deleteSavedAccommodationAccommodation = /* GraphQL */ `
           createdAt
           updatedAt
           userSavedAccommodationId
+          owner
           __typename
         }
         createdAt
         updatedAt
         savedAccommodationUserId
+        owner
         __typename
       }
       accommodation {
@@ -1113,13 +1173,16 @@ export const deleteSavedAccommodationAccommodation = /* GraphQL */ `
           createdAt
           updatedAt
           userSavedAccommodationId
+          owner
           __typename
         }
         updatedAt
+        owner
         __typename
       }
       createdAt
       updatedAt
+      owner
       __typename
     }
   }
@@ -1168,6 +1231,7 @@ export const createUserChatRoom = /* GraphQL */ `
           latitude
           longitude
           updatedAt
+          owner
           __typename
         }
         createdAt
@@ -1198,15 +1262,18 @@ export const createUserChatRoom = /* GraphQL */ `
           createdAt
           updatedAt
           savedAccommodationUserId
+          owner
           __typename
         }
         createdAt
         updatedAt
         userSavedAccommodationId
+        owner
         __typename
       }
       createdAt
       updatedAt
+      owner
       __typename
     }
   }
@@ -1255,6 +1322,7 @@ export const updateUserChatRoom = /* GraphQL */ `
           latitude
           longitude
           updatedAt
+          owner
           __typename
         }
         createdAt
@@ -1285,15 +1353,18 @@ export const updateUserChatRoom = /* GraphQL */ `
           createdAt
           updatedAt
           savedAccommodationUserId
+          owner
           __typename
         }
         createdAt
         updatedAt
         userSavedAccommodationId
+        owner
         __typename
       }
       createdAt
       updatedAt
+      owner
       __typename
     }
   }
@@ -1342,6 +1413,7 @@ export const deleteUserChatRoom = /* GraphQL */ `
           latitude
           longitude
           updatedAt
+          owner
           __typename
         }
         createdAt
@@ -1372,15 +1444,18 @@ export const deleteUserChatRoom = /* GraphQL */ `
           createdAt
           updatedAt
           savedAccommodationUserId
+          owner
           __typename
         }
         createdAt
         updatedAt
         userSavedAccommodationId
+        owner
         __typename
       }
       createdAt
       updatedAt
+      owner
       __typename
     }
   }

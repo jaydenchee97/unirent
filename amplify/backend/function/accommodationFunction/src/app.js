@@ -18,6 +18,9 @@ const {
 const awsServerlessExpressMiddleware = require("aws-serverless-express/middleware");
 const bodyParser = require("body-parser");
 const express = require("express");
+const axios = require("axios");
+const validator = require('validator');
+
 
 const ddbClient = new DynamoDBClient({ region: process.env.TABLE_REGION });
 const ddbDocClient = DynamoDBDocumentClient.from(ddbClient);
@@ -59,6 +62,81 @@ const convertUrlType = (param, type) => {
       return param;
   }
 };
+
+const endpoint = process.env.GRAPHQL_ENDPOINT;
+const apiKey = process.env.GRAPHQL_API_KEY;
+
+const query = /* GraphQL */ `
+  mutation CreateAccommodation(
+    $input: CreateAccommodationInput!
+    $condition: ModelAccommodationConditionInput
+  ) {
+    createAccommodation(input: $input, condition: $condition) {
+      id
+      availableDate
+      description
+      images
+      price
+      propertyType
+      rented
+      createdAt
+      title
+      address
+      userId
+      unitFeature
+      latitude
+      longitude
+      savedaccommodations {
+        items {
+          id
+          savedAccommodationId
+          accommodationId
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      User {
+        id
+        name
+        status
+        userType
+        Accommodations {
+          nextToken
+          __typename
+        }
+        ChatRooms {
+          nextToken
+          __typename
+        }
+        Messages {
+          nextToken
+          __typename
+        }
+        SavedAccommodation {
+          id
+          createdAt
+          updatedAt
+          savedAccommodationUserId
+          __typename
+        }
+        createdAt
+        updatedAt
+        userSavedAccommodationId
+        __typename
+      }
+      updatedAt
+      __typename
+    }
+  }
+`;
+const headers = {
+  "x-api-key": apiKey,
+  "Content-Type": "application/json",
+};
+
 
 /************************************
  * HTTP Get method to list objects *
@@ -205,23 +283,126 @@ app.put(path, async function (req, res) {
 /************************************
  * HTTP post method for insert object *
  *************************************/
-
 app.post(path, async function (req, res) {
   if (userIdPresent) {
     req.body["userId"] =
       req.apiGateway.event.requestContext.identity.cognitoIdentityId || UNAUTH;
   }
+  const { id, title, address, propertyType, images, description, price, rented, availableDate, unitFeature, latitude, longitude, userId } = req.body;
 
-  let putItemParams = {
-    TableName: tableName,
-    Item: req.body,
+  if (!validator.isUUID(userId, 4)) {
+    return res.status(400).json({ error: 'Invalid user ID' });
+  }
+
+  // Input validation
+  if (!validator.isAlphanumeric(title, 'en-US', { ignore: ' ' })) {
+    return res.status(400).json({ error: 'Invalid title' });
+  }
+
+  if (!validator.isFloat(price.toString())) {
+    return res.status(400).json({ error: 'Invalid price' });
+  }
+
+  // Sanitize inputs
+  const sanitizedTitle = validator.escape(title);
+  const sanitizedDescription = validator.escape(description)
+  
+  // Prepare the item for DynamoDB
+  const newAccomm = {
+    id: id || uuidv4(), // Generate UUID if not provided
+    sanitizedTitle,
+    address,
+    propertyType,
+    images,
+    sanitizedDescription,
+    price,
+    rented: rented || false,
+    availableDate,
+    unitFeature,
+    latitude,
+    longitude,
+    userId,
+    createdAt: new Date().toISOString(),
   };
+
+  const payload = {
+    query: query,
+    variables: {
+      input: newAccomm
+    }
+  }
+
+  let data;
   try {
-    let data = await ddbDocClient.send(new PutCommand(putItemParams));
-    res.json({ success: "post call succeed!", url: req.url, data: data });
-  } catch (err) {
-    res.statusCode = 500;
-    res.json({ error: err, url: req.url, body: req.body });
+    const response = await axios.post(endpoint, payload, { headers });
+    data = response.data?.data?.listAccommodations?.items;
+    res.json({ success: "Accommodation created successfully", data });
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to create accommodation", details: err });
+  }
+
+  // try {
+  //   const data = await ddbDocClient.send(new PutCommand(putItemParams));
+  //   res.json({ success: "Accommodation created successfully", data });
+  // } catch (err) {
+  //   res.status(500).json({ error: "Failed to create accommodation", details: err });
+  // }
+});
+
+app.post('/accommodations/university', async function (req, res) {
+  const { title, address, images, description, price, availableDate, unitFeature, latitude, longitude, userId } = req.body;
+
+
+  // Input validation
+  if (!validator.isAlphanumeric(title, 'en-US', { ignore: ' ' })) {
+    return res.status(400).json({ error: 'Invalid title' });
+  }
+
+  if (!validator.isFloat(price.toString())) {
+    return res.status(400).json({ error: 'Invalid price' });
+  }
+
+  // Sanitize inputs
+  const sanitizedTitle = validator.escape(title);
+  const sanitizedDescription = validator.escape(description)
+
+  if (!validator.isUUID(userId, 4)) {
+    return res.status(400).json({ error: 'Invalid user ID' });
+  }
+  
+  // For university partners, the property type is always 'UNIVERSITY'
+  const newAccomm = {
+    id: uuidv4(),
+    sanitizedTitle,
+    address,
+    propertyType: 'UNIVERSITY', // Fixed type for university accommodations
+    images,
+    sanitizedDescription,
+    price,
+    rented: false,
+    availableDate,
+    unitFeature,
+    latitude,
+    longitude,
+    userId,
+    createdAt: new Date().toISOString(),
+  };
+
+  
+
+  const payload = {
+    query: query,  // Assuming you have a GraphQL mutation for creating accommodation
+    variables: { input: newAccomm }
+  };
+
+  try {
+    const response = await axios.post(endpoint, payload, { headers });
+    const data = response.data?.data?.createAccommodation;
+    res.json({ success: "University Accommodation created successfully", data });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to create university accommodation", details: error });
   }
 });
 
