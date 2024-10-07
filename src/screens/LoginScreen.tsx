@@ -42,7 +42,7 @@ const LoginScreen = () => {
             <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={signInWithGoogle}>
-            <Text style={styles.buttonText}>Login as University Partner</Text>
+            <Text style={styles.buttonText}>Login as University Manager</Text>
       </TouchableOpacity>
     </View>
   );
