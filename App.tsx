@@ -1,70 +1,76 @@
-// App.tsx
+import { Authenticator } from "@aws-amplify/ui-react-native";
 import { NavigationContainer } from "@react-navigation/native";
-import { Amplify, Auth, Hub } from "aws-amplify";
+import { Amplify, Auth } from "aws-amplify";
+import { useEffect, useState } from "react";
+import { AppState, Platform } from "react-native";
 import { PaperProvider } from "react-native-paper";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { useEffect, useState } from "react";
+
 import awsExports from "./src/aws-exports";
-import LoginScreen from "./src/screens/LoginScreen";
+import MaskOverlay from "./src/components/MaskOverlay";
+import AppStack from "./src/navigation/AppStack";
 import HomeStack from "./src/navigation/HomeStack";
-import { Platform } from "react-native";
+
+const isWeb = Platform.OS === "web";
+// auth configuration
+const authConfig = {
+  oauth: {
+    domain: process.env.EXPO_PUBLIC_OAUTH_DOMAIN,
+    redirectSignIn: isWeb
+      ? process.env.EXPO_PUBLIC_OAUTH_REDIRECT_SIGN_IN
+      : process.env.EXPO_PUBLIC_OAUTH_REDIRECT_SIGN_IN_MOBILE,
+    redirectSignOut: isWeb
+      ? process.env.EXPO_PUBLIC_OAUTH_REDIRECT_SIGN_OUT
+      : process.env.EXPO_PUBLIC_OAUTH_REDIRECT_SIGN_OUT_MOBILE,
+    responseType: process.env.EXPO_PUBLIC_OAUTH_RESPONSE_TYPE,
+  },
+};
 
 // Amplify configuration
 Amplify.configure({
   ...awsExports,
-  oauth: {
-    domain: process.env.EXPO_PUBLIC_OAUTH_DOMAIN,
-    redirectSignIn:
-      Platform.OS === "web"
-        ? process.env.EXPO_PUBLIC_OAUTH_REDIRECT_SIGN_IN
-        : process.env.EXPO_PUBLIC_OAUTH_REDIRECT_SIGN_IN_MOBILE,
-    redirectSignOut:
-      Platform.OS === "web"
-        ? process.env.EXPO_PUBLIC_OAUTH_REDIRECT_SIGN_OUT
-        : process.env.EXPO_PUBLIC_OAUTH_REDIRECT_SIGN_OUT_MOBILE,
-    responseType: process.env.EXPO_PUBLIC_OAUTH_RESPONSE_TYPE,
-  },
+  ...authConfig,
 });
 
+// Amplify.configure({awsExports});
+
 export default function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [appState, setAppState] = useState(AppState.currentState);
+  const [showMask, setShowMask] = useState(false);
 
   useEffect(() => {
-    const checkAuthStatus = async () => {
-      try {
-        const user = await Auth.currentAuthenticatedUser();
-        if (user) {
-          setIsAuthenticated(true);
-        }
-      } catch {
-        setIsAuthenticated(false);
+    const handleAppStateChange = (nextAppState) => {
+      if (
+        appState.match(/active/) &&
+        nextAppState.match(/inactive|background/)
+      ) {
+        setShowMask(true);
+      } else if (nextAppState === "active") {
+        setShowMask(false);
       }
+      setAppState(nextAppState);
     };
 
-    // Listen for authentication events and check status
-    const authListener = Hub.listen("auth", (data) => {
-      const { payload } = data;
-      if (payload.event === "signIn") {
-        checkAuthStatus();
-      }
-    });
+    const subscription = AppState.addEventListener(
+      "change",
+      handleAppStateChange,
+    );
 
-    // Check auth status on mount
-    checkAuthStatus();
-
-    // Cleanup the Hub listener on unmount
-    return () => authListener();
-  }, []);
+    return () => {
+      subscription.remove();
+    };
+  }, [appState]);
 
   return (
     <PaperProvider>
       <SafeAreaProvider>
         <NavigationContainer>
-          {isAuthenticated ? (
-            <HomeStack /> // If authenticated, show the main app
-          ) : (
-            <LoginScreen />
-          )}
+          <Authenticator.Provider>
+            {/* <HomeStack /> */}
+            {!isWeb && showMask && <MaskOverlay />}
+            <AppStack />
+          </Authenticator.Provider>
+          {/* <AppStack /> */}
         </NavigationContainer>
       </SafeAreaProvider>
     </PaperProvider>
