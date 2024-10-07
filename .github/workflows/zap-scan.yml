@@ -1,11 +1,7 @@
 name: ZAP Baseline Scan
 on: 
-  push:
-    branches:
-      - develop
-  pull_request:
-    branches:
-      - develop
+  schedule:
+    - cron: "0 0 * * 2"
   workflow_dispatch:
 permissions:
   issues: write
