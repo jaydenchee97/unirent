@@ -18,7 +18,7 @@ type Message @model @auth(rules: [{allow: private }]) {
   id: ID!
   createdAt: AWSDateTime!
   text: String!
-  chatRoomId: ID! @index(name: "byChatRoom")
+  chatRoomId: ID! @index(name: "byChatRoom", sortKeyFields: ["createdAt"], queryField: "listMessagesByChatRoom")
   userId: ID! @index(name: "byUser")
 }
 
@@ -39,13 +39,13 @@ type Accommodation @model @auth(rules: [
   id: ID!
   availableDate: AWSDate
   description: String!
-  images: [String!]
+  images: [String]!
   price: Int!
-  propertyType: PropertyEnum
+  propertyType: PropertyEnum!
   rented: Boolean
   createdAt: AWSDateTime!
   title: String!
-  address: AWSJSON
+  address: AWSJSON!
   userId: ID! @index(name: "byUser")
   unitFeature: [String]
   latitude: Float
