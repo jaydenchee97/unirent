@@ -48,18 +48,23 @@ const AccommodationCard = (props: IAccommodation) => {
     const newChatRoomData = await API.graphql(
       graphqlOperation(createChatRoom, { input: {} }),
     );
+
     if (!newChatRoomData.data?.createChatRoom) {
       console.log("Error creating new chat room");
     }
     const newChatRoom = newChatRoomData.data?.createChatRoom;
 
+    console.log("before add lcicked user")
+    console.log("props.userId: " + props.userId + " " + newChatRoom.id)
     // add clicked user to chatroom
     await API.graphql(
       graphqlOperation(createUserChatRoom, {
         input: { chatRoomId: newChatRoom.id, userId: props.userId },
       }),
     );
+    console.log("after add clicked user")
 
+    console.log("before add auth user")
     // add auth user to chatroom
     const authUser = await Auth.currentAuthenticatedUser();
     await API.graphql(
@@ -67,6 +72,8 @@ const AccommodationCard = (props: IAccommodation) => {
         input: { chatRoomId: newChatRoom.id, userId: authUser.attributes.sub },
       }),
     );
+
+    console.log("after add auth user")
 
     navigation.navigate("Chat", { id: newChatRoom.id });
   };

@@ -29,6 +29,7 @@ export default function ChatScreen({ navigation, route }) {
 
   // fetch Messages
   useEffect(() => {
+    console.log("chatroom Id: " + chatroomID)
     API.graphql(
       graphqlOperation(listMessagesByChatRoom, {
         chatRoomId: chatroomID,
@@ -58,6 +59,7 @@ export default function ChatScreen({ navigation, route }) {
   }, [chatroomID]);
 
   const onSend = async (event) => {
+    console.log("on send: " + event.key)
     if ((event.key === "Enter" && !event.shiftKey) || event.type === "click") {
       const authUser = await Auth.currentAuthenticatedUser();
 

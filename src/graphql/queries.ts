@@ -268,16 +268,18 @@ export const listMessages = /* GraphQL */ `
     }
   }
 `;
-export const messagesByChatRoomId = /* GraphQL */ `
-  query MessagesByChatRoomId(
+export const listMessagesByChatRoom = /* GraphQL */ `
+  query ListMessagesByChatRoom(
     $chatRoomId: ID!
+    $createdAt: ModelStringKeyConditionInput
     $sortDirection: ModelSortDirection
     $filter: ModelMessageFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    messagesByChatRoomId(
+    listMessagesByChatRoom(
       chatRoomId: $chatRoomId
+      createdAt: $createdAt
       sortDirection: $sortDirection
       filter: $filter
       limit: $limit
