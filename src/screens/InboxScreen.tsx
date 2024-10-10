@@ -27,6 +27,8 @@ export default function InboxScreen(props: any) {
       (r1, r2) =>
         new Date(r2.chatRoom.updatedAt) - new Date(r1.chatRoom.updatedAt),
     );
+    console.log("sorted chatrooms")
+    console.log(sortedRooms)
 
     setChatRooms(sortedRooms);
     setLoading(false);
@@ -34,6 +36,7 @@ export default function InboxScreen(props: any) {
 
   useEffect(() => {
     fetchChatRooms();
+    console.log(chatRooms)
   }, []);
 
   if (loading) return <ActivityIndicator animating />;
@@ -65,6 +68,7 @@ export default function InboxScreen(props: any) {
             </Text>
           </View>
         ) : (
+          
           <ScrollView style={{ flex: 1, flexDirection: "column" }}>
             {chatRooms.map((chatRoom, index) => {
               return <ChatRoom {...chatRoom} key={index} />;

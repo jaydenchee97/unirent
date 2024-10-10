@@ -1,25 +1,10 @@
 type SavedAccommodation @model @auth(rules: [
     { allow: owner, operations: [create, read, update, delete] },  # User can manage their saved accommodations
+    {allow: private },
   ]) {
   id: ID!
   Accommodations: [Accommodation] @manyToMany(relationName: "SavedAccommodationAccommodation")
   User: User @belongsTo
-}
-
-type ChatRoom @model @auth(rules: [{allow: private }]) {
-  id: ID!
-  Users: [User] @manyToMany(relationName: "UserChatRoom")
-  Messages: [Message] @hasMany(indexName: "byChatRoom", fields: ["id"])
-  LastMessage: Message @hasOne
-  Accommodation: Accommodation @hasOne
-}
-
-type Message @model @auth(rules: [{allow: private }]) {
-  id: ID!
-  createdAt: AWSDateTime!
-  text: String!
-  chatRoomId: ID! @index(name: "byChatRoom", sortKeyFields: ["createdAt"], queryField: "listMessagesByChatRoom")
-  userId: ID! @index(name: "byUser")
 }
 
 enum PropertyEnum {
@@ -66,4 +51,24 @@ type User @model @auth(rules: [
   ChatRooms: [ChatRoom] @manyToMany(relationName: "UserChatRoom")
   Messages: [Message] @hasMany(indexName: "byUser", fields: ["id"])
   SavedAccommodation: SavedAccommodation @hasOne
+}
+
+type Message @model @auth(rules: [
+    { allow: private}, 
+  ]) {
+  id: ID!
+  createdAt: AWSDateTime!
+  text: String!
+  chatRoomId: ID! @index(name: "byChatRoom", sortKeyFields: ["createdAt"], queryField: "listMessagesByChatRoom")
+  userId: ID! @index(name: "byUser")
+}
+
+type ChatRoom @model @auth(rules: [
+    { allow: private},
+  ]) {
+  id: ID!
+  Users: [User] @manyToMany(relationName: "UserChatRoom")
+  Messages: [Message] @hasMany(indexName: "byChatRoom", fields: ["id"])
+  LastMessage: Message @hasOne
+  Accommodation: Accommodation @hasOne
 }

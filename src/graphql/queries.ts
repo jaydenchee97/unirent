@@ -97,235 +97,6 @@ export const listSavedAccommodations = /* GraphQL */ `
     }
   }
 `;
-export const getChatRoom = /* GraphQL */ `
-  query GetChatRoom($id: ID!) {
-    getChatRoom(id: $id) {
-      id
-      Users {
-        items {
-          id
-          chatRoomId
-          userId
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      Messages {
-        items {
-          id
-          createdAt
-          text
-          chatRoomId
-          userId
-          updatedAt
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      LastMessage {
-        id
-        createdAt
-        text
-        chatRoomId
-        userId
-        updatedAt
-        __typename
-      }
-      Accommodation {
-        id
-        availableDate
-        description
-        images
-        price
-        propertyType
-        rented
-        createdAt
-        title
-        address
-        userId
-        unitFeature
-        latitude
-        longitude
-        savedaccommodations {
-          nextToken
-          __typename
-        }
-        User {
-          id
-          name
-          status
-          userType
-          createdAt
-          updatedAt
-          userSavedAccommodationId
-          owner
-          __typename
-        }
-        updatedAt
-        owner
-        __typename
-      }
-      createdAt
-      updatedAt
-      chatRoomLastMessageId
-      chatRoomAccommodationId
-      __typename
-    }
-  }
-`;
-export const listChatRooms = /* GraphQL */ `
-  query ListChatRooms(
-    $filter: ModelChatRoomFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listChatRooms(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        Users {
-          nextToken
-          __typename
-        }
-        Messages {
-          nextToken
-          __typename
-        }
-        LastMessage {
-          id
-          createdAt
-          text
-          chatRoomId
-          userId
-          updatedAt
-          __typename
-        }
-        Accommodation {
-          id
-          availableDate
-          description
-          images
-          price
-          propertyType
-          rented
-          createdAt
-          title
-          address
-          userId
-          unitFeature
-          latitude
-          longitude
-          updatedAt
-          owner
-          __typename
-        }
-        createdAt
-        updatedAt
-        chatRoomLastMessageId
-        chatRoomAccommodationId
-        __typename
-      }
-      nextToken
-      __typename
-    }
-  }
-`;
-export const getMessage = /* GraphQL */ `
-  query GetMessage($id: ID!) {
-    getMessage(id: $id) {
-      id
-      createdAt
-      text
-      chatRoomId
-      userId
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const listMessages = /* GraphQL */ `
-  query ListMessages(
-    $filter: ModelMessageFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listMessages(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        createdAt
-        text
-        chatRoomId
-        userId
-        updatedAt
-        __typename
-      }
-      nextToken
-      __typename
-    }
-  }
-`;
-export const messagesByChatRoomId = /* GraphQL */ `
-  query MessagesByChatRoomId(
-    $chatRoomId: ID!
-    $sortDirection: ModelSortDirection
-    $filter: ModelMessageFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    messagesByChatRoomId(
-      chatRoomId: $chatRoomId
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        createdAt
-        text
-        chatRoomId
-        userId
-        updatedAt
-        __typename
-      }
-      nextToken
-      __typename
-    }
-  }
-`;
-export const messagesByUserId = /* GraphQL */ `
-  query MessagesByUserId(
-    $userId: ID!
-    $sortDirection: ModelSortDirection
-    $filter: ModelMessageFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    messagesByUserId(
-      userId: $userId
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        createdAt
-        text
-        chatRoomId
-        userId
-        updatedAt
-        __typename
-      }
-      nextToken
-      __typename
-    }
-  }
-`;
 export const getAccommodation = /* GraphQL */ `
   query GetAccommodation($id: ID!) {
     getAccommodation(id: $id) {
@@ -526,8 +297,8 @@ export const getUser = /* GraphQL */ `
       ChatRooms {
         items {
           id
-          chatRoomId
           userId
+          chatRoomId
           createdAt
           updatedAt
           owner
@@ -616,6 +387,237 @@ export const listUsers = /* GraphQL */ `
         updatedAt
         userSavedAccommodationId
         owner
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getMessage = /* GraphQL */ `
+  query GetMessage($id: ID!) {
+    getMessage(id: $id) {
+      id
+      createdAt
+      text
+      chatRoomId
+      userId
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listMessages = /* GraphQL */ `
+  query ListMessages(
+    $filter: ModelMessageFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listMessages(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        createdAt
+        text
+        chatRoomId
+        userId
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const listMessagesByChatRoom = /* GraphQL */ `
+  query ListMessagesByChatRoom(
+    $chatRoomId: ID!
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelMessageFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listMessagesByChatRoom(
+      chatRoomId: $chatRoomId
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        createdAt
+        text
+        chatRoomId
+        userId
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const messagesByUserId = /* GraphQL */ `
+  query MessagesByUserId(
+    $userId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelMessageFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    messagesByUserId(
+      userId: $userId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        createdAt
+        text
+        chatRoomId
+        userId
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getChatRoom = /* GraphQL */ `
+  query GetChatRoom($id: ID!) {
+    getChatRoom(id: $id) {
+      id
+      Users {
+        items {
+          id
+          userId
+          chatRoomId
+          createdAt
+          updatedAt
+          owner
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      Messages {
+        items {
+          id
+          createdAt
+          text
+          chatRoomId
+          userId
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      LastMessage {
+        id
+        createdAt
+        text
+        chatRoomId
+        userId
+        updatedAt
+        __typename
+      }
+      Accommodation {
+        id
+        availableDate
+        description
+        images
+        price
+        propertyType
+        rented
+        createdAt
+        title
+        address
+        userId
+        unitFeature
+        latitude
+        longitude
+        savedaccommodations {
+          nextToken
+          __typename
+        }
+        User {
+          id
+          name
+          status
+          userType
+          createdAt
+          updatedAt
+          userSavedAccommodationId
+          owner
+          __typename
+        }
+        updatedAt
+        owner
+        __typename
+      }
+      createdAt
+      updatedAt
+      chatRoomLastMessageId
+      chatRoomAccommodationId
+      __typename
+    }
+  }
+`;
+export const listChatRooms = /* GraphQL */ `
+  query ListChatRooms(
+    $filter: ModelChatRoomFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listChatRooms(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        Users {
+          nextToken
+          __typename
+        }
+        Messages {
+          nextToken
+          __typename
+        }
+        LastMessage {
+          id
+          createdAt
+          text
+          chatRoomId
+          userId
+          updatedAt
+          __typename
+        }
+        Accommodation {
+          id
+          availableDate
+          description
+          images
+          price
+          propertyType
+          rented
+          createdAt
+          title
+          address
+          userId
+          unitFeature
+          latitude
+          longitude
+          updatedAt
+          owner
+          __typename
+        }
+        createdAt
+        updatedAt
+        chatRoomLastMessageId
+        chatRoomAccommodationId
         __typename
       }
       nextToken
@@ -861,8 +863,39 @@ export const getUserChatRoom = /* GraphQL */ `
   query GetUserChatRoom($id: ID!) {
     getUserChatRoom(id: $id) {
       id
-      chatRoomId
       userId
+      chatRoomId
+      user {
+        id
+        name
+        status
+        userType
+        Accommodations {
+          nextToken
+          __typename
+        }
+        ChatRooms {
+          nextToken
+          __typename
+        }
+        Messages {
+          nextToken
+          __typename
+        }
+        SavedAccommodation {
+          id
+          createdAt
+          updatedAt
+          savedAccommodationUserId
+          owner
+          __typename
+        }
+        createdAt
+        updatedAt
+        userSavedAccommodationId
+        owner
+        __typename
+      }
       chatRoom {
         id
         Users {
@@ -907,37 +940,6 @@ export const getUserChatRoom = /* GraphQL */ `
         chatRoomAccommodationId
         __typename
       }
-      user {
-        id
-        name
-        status
-        userType
-        Accommodations {
-          nextToken
-          __typename
-        }
-        ChatRooms {
-          nextToken
-          __typename
-        }
-        Messages {
-          nextToken
-          __typename
-        }
-        SavedAccommodation {
-          id
-          createdAt
-          updatedAt
-          savedAccommodationUserId
-          owner
-          __typename
-        }
-        createdAt
-        updatedAt
-        userSavedAccommodationId
-        owner
-        __typename
-      }
       createdAt
       updatedAt
       owner
@@ -954,16 +956,8 @@ export const listUserChatRooms = /* GraphQL */ `
     listUserChatRooms(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        chatRoomId
         userId
-        chatRoom {
-          id
-          createdAt
-          updatedAt
-          chatRoomLastMessageId
-          chatRoomAccommodationId
-          __typename
-        }
+        chatRoomId
         user {
           id
           name
@@ -975,52 +969,12 @@ export const listUserChatRooms = /* GraphQL */ `
           owner
           __typename
         }
-        createdAt
-        updatedAt
-        owner
-        __typename
-      }
-      nextToken
-      __typename
-    }
-  }
-`;
-export const userChatRoomsByChatRoomId = /* GraphQL */ `
-  query UserChatRoomsByChatRoomId(
-    $chatRoomId: ID!
-    $sortDirection: ModelSortDirection
-    $filter: ModelUserChatRoomFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    userChatRoomsByChatRoomId(
-      chatRoomId: $chatRoomId
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        chatRoomId
-        userId
         chatRoom {
           id
           createdAt
           updatedAt
           chatRoomLastMessageId
           chatRoomAccommodationId
-          __typename
-        }
-        user {
-          id
-          name
-          status
-          userType
-          createdAt
-          updatedAt
-          userSavedAccommodationId
-          owner
           __typename
         }
         createdAt
@@ -1050,16 +1004,8 @@ export const userChatRoomsByUserId = /* GraphQL */ `
     ) {
       items {
         id
-        chatRoomId
         userId
-        chatRoom {
-          id
-          createdAt
-          updatedAt
-          chatRoomLastMessageId
-          chatRoomAccommodationId
-          __typename
-        }
+        chatRoomId
         user {
           id
           name
@@ -1069,6 +1015,62 @@ export const userChatRoomsByUserId = /* GraphQL */ `
           updatedAt
           userSavedAccommodationId
           owner
+          __typename
+        }
+        chatRoom {
+          id
+          createdAt
+          updatedAt
+          chatRoomLastMessageId
+          chatRoomAccommodationId
+          __typename
+        }
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const userChatRoomsByChatRoomId = /* GraphQL */ `
+  query UserChatRoomsByChatRoomId(
+    $chatRoomId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelUserChatRoomFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    userChatRoomsByChatRoomId(
+      chatRoomId: $chatRoomId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userId
+        chatRoomId
+        user {
+          id
+          name
+          status
+          userType
+          createdAt
+          updatedAt
+          userSavedAccommodationId
+          owner
+          __typename
+        }
+        chatRoom {
+          id
+          createdAt
+          updatedAt
+          chatRoomLastMessageId
+          chatRoomAccommodationId
           __typename
         }
         createdAt
