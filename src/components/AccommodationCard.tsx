@@ -24,6 +24,7 @@ import {
   addSavedAccommodation,
   deleteSavedAccommodationById,
 } from "../services/SavedAccommodationService";
+import { Accommodation } from "../models";
 
 dayjs.extend(relativeTime);
 
@@ -35,7 +36,7 @@ const AccommodationCard = (props: IAccommodation) => {
     setSavedAccommodationAccommodationID,
   ] = useState("");
 
-  const onContact = async () => {
+  const onContact = async (props: Accommodation) => {
     // check if have chatroom with user
     const existingChatRoom = await getCommonChatRoomWithUser(props.userId);
     if (existingChatRoom) {
@@ -46,7 +47,7 @@ const AccommodationCard = (props: IAccommodation) => {
 
     console.log("Creating new chatroom");
     const newChatRoomData = await API.graphql(
-      graphqlOperation(createChatRoom, { input: {} }),
+      graphqlOperation(createChatRoom, { input: {chatRoomAccommodationId: props.id} }),
     );
 
     if (!newChatRoomData.data?.createChatRoom) {
@@ -180,7 +181,7 @@ const AccommodationCard = (props: IAccommodation) => {
             </Text>
           </View>
         </View>
-        <Button mode="outlined" onPress={() => onContact()}>
+        <Button mode="outlined" onPress={() => onContact(props)}>
           Contact
         </Button>
       </Card.Content>
