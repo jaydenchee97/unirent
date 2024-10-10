@@ -5,8 +5,6 @@ import HomeStack from './HomeStack';
 import { Dimensions, StyleSheet } from "react-native";
 import { useTheme } from 'react-native-paper';
 import LandingScreen from '../screens/LandingScreen';
-import SignUp from '../screens/SignUp';
-import Verify from '../screens/Verify';
 
 const Stack = createStackNavigator();
 
