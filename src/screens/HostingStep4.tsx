@@ -124,12 +124,15 @@ export default function HostingStep4({ navigation }) {
       longitude: geocode.lng,
       userId: authUser.attributes.sub,
     };
+
     // const newAccommData = await API.graphql(
     //   graphqlOperation(createAccommodation, { input: newAccomm }),
     // );
+    
     const newAccommData = postAccommodation(newAccomm);
     console.log("newAccommData");
     console.log(newAccommData);
+
     if (newAccommData.data.createAccommodation) {
       alert("New Listing", "Publish successful!", [
         { text: "OK", onPress: () => navigation.navigate("Hosting") },
