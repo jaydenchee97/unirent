@@ -429,31 +429,34 @@ app.put(path, async function (req, res) {
   const sanitizedDescription = validator.escape(description)
   
   // Encryption Changes
-  const addressString = JSON.stringify(address);
-  const latitudeString = String(latitude);
-  const longitudeString = String(longitude);
+  // const addressString = JSON.stringify(address);
+  // const latitudeString = String(latitude);
+  // const longitudeString = String(longitude);
 
-  address = await encryptData(addressString);
-  latitude = await encryptData(latitudeString);
-  longitude = await encryptData(longitudeString);
+  // address = await encryptData(addressString);
+  // latitude = await encryptData(latitudeString);
+  // longitude = await encryptData(longitudeString);
 
   // Prepare the item for DynamoDB
   const accomm = {
     id: id || uuidv4(), // Generate UUID if not provided
-    sanitizedTitle,
-    address,
+    title: sanitizedTitle,
+    address: JSON.stringify(address),
     propertyType,
-    images,
-    sanitizedDescription,
-    price,
+    images: images,
+    description: sanitizedDescription,
+    price: price,
     rented: rented || false,
-    availableDate,
-    unitFeature,
-    latitude,
-    longitude,
-    userId,
+    availableDate: availableDate,
+    unitFeature: unitFeature,
+    latitude: latitude,
+    longitude: longitude,
+    userId: userId,
     createdAt: new Date().toISOString(),
   };
+
+  console.log("accomm");
+  console.log(accomm);
 
   const payload = {
     query: updateQuery,
@@ -461,13 +464,16 @@ app.put(path, async function (req, res) {
       input: accomm
     }
   }
+  console.log("payload");
+  console.log(payload);
+
 
   let data;
   try {
     const response = await axios.post(endpoint, payload, { headers });
     data = response.data?.data?.listAccommodations?.items;
     console.log(JSON.stringify(response.data, null, 2));
-    res.json({ success: "Accommodation update successfully", data });
+    res.json({ success: "Accommodation update successfully", data: data });
     console.log(data);
   } catch (error) {
     console.error(error);
@@ -527,28 +533,28 @@ app.put('/accommodations/university', async function (req, res) {
   latitude = await encryptData(latitudeString);
   longitude = await encryptData(longitudeString);
 
-  // Prepare the item for DynamoDB
-  const accomm = {
+  const newAccomm = {
     id: id || uuidv4(), // Generate UUID if not provided
-    sanitizedTitle,
-    address,
-    propertyType: 'UNIVERSITY', // Fixed type for university accommodations
-    images,
-    sanitizedDescription,
-    price,
+    title: sanitizedTitle,
+    address: JSON.stringify(address),
+    propertyType: 'UNIVERSITY',
+    images: images,
+    description: sanitizedDescription,
+    price: price,
     rented: rented || false,
-    availableDate,
-    unitFeature,
-    latitude,
-    longitude,
-    userId,
+    availableDate: availableDate,
+    unitFeature: unitFeature,
+    latitude: latitude,
+    longitude: longitude,
+    userId: userId,
     createdAt: new Date().toISOString(),
   };
+
 
   const payload = {
     query: updateQuery,
     variables: {
-      input: accomm
+      input: newAccomm
     }
   }
 
@@ -584,9 +590,9 @@ app.post(path, async function (req, res) {
   };
 
   // Encryption Changes
-  // const { id, title, address, propertyType, images, description, price, rented, availableDate, unitFeature, latitude, longitude, userId } = req.body;
-  const { id, title, propertyType, images, description, price, rented, availableDate, unitFeature, userId } = req.body;
-  let { address, latitude, longitude } = req.body;                                              
+  const { id, title, address, propertyType, images, description, price, rented, availableDate, unitFeature, latitude, longitude, userId } = req.body;
+  // const { id, title, propertyType, images, description, price, rented, availableDate, unitFeature, userId } = req.body;
+  // let { address, latitude, longitude } = req.body;                                              
 
   if (!validator.isUUID(userId, 4)) {
     return res.status(400).json({ error: 'Invalid user ID' });
@@ -606,37 +612,37 @@ app.post(path, async function (req, res) {
   const sanitizedDescription = validator.escape(description)
   
   // Encryption Changes
-  const addressString = JSON.stringify(address);
+  // const addressString = JSON.stringify(address);
   // const latitudeString = String(latitude);
   // const longitudeString = String(longitude);
 
-  address = await encryptData(addressString);
+  // address = await encryptData(addressString);
   // latitude = await encryptData(latitudeString);
   // longitude = await encryptData(longitudeString);
 
   // Prepare the item for DynamoDB
   const newAccomm = {
     id: id || uuidv4(), // Generate UUID if not provided
-    sanitizedTitle,
-    address,
+    title: sanitizedTitle,
+    address: JSON.stringify(address),
     propertyType,
-    images,
-    sanitizedDescription,
-    price,
+    images: images,
+    description: sanitizedDescription,
+    price: price,
     rented: rented || false,
-    availableDate,
-    unitFeature,
-    latitude,
-    longitude,
-    userId,
+    availableDate: availableDate,
+    unitFeature: unitFeature,
+    latitude: latitude,
+    longitude: longitude,
+    userId: userId,
     createdAt: new Date().toISOString(),
   };
 
-  console.log("typeof address: " + typeof address);
-  console.log("newAccomm: " + JSON.stringify(newAccomm, null, 2));
-  for (const key in newAccomm) {
-    console.log(`Field: ${key}, Type: ${typeof newAccomm[key]}`);
-  }
+  // console.log("typeof address: " + typeof address);
+  // console.log("newAccomm: " + JSON.stringify(newAccomm, null, 2));
+  // for (const key in newAccomm) {
+  //   console.log(`Field: ${key}, Type: ${typeof newAccomm[key]}`);
+  // }
 
   const payload = {
     query: createQuery,
@@ -645,17 +651,23 @@ app.post(path, async function (req, res) {
     }
   }
 
+  console.log("accomm");
+  console.log(newAccomm);
+
+  console.log("payload");
+  console.log(payload);
+
   let data;
   try {
     const response = await axios.post(endpoint, payload, { headers });
     console.log("response: " + JSON.stringify(response.data, null, 2));
     // data = response.data?.data?.listAccommodations?.items;
-    data = response.data?.data?.createAccommodation;
-    res.json({ success: "Accommodation created successfully", data });
+    data = response.data;
+    res.json({ status: "Accommodation created successfully", data: data });
     console.log("data: " + data);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Failed to create accommodation", details: err });
+    res.status(500).json({ status: "Failed to create accommodation", details: err });
   }
 
   // try {
@@ -671,9 +683,9 @@ app.post('/accommodations/university', async function (req, res) {
   console.log("In app.post() for " + "/accommodations/university");
 
   // Encryption Changes
-  // const { title, address, images, description, price, availableDate, unitFeature, latitude, longitude, userId } = req.body;  // Input validation
-  const { title, images, description, price, availableDate, unitFeature, userId } = req.body;   
-  let { address, latitude, longitude } = req.body;                                              
+  const { title, address, images, description, price, availableDate, unitFeature, latitude, longitude, userId } = req.body;  // Input validation
+  // const { title, images, description, price, availableDate, unitFeature, userId } = req.body;   
+  // let { address, latitude, longitude } = req.body;                                              
   
   if (!validator.isAlphanumeric(title, 'en-US', { ignore: ' ' })) {
     return res.status(400).json({ error: 'Invalid title' });
@@ -700,23 +712,23 @@ app.post('/accommodations/university', async function (req, res) {
   // latitude = await encryptData(latitudeString);
   // longitude = await encryptData(longitudeString);
 
-  // For university partners, the property type is always 'UNIVERSITY'
   const newAccomm = {
-    id: uuidv4(),
-    sanitizedTitle,
-    address,
-    propertyType: 'UNIVERSITY', // Fixed type for university accommodations
-    images,
-    sanitizedDescription,
-    price,
-    rented: false,
-    availableDate,
-    unitFeature,
-    latitude,
-    longitude,
-    userId,
+    id: id || uuidv4(), // Generate UUID if not provided
+    title: sanitizedTitle,
+    address: JSON.stringify(address),
+    propertyType: 'UNIVERSITY',
+    images: images,
+    description: sanitizedDescription,
+    price: price,
+    rented: rented || false,
+    availableDate: availableDate,
+    unitFeature: unitFeature,
+    latitude: latitude,
+    longitude: longitude,
+    userId: userId,
     createdAt: new Date().toISOString(),
   };
+
 
   const payload = {
     query: createQuery,  // Assuming you have a GraphQL mutation for creating accommodation
@@ -727,7 +739,7 @@ app.post('/accommodations/university', async function (req, res) {
     const response = await axios.post(endpoint, payload, { headers });
     console.log(JSON.stringify(response.data, null, 2));
     const data = response.data?.data?.createAccommodation;
-    res.json({ success: "University Accommodation created successfully", data });
+    res.json({ success: "University Accommodation created successfully", data: data });
   } catch (error) {
     res.status(500).json({ error: "Failed to create university accommodation", details: error });
   }
