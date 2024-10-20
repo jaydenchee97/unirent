@@ -285,9 +285,13 @@ export type UpdateAccommodationInput = {
   title?: string | null,
   address?: string | null,
   userId?: string | null,
-  unitFeature?: Array< string | null > | null,
-  latitude?: number | null,
-  longitude?: number | null,
+  unitFeature?: Array<string | null> | null,
+  // Encryption Changes
+  // latitude?: number | null,
+  // longitude?: number | null,
+  latitude?: string | number | null,
+  longitude?: string | number | null,
+
 };
 
 export type DeleteAccommodationInput = {

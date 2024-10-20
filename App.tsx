@@ -33,7 +33,6 @@ Amplify.configure({
   
 });
 
-
 // Amplify.configure({awsExports});
 
 export default function App() {

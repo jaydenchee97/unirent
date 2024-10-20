@@ -23,7 +23,7 @@ export default function HomeStack() {
     console.log(authUser);
 
     const userData = await API.graphql(
-      graphqlOperation(getUser, { id: authUser.attributes.sub }),
+      graphqlOperation(getUser, { id: authUser.attributes.sub },),
     );
     console.log(userData);
 
