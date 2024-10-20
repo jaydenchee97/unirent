@@ -20,7 +20,8 @@ const bodyParser = require("body-parser");
 const express = require("express");
 const axios = require("axios");
 const validator = require('validator');
-
+// Encryption Changes
+const { KmsKeyringNode, buildClient, CommitmentPolicy } = require("@aws-crypto/client-node");
 
 const ddbClient = new DynamoDBClient({ region: process.env.TABLE_REGION });
 const ddbDocClient = DynamoDBDocumentClient.from(ddbClient);
@@ -29,6 +30,13 @@ let tableName = "accommodationTable";
 if (process.env.ENV && process.env.ENV !== "NONE") {
   tableName = tableName + "-" + process.env.ENV;
 }
+
+// Encryption Changes
+const { encrypt, decrypt } = buildClient(CommitmentPolicy.REQUIRE_ENCRYPT_REQUIRE_DECRYPT);
+const generatorKeyId = process.env.DEK;
+const keyIds = [process.env.KEK];
+const keyring = new KmsKeyringNode({ generatorKeyId, keyIds });
+const context = { stage: "staging", purpose: "security", origin: "ap-southeast-1" };
 
 const userIdPresent = false; // TODO: update in case is required to use that definition
 const partitionKeyName = "id";
@@ -264,11 +272,10 @@ const updateQuery = /* GraphQL */ `
   }
 `;
 
-const headers = {
-  "x-api-key": apiKey,
-  "Content-Type": "application/json",
-};
-
+// const headers = {
+//   "x-api-key": apiKey,
+//   "Content-Type": "application/json",
+// };
 
 /************************************
  * HTTP Get method to list objects *
@@ -388,13 +395,22 @@ app.get(
  *************************************/
 
 app.put(path, async function (req, res) {
+
   if (userIdPresent) {
     req.body["userId"] =
       req.apiGateway.event.requestContext.identity.cognitoIdentityId || UNAUTH;
   }
 
-  const { id, title, address, propertyType, images, description, price, rented, availableDate, unitFeature, latitude, longitude, userId } = req.body;
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: req.headers.authorization || '', // Authorization token (if needed)
+  };
 
+  // Encryption Changes
+  // const { id, title, address, propertyType, images, description, price, rented, availableDate, unitFeature, latitude, longitude, userId } = req.body;
+  const { id, title, propertyType, images, description, price, rented, availableDate, unitFeature, userId } = req.body;
+  let { address, latitude, longitude } = req.body;        
+  
   if (!validator.isUUID(userId, 4)) {
     return res.status(400).json({ error: 'Invalid user ID' });
   }
@@ -412,6 +428,15 @@ app.put(path, async function (req, res) {
   const sanitizedTitle = validator.escape(title);
   const sanitizedDescription = validator.escape(description)
   
+  // Encryption Changes
+  const addressString = JSON.stringify(address);
+  const latitudeString = String(latitude);
+  const longitudeString = String(longitude);
+
+  address = await encryptData(addressString);
+  latitude = await encryptData(latitudeString);
+  longitude = await encryptData(longitudeString);
+
   // Prepare the item for DynamoDB
   const accomm = {
     id: id || uuidv4(), // Generate UUID if not provided
@@ -441,6 +466,7 @@ app.put(path, async function (req, res) {
   try {
     const response = await axios.post(endpoint, payload, { headers });
     data = response.data?.data?.listAccommodations?.items;
+    console.log(JSON.stringify(response.data, null, 2));
     res.json({ success: "Accommodation update successfully", data });
     console.log(data);
   } catch (error) {
@@ -459,12 +485,21 @@ app.put(path, async function (req, res) {
 });
 
 app.put('/accommodations/university', async function (req, res) {
+
   if (userIdPresent) {
     req.body["userId"] =
       req.apiGateway.event.requestContext.identity.cognitoIdentityId || UNAUTH;
   }
 
-  const { id, title, address, images, description, price, rented, availableDate, unitFeature, latitude, longitude, userId } = req.body;
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: req.headers.authorization || '', // Authorization token (if needed)
+  };
+
+  // Encryption Changes
+  // const { id, title, address, images, description, price, rented, availableDate, unitFeature, latitude, longitude, userId } = req.body;
+  const { id, title,  images, description, price, rented, availableDate, unitFeature, userId } = req.body;
+  let { address, latitude, longitude } = req.body;       
 
   if (!validator.isUUID(userId, 4)) {
     return res.status(400).json({ error: 'Invalid user ID' });
@@ -481,8 +516,17 @@ app.put('/accommodations/university', async function (req, res) {
 
   // Sanitize inputs
   const sanitizedTitle = validator.escape(title);
-  const sanitizedDescription = validator.escape(description)
-  
+  const sanitizedDescription = validator.escape(description);
+
+  // Encryption Changes
+  const addressString = JSON.stringify(address);
+  const latitudeString = String(latitude);
+  const longitudeString = String(longitude);
+
+  address = await encryptData(addressString);
+  latitude = await encryptData(latitudeString);
+  longitude = await encryptData(longitudeString);
+
   // Prepare the item for DynamoDB
   const accomm = {
     id: id || uuidv4(), // Generate UUID if not provided
@@ -511,6 +555,7 @@ app.put('/accommodations/university', async function (req, res) {
   let data;
   try {
     const response = await axios.post(endpoint, payload, { headers });
+    console.log(JSON.stringify(response.data, null, 2));
     data = response.data?.data?.listAccommodations?.items;
     res.json({ success: "Accommodation update successfully", data });
     console.log(data);
@@ -525,11 +570,23 @@ app.put('/accommodations/university', async function (req, res) {
  * HTTP post method for insert object *
  *************************************/
 app.post(path, async function (req, res) {
+
+  console.log("In app.post() for " + path);
+
   if (userIdPresent) {
     req.body["userId"] =
       req.apiGateway.event.requestContext.identity.cognitoIdentityId || UNAUTH;
   }
-  const { id, title, address, propertyType, images, description, price, rented, availableDate, unitFeature, latitude, longitude, userId } = req.body;
+
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: req.headers.authorization || '', // Authorization token (if needed)
+  };
+
+  // Encryption Changes
+  // const { id, title, address, propertyType, images, description, price, rented, availableDate, unitFeature, latitude, longitude, userId } = req.body;
+  const { id, title, propertyType, images, description, price, rented, availableDate, unitFeature, userId } = req.body;
+  let { address, latitude, longitude } = req.body;                                              
 
   if (!validator.isUUID(userId, 4)) {
     return res.status(400).json({ error: 'Invalid user ID' });
@@ -548,6 +605,15 @@ app.post(path, async function (req, res) {
   const sanitizedTitle = validator.escape(title);
   const sanitizedDescription = validator.escape(description)
   
+  // Encryption Changes
+  const addressString = JSON.stringify(address);
+  // const latitudeString = String(latitude);
+  // const longitudeString = String(longitude);
+
+  address = await encryptData(addressString);
+  // latitude = await encryptData(latitudeString);
+  // longitude = await encryptData(longitudeString);
+
   // Prepare the item for DynamoDB
   const newAccomm = {
     id: id || uuidv4(), // Generate UUID if not provided
@@ -566,6 +632,12 @@ app.post(path, async function (req, res) {
     createdAt: new Date().toISOString(),
   };
 
+  console.log("typeof address: " + typeof address);
+  console.log("newAccomm: " + JSON.stringify(newAccomm, null, 2));
+  for (const key in newAccomm) {
+    console.log(`Field: ${key}, Type: ${typeof newAccomm[key]}`);
+  }
+
   const payload = {
     query: createQuery,
     variables: {
@@ -576,9 +648,11 @@ app.post(path, async function (req, res) {
   let data;
   try {
     const response = await axios.post(endpoint, payload, { headers });
-    data = response.data?.data?.listAccommodations?.items;
+    console.log("response: " + JSON.stringify(response.data, null, 2));
+    // data = response.data?.data?.listAccommodations?.items;
+    data = response.data?.data?.createAccommodation;
     res.json({ success: "Accommodation created successfully", data });
-    console.log(data);
+    console.log("data: " + data);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to create accommodation", details: err });
@@ -593,10 +667,14 @@ app.post(path, async function (req, res) {
 });
 
 app.post('/accommodations/university', async function (req, res) {
-  const { title, address, images, description, price, availableDate, unitFeature, latitude, longitude, userId } = req.body;
 
+  console.log("In app.post() for " + "/accommodations/university");
 
-  // Input validation
+  // Encryption Changes
+  // const { title, address, images, description, price, availableDate, unitFeature, latitude, longitude, userId } = req.body;  // Input validation
+  const { title, images, description, price, availableDate, unitFeature, userId } = req.body;   
+  let { address, latitude, longitude } = req.body;                                              
+  
   if (!validator.isAlphanumeric(title, 'en-US', { ignore: ' ' })) {
     return res.status(400).json({ error: 'Invalid title' });
   }
@@ -612,7 +690,16 @@ app.post('/accommodations/university', async function (req, res) {
   if (!validator.isUUID(userId, 4)) {
     return res.status(400).json({ error: 'Invalid user ID' });
   }
-  
+ 
+  // Encryption Changes
+  // const addressString = JSON.stringify(address);
+  // const latitudeString = String(latitude);
+  // const longitudeString = String(longitude);
+
+  // address = await encryptData(addressString);
+  // latitude = await encryptData(latitudeString);
+  // longitude = await encryptData(longitudeString);
+
   // For university partners, the property type is always 'UNIVERSITY'
   const newAccomm = {
     id: uuidv4(),
@@ -631,8 +718,6 @@ app.post('/accommodations/university', async function (req, res) {
     createdAt: new Date().toISOString(),
   };
 
-  
-
   const payload = {
     query: createQuery,  // Assuming you have a GraphQL mutation for creating accommodation
     variables: { input: newAccomm }
@@ -640,6 +725,7 @@ app.post('/accommodations/university', async function (req, res) {
 
   try {
     const response = await axios.post(endpoint, payload, { headers });
+    console.log(JSON.stringify(response.data, null, 2));
     const data = response.data?.data?.createAccommodation;
     res.json({ success: "University Accommodation created successfully", data });
   } catch (error) {
@@ -652,12 +738,18 @@ app.post('/accommodations/university', async function (req, res) {
  ***************************************/
 // Delete accommodation
 app.delete(`${path}/:accommodationId`, async function (req, res) {
+
   const { accommodationId } = req.params;
 
   // Validate the accommodation ID
   if (!validator.isUUID(accommodationId, 4)) {
     return res.status(400).json({ error: 'Invalid accommodation ID' });
   }
+
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: req.headers.authorization || '', // Authorization token (if needed)
+  };
 
   // Create the payload for the GraphQL mutation
   const payload = {
@@ -667,11 +759,6 @@ app.delete(`${path}/:accommodationId`, async function (req, res) {
         id: accommodationId, // Pass the accommodation ID
       },
     },
-  };
-
-  const headers = {
-    'Content-Type': 'application/json',
-    Authorization: req.headers.authorization || '', // Authorization token (if needed)
   };
 
   // Send the delete request to the GraphQL API
@@ -693,12 +780,18 @@ app.delete(`${path}/:accommodationId`, async function (req, res) {
 
 // Delete university accommodation
 app.delete(`${path}/university/:accommodationId`, async function (req, res) {
+
   const { accommodationId } = req.params;
 
   // Validate the accommodation ID
   if (!validator.isUUID(accommodationId, 4)) {
     return res.status(400).json({ error: 'Invalid accommodation ID' });
   }
+  
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: req.headers.authorization || '', // Authorization token (if needed)
+  };
 
   // Create the payload for the GraphQL mutation
   const payload = {
@@ -708,11 +801,6 @@ app.delete(`${path}/university/:accommodationId`, async function (req, res) {
         id: accommodationId, // Pass the accommodation ID
       },
     },
-  };
-
-  const headers = {
-    'Content-Type': 'application/json',
-    Authorization: req.headers.authorization || '', // Authorization token (if needed)
   };
 
   // Send the delete request to the GraphQL API
@@ -731,8 +819,6 @@ app.delete(`${path}/university/:accommodationId`, async function (req, res) {
     res.status(500).json({ error: "Failed to delete accommodation", details: error.message });
   }
 });
-
-
 
 // app.delete(
 //   path + "/object" + hashKeyPath + sortKeyPath,
@@ -780,6 +866,16 @@ app.delete(`${path}/university/:accommodationId`, async function (req, res) {
 //     }
 //   },
 // );
+
+// Encryption Changes
+// NOTE: The variable name for encrypt/decrypt function must be called result
+async function encryptData(plaintext) { 
+  console.log("plaintext: " + plaintext);
+  const { result } = await encrypt(keyring, plaintext, { encryptionContext: context });
+  const ciphertext = result.toString("base64");
+  console.log("ciphertext: " + ciphertext);
+  return ciphertext ;
+}
 
 app.listen(3000, function () {
   console.log("App started");

@@ -21,6 +21,7 @@ import IAccommodation from "../model/IAccommodation";
 import IGeo from "../model/IGeo";
 import { useHostStore } from "../store/host";
 import { isWeb } from "../utils";
+import { postAccommodation } from "../api/AccommodationAPI";
 
 const { width, height } = Dimensions.get("window");
 
@@ -123,9 +124,10 @@ export default function HostingStep4({ navigation }) {
       longitude: geocode.lng,
       userId: authUser.attributes.sub,
     };
-    const newAccommData = await API.graphql(
-      graphqlOperation(createAccommodation, { input: newAccomm }),
-    );
+    // const newAccommData = await API.graphql(
+    //   graphqlOperation(createAccommodation, { input: newAccomm }),
+    // );
+    const newAccommData = postAccommodation(newAccomm);
     console.log("newAccommData");
     console.log(newAccommData);
     if (newAccommData.data.createAccommodation) {

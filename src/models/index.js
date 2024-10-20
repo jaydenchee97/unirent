@@ -9,16 +9,15 @@ const PropertyEnum = {
   "UNIVERSITY": "UNIVERSITY"
 };
 
-const { SavedAccommodation, ChatRoom, Message, Accommodation, User, SavedAccommodationAccommodation, UserSavedAccomodations, UserChatRoom } = initSchema(schema);
+const { SavedAccommodation, Accommodation, User, Message, ChatRoom, SavedAccommodationAccommodation, UserChatRoom } = initSchema(schema);
 
 export {
   SavedAccommodation,
-  ChatRoom,
-  Message,
   Accommodation,
   User,
+  Message,
+  ChatRoom,
   SavedAccommodationAccommodation,
-  UserSavedAccomodations,
   UserChatRoom,
   PropertyEnum
 };
