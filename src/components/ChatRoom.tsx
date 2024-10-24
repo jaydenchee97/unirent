@@ -7,15 +7,13 @@ import { Pressable, View, StyleSheet } from "react-native";
 import { Avatar, Divider, Text } from "react-native-paper";
 
 import { onUpdateChatRoom } from "../graphql/subscriptions";
+import { decryptMessage } from "../utils/cryptoJs";
 
 dayjs.extend(relativeTime);
 
 export default function ChatRoom(props: any) {
   const navigation = useNavigation();
   const [chatRoom, setChatRoom] = useState(props.chatRoom);
-  console.log("kx test: " + props.chatRoom.id);
-  console.log("chatRoom: " + chatRoom)
-  console.log("chatRoom Accom: " + chatRoom.Accommodation)
   // subscribe to chatroom for updates
   useEffect(() => {
     const subscription = API.graphql(
@@ -40,8 +38,7 @@ export default function ChatRoom(props: any) {
 
   const user = props.chatRoom.Users?.items?.[0]?.user;
   const accommodation = chatRoom.Accommodation;
-  console.log("user: " + user)
-  console.log("accommodation: " + accommodation)
+
 
   if (!user || !accommodation) {
     console.log("returning null")
@@ -67,7 +64,7 @@ export default function ChatRoom(props: any) {
           </Text>
           <Text variant="titleMedium"> {accommodation.title} </Text>
           <Text variant="labelMedium" style={{ color: "gray" }}>
-            {chatRoom.LastMessage?.text}
+            {decryptMessage(chatRoom.LastMessage?.text, chatRoom.id)}
           </Text>
         </View>
         <View style={{ flex: 1, flexDirection: "row-reverse" }}>

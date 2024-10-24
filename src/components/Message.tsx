@@ -2,6 +2,7 @@ import { Auth } from "aws-amplify";
 import { useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 import { Surface, Text } from "react-native-paper";
+import { decryptMessage } from "../utils/cryptoJs";
 
 export default function Message(props: any) {
   const [isMe, setIsMe] = useState(false);
@@ -11,6 +12,9 @@ export default function Message(props: any) {
 
     setIsMe(props?.userId === authUser.attributes.sub);
   };
+
+  let text = decryptMessage(props?.text,props?.chatRoomId)
+  console.log(text)
 
   useEffect(() => {
     isMyMessage();
@@ -28,7 +32,7 @@ export default function Message(props: any) {
       mode="flat"
       elevation={4}
     >
-      <Text>{props?.text}</Text>
+      <Text>{text}</Text>
     </Surface>
   );
 }
