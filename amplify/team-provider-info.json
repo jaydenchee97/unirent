@@ -18,7 +18,7 @@
       "function": {
         "accommodationFunction": {
           "deploymentBucketName": "amplify-unirent-staging-195410-deployment",
-          "s3Key": "amplify-builds/accommodationFunction-592f5a68356b6b51386a-build.zip"
+          "s3Key": "amplify-builds/accommodationFunction-5738506f37516d525941-build.zip"
         },
         "geocodingHandler": {
           "deploymentBucketName": "amplify-unirent-staging-195410-deployment",
@@ -30,7 +30,7 @@
         },
         "recommendationHandler": {
           "deploymentBucketName": "amplify-unirent-staging-195410-deployment",
-          "s3Key": "amplify-builds/recommendationHandler-57747135775450376951-build.zip"
+          "s3Key": "amplify-builds/recommendationHandler-726e587555504a4e3555-build.zip"
         }
       },
       "storage": {

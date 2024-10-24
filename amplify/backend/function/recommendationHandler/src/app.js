@@ -79,9 +79,9 @@ app.get("/recommendation/*", function (req, res) {
 
 // code start
 app.post("/recommendation", async function (req, res) {
-  console.log("recommendation start...");
 
-  console.log("req.body: " + req.body);
+  console.log("recommendation start...");
+  console.log("req.body: " + JSON.stringify(req.body, null, 2));
 
   const headers = {
     'Content-Type': 'application/json',
@@ -92,20 +92,37 @@ app.post("/recommendation", async function (req, res) {
   try {
     const response = await axios.post(endpoint, { query }, { headers });
     data = response.data?.data?.listAccommodations?.items;
-    console.log("data: " + data);
+    console.log("data: " + JSON.stringify(data, null, 2));
   } catch (error) {
     console.error(error);
   }
 
   const map = new Map();
-  for (let i = 0; i < data.length; i++) {
-    // Decryption Changes
-    const address = JSON.parse(data[i].address);
-    const dist = geolib.getDistance(req.body.coords, address.geo);
+  const userCoords = {
+    latitude: req.body.coords.latitude,
+    longitude: req.body.coords.longitude
+  };
 
-    // TODO: Check the structure of address and find out how to decrpyt data
-    console.log("address: " + JSON.stringify(address, null, 2));
+  // TODO: Check the structure of address and find out how to decrpyt data
+  for (let i = 0; i < data.length; i++) {
+
+    const address = JSON.parse(data[i].address);
+    console.log(`address[${i}]: ` + JSON.stringify(address, null, 2));
+
+    const addressCoords = {
+      latitude: address.geo.geometry.location.lat,
+      longitude: address.geo.geometry.location.lng
+    };
+
+    console.log(`userCoords[${i}]: ` + JSON.stringify(userCoords, null, 2));
+    console.log(`addressCoords[${i}]: ` + JSON.stringify(userCoords, null, 2));
+
+    // const dist = geolib.getDistance(req.body.coords, address.geo);
+    const dist = geolib.getDistance(userCoords, addressCoords);
+    console.log(`dist[${i}]: ` + dist);
+
     map.set(data[i], dist);
+
   }
 
   // sort by dist asc
@@ -127,6 +144,8 @@ app.post("/recommendation", async function (req, res) {
     element.distance = value;
     finalArray.push(element);
   });
+
+  console.log("finalArray");
   console.log(finalArray);
 
   res.json(finalArray);

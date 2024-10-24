@@ -59,7 +59,7 @@ export default function HostingStep4({ navigation }) {
     setFormattedAddress(resp?.formatted_address);
     setIsLoading(false);
   }
-
+  
   useEffect(() => {
     invokeGoogleMaps(hostStore.address);
   }, []);
@@ -125,15 +125,18 @@ export default function HostingStep4({ navigation }) {
       userId: authUser.attributes.sub,
     };
 
+    console.log("newAccomm: " + JSON.stringify(newAccomm, null, 2));
+
     // const newAccommData = await API.graphql(
     //   graphqlOperation(createAccommodation, { input: newAccomm }),
     // );
     
-    const newAccommData = postAccommodation(newAccomm);
-    console.log("newAccommData");
-    console.log(newAccommData);
+    const newAccommData = await postAccommodation(newAccomm);
 
-    if (newAccommData.data.createAccommodation) {
+    console.log("newAccommData: " + JSON.stringify(newAccommData, null, 2));
+
+    // if (newAccommData.data.createAccommodation) {
+    if (newAccommData.data) {
       alert("New Listing", "Publish successful!", [
         { text: "OK", onPress: () => navigation.navigate("Hosting") },
       ]);

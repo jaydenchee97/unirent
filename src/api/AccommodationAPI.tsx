@@ -30,6 +30,7 @@ export async function postAccommodation(request) {
     return response;
   } catch (error) {
     console.error("Error in post accommodation API: " + error);
+    throw new Error("Failed to post accommodation");
   }
 }
 

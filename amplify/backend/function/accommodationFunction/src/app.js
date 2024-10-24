@@ -578,6 +578,7 @@ app.put('/accommodations/university', async function (req, res) {
 app.post(path, async function (req, res) {
 
   console.log("In app.post() for " + path);
+  console.log("req.body: " + JSON.stringify(req.body, null, 2));
 
   if (userIdPresent) {
     req.body["userId"] =
@@ -652,7 +653,7 @@ app.post(path, async function (req, res) {
   }
 
   console.log("accomm");
-  console.log(newAccomm);
+  console.log(JSON.stringify(newAccomm, null, 2));
 
   console.log("payload");
   console.log(payload);
@@ -661,10 +662,8 @@ app.post(path, async function (req, res) {
   try {
     const response = await axios.post(endpoint, payload, { headers });
     console.log("response: " + JSON.stringify(response.data, null, 2));
-    // data = response.data?.data?.listAccommodations?.items;
-    data = response.data;
+    const data = response.data?.data?.createAccommodation;
     res.json({ status: "Accommodation created successfully", data: data });
-    console.log("data: " + data);
   } catch (error) {
     console.error(error);
     res.status(500).json({ status: "Failed to create accommodation", details: err });
