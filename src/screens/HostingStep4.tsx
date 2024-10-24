@@ -21,6 +21,7 @@ import IAccommodation from "../model/IAccommodation";
 import IGeo from "../model/IGeo";
 import { useHostStore } from "../store/host";
 import { isWeb } from "../utils";
+import { postAccommodation } from "../api/AccommodationAPI";
 
 const { width, height } = Dimensions.get("window");
 
@@ -58,7 +59,7 @@ export default function HostingStep4({ navigation }) {
     setFormattedAddress(resp?.formatted_address);
     setIsLoading(false);
   }
-
+  
   useEffect(() => {
     invokeGoogleMaps(hostStore.address);
   }, []);
@@ -123,12 +124,19 @@ export default function HostingStep4({ navigation }) {
       longitude: geocode.lng,
       userId: authUser.attributes.sub,
     };
-    const newAccommData = await API.graphql(
-      graphqlOperation(createAccommodation, { input: newAccomm }),
-    );
-    console.log("newAccommData");
-    console.log(newAccommData);
-    if (newAccommData.data.createAccommodation) {
+
+    console.log("newAccomm: " + JSON.stringify(newAccomm, null, 2));
+
+    // const newAccommData = await API.graphql(
+    //   graphqlOperation(createAccommodation, { input: newAccomm }),
+    // );
+    
+    const newAccommData = await postAccommodation(newAccomm);
+
+    console.log("newAccommData: " + JSON.stringify(newAccommData, null, 2));
+
+    // if (newAccommData.data.createAccommodation) {
+    if (newAccommData.data) {
       alert("New Listing", "Publish successful!", [
         { text: "OK", onPress: () => navigation.navigate("Hosting") },
       ]);

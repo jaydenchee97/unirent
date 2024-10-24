@@ -85,17 +85,50 @@ export default function Welcome({ props }) {
   
 
   async function fetch() {
-    const { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== "granted") {
-      console.log("Permission to access location was denied");
-      setIsLoading(false);
-      return;
-    }
-    setPermission(true);
+    // const { status } = await Location.requestForegroundPermissionsAsync();
+    // console.log(status);
+    // if (status !== "granted") {
+    //   console.log("Permission to access location was denied");
+    //   setIsLoading(false);
+    //   return;
+    // }
+    // setPermission(true);
 
-    const location = await Location.getCurrentPositionAsync({});
-    const recommendations = await getRecommendation(location);
-    await downloadFromStorage(recommendations);
+    // const location = await Location.getCurrentPositionAsync({});
+    // console.log("fetch from recommendation");
+    // const recommendations = await getRecommendation(location);
+    // await downloadFromStorage(recommendations);
+    
+    console.log("trigger fetch");
+
+    if (isWeb) {
+      setPermission(true);
+      console.log("this is web");
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          console.log("Location fetched: ", position);
+          // Proceed with recommendation logic
+          console.log("fetch from recommendation");
+          const recommendations = await getRecommendation(position);
+          await downloadFromStorage(recommendations);
+        }
+      )
+    }
+    else {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      console.log(status);
+      if (status !== "granted") {
+        console.log("Permission to access location was denied");
+        setIsLoading(false);
+        return;
+      }
+      setPermission(true);
+
+      const location = await Location.getCurrentPositionAsync({});
+      console.log("fetch from recommendation");
+      const recommendations = await getRecommendation(location);
+      await downloadFromStorage(recommendations);
+    }
   }
 
   async function createNewSavedAccommodationId(userId) {
@@ -225,6 +258,7 @@ export default function Welcome({ props }) {
   // fetch all Listings
   useEffect(() => {
     if (isFocused) {
+    console.log("use effect");
       getSavedAccommodations();
       fetch();
     }

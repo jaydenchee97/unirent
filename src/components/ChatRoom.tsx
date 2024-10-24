@@ -13,8 +13,9 @@ dayjs.extend(relativeTime);
 export default function ChatRoom(props: any) {
   const navigation = useNavigation();
   const [chatRoom, setChatRoom] = useState(props.chatRoom);
-  console.log(props);
-
+  console.log("kx test: " + props.chatRoom.id);
+  console.log("chatRoom: " + chatRoom)
+  console.log("chatRoom Accom: " + chatRoom.Accommodation)
   // subscribe to chatroom for updates
   useEffect(() => {
     const subscription = API.graphql(
@@ -23,6 +24,7 @@ export default function ChatRoom(props: any) {
       }),
     ).subscribe({
       next: ({ value }) => {
+
         setChatRoom((cr) => ({
           ...(cr || {}),
           ...value.data.onUpdateChatRoom,
@@ -38,8 +40,11 @@ export default function ChatRoom(props: any) {
 
   const user = props.chatRoom.Users?.items?.[0]?.user;
   const accommodation = chatRoom.Accommodation;
+  console.log("user: " + user)
+  console.log("accommodation: " + accommodation)
 
   if (!user || !accommodation) {
+    console.log("returning null")
     return null; // or you can return a loading indicator or some fallback UI
   }
 
@@ -78,6 +83,6 @@ export default function ChatRoom(props: any) {
 
 const styles = StyleSheet.create({
   blackFont: {
-    color: "black",
+    color: "white",
   },
 });

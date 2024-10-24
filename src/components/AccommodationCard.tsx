@@ -24,6 +24,7 @@ import {
   addSavedAccommodation,
   deleteSavedAccommodationById,
 } from "../services/SavedAccommodationService";
+import { Accommodation } from "../models";
 
 dayjs.extend(relativeTime);
 
@@ -35,7 +36,7 @@ const AccommodationCard = (props: IAccommodation) => {
     setSavedAccommodationAccommodationID,
   ] = useState("");
 
-  const onContact = async () => {
+  const onContact = async (props: Accommodation) => {
     // check if have chatroom with user
     const existingChatRoom = await getCommonChatRoomWithUser(props.userId);
     if (existingChatRoom) {
@@ -46,20 +47,25 @@ const AccommodationCard = (props: IAccommodation) => {
 
     console.log("Creating new chatroom");
     const newChatRoomData = await API.graphql(
-      graphqlOperation(createChatRoom, { input: {} }),
+      graphqlOperation(createChatRoom, { input: {chatRoomAccommodationId: props.id} }),
     );
+
     if (!newChatRoomData.data?.createChatRoom) {
       console.log("Error creating new chat room");
     }
     const newChatRoom = newChatRoomData.data?.createChatRoom;
 
+    console.log("before add lcicked user")
+    console.log("props.userId: " + props.userId + " " + newChatRoom.id)
     // add clicked user to chatroom
     await API.graphql(
       graphqlOperation(createUserChatRoom, {
         input: { chatRoomId: newChatRoom.id, userId: props.userId },
       }),
     );
+    console.log("after add clicked user")
 
+    console.log("before add auth user")
     // add auth user to chatroom
     const authUser = await Auth.currentAuthenticatedUser();
     await API.graphql(
@@ -67,6 +73,8 @@ const AccommodationCard = (props: IAccommodation) => {
         input: { chatRoomId: newChatRoom.id, userId: authUser.attributes.sub },
       }),
     );
+
+    console.log("after add auth user")
 
     navigation.navigate("Chat", { id: newChatRoom.id });
   };
@@ -173,7 +181,7 @@ const AccommodationCard = (props: IAccommodation) => {
             </Text>
           </View>
         </View>
-        <Button mode="outlined" onPress={() => onContact()}>
+        <Button mode="outlined" onPress={() => onContact(props)}>
           Contact
         </Button>
       </Card.Content>

@@ -5,8 +5,9 @@
 export const onCreateSavedAccommodation = /* GraphQL */ `
   subscription OnCreateSavedAccommodation(
     $filter: ModelSubscriptionSavedAccommodationFilterInput
+    $owner: String
   ) {
-    onCreateSavedAccommodation(filter: $filter) {
+    onCreateSavedAccommodation(filter: $filter, owner: $owner) {
       id
       Accommodations {
         items {
@@ -15,6 +16,7 @@ export const onCreateSavedAccommodation = /* GraphQL */ `
           accommodationId
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -42,16 +44,19 @@ export const onCreateSavedAccommodation = /* GraphQL */ `
           createdAt
           updatedAt
           savedAccommodationUserId
+          owner
           __typename
         }
         createdAt
         updatedAt
         userSavedAccommodationId
+        owner
         __typename
       }
       createdAt
       updatedAt
       savedAccommodationUserId
+      owner
       __typename
     }
   }
@@ -59,8 +64,9 @@ export const onCreateSavedAccommodation = /* GraphQL */ `
 export const onUpdateSavedAccommodation = /* GraphQL */ `
   subscription OnUpdateSavedAccommodation(
     $filter: ModelSubscriptionSavedAccommodationFilterInput
+    $owner: String
   ) {
-    onUpdateSavedAccommodation(filter: $filter) {
+    onUpdateSavedAccommodation(filter: $filter, owner: $owner) {
       id
       Accommodations {
         items {
@@ -69,6 +75,7 @@ export const onUpdateSavedAccommodation = /* GraphQL */ `
           accommodationId
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -96,16 +103,19 @@ export const onUpdateSavedAccommodation = /* GraphQL */ `
           createdAt
           updatedAt
           savedAccommodationUserId
+          owner
           __typename
         }
         createdAt
         updatedAt
         userSavedAccommodationId
+        owner
         __typename
       }
       createdAt
       updatedAt
       savedAccommodationUserId
+      owner
       __typename
     }
   }
@@ -113,8 +123,9 @@ export const onUpdateSavedAccommodation = /* GraphQL */ `
 export const onDeleteSavedAccommodation = /* GraphQL */ `
   subscription OnDeleteSavedAccommodation(
     $filter: ModelSubscriptionSavedAccommodationFilterInput
+    $owner: String
   ) {
-    onDeleteSavedAccommodation(filter: $filter) {
+    onDeleteSavedAccommodation(filter: $filter, owner: $owner) {
       id
       Accommodations {
         items {
@@ -123,6 +134,7 @@ export const onDeleteSavedAccommodation = /* GraphQL */ `
           accommodationId
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -150,31 +162,274 @@ export const onDeleteSavedAccommodation = /* GraphQL */ `
           createdAt
           updatedAt
           savedAccommodationUserId
+          owner
           __typename
         }
         createdAt
         updatedAt
         userSavedAccommodationId
+        owner
         __typename
       }
       createdAt
       updatedAt
       savedAccommodationUserId
+      owner
       __typename
     }
   }
 `;
-export const onCreateChatRoom = /* GraphQL */ `
-  subscription OnCreateChatRoom($filter: ModelSubscriptionChatRoomFilterInput) {
-    onCreateChatRoom(filter: $filter) {
+export const onCreateAccommodation = /* GraphQL */ `
+  subscription OnCreateAccommodation(
+    $filter: ModelSubscriptionAccommodationFilterInput
+    $owner: String
+  ) {
+    onCreateAccommodation(filter: $filter, owner: $owner) {
       id
-      Users {
+      availableDate
+      description
+      images
+      price
+      propertyType
+      rented
+      createdAt
+      title
+      address
+      userId
+      unitFeature
+      latitude
+      longitude
+      savedaccommodations {
         items {
           id
-          chatRoomId
-          userId
+          savedAccommodationId
+          accommodationId
           createdAt
           updatedAt
+          owner
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      User {
+        id
+        name
+        status
+        userType
+        Accommodations {
+          nextToken
+          __typename
+        }
+        ChatRooms {
+          nextToken
+          __typename
+        }
+        Messages {
+          nextToken
+          __typename
+        }
+        SavedAccommodation {
+          id
+          createdAt
+          updatedAt
+          savedAccommodationUserId
+          owner
+          __typename
+        }
+        createdAt
+        updatedAt
+        userSavedAccommodationId
+        owner
+        __typename
+      }
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const onUpdateAccommodation = /* GraphQL */ `
+  subscription OnUpdateAccommodation(
+    $filter: ModelSubscriptionAccommodationFilterInput
+    $owner: String
+  ) {
+    onUpdateAccommodation(filter: $filter, owner: $owner) {
+      id
+      availableDate
+      description
+      images
+      price
+      propertyType
+      rented
+      createdAt
+      title
+      address
+      userId
+      unitFeature
+      latitude
+      longitude
+      savedaccommodations {
+        items {
+          id
+          savedAccommodationId
+          accommodationId
+          createdAt
+          updatedAt
+          owner
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      User {
+        id
+        name
+        status
+        userType
+        Accommodations {
+          nextToken
+          __typename
+        }
+        ChatRooms {
+          nextToken
+          __typename
+        }
+        Messages {
+          nextToken
+          __typename
+        }
+        SavedAccommodation {
+          id
+          createdAt
+          updatedAt
+          savedAccommodationUserId
+          owner
+          __typename
+        }
+        createdAt
+        updatedAt
+        userSavedAccommodationId
+        owner
+        __typename
+      }
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const onDeleteAccommodation = /* GraphQL */ `
+  subscription OnDeleteAccommodation(
+    $filter: ModelSubscriptionAccommodationFilterInput
+    $owner: String
+  ) {
+    onDeleteAccommodation(filter: $filter, owner: $owner) {
+      id
+      availableDate
+      description
+      images
+      price
+      propertyType
+      rented
+      createdAt
+      title
+      address
+      userId
+      unitFeature
+      latitude
+      longitude
+      savedaccommodations {
+        items {
+          id
+          savedAccommodationId
+          accommodationId
+          createdAt
+          updatedAt
+          owner
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      User {
+        id
+        name
+        status
+        userType
+        Accommodations {
+          nextToken
+          __typename
+        }
+        ChatRooms {
+          nextToken
+          __typename
+        }
+        Messages {
+          nextToken
+          __typename
+        }
+        SavedAccommodation {
+          id
+          createdAt
+          updatedAt
+          savedAccommodationUserId
+          owner
+          __typename
+        }
+        createdAt
+        updatedAt
+        userSavedAccommodationId
+        owner
+        __typename
+      }
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const onCreateUser = /* GraphQL */ `
+  subscription OnCreateUser(
+    $filter: ModelSubscriptionUserFilterInput
+    $owner: String
+  ) {
+    onCreateUser(filter: $filter, owner: $owner) {
+      id
+      name
+      status
+      userType
+      Accommodations {
+        items {
+          id
+          availableDate
+          description
+          images
+          price
+          propertyType
+          rented
+          createdAt
+          title
+          address
+          userId
+          unitFeature
+          latitude
+          longitude
+          updatedAt
+          owner
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      ChatRooms {
+        items {
+          id
+          userId
+          chatRoomId
+          createdAt
+          updatedAt
+          owner
           __typename
         }
         nextToken
@@ -193,31 +448,9 @@ export const onCreateChatRoom = /* GraphQL */ `
         nextToken
         __typename
       }
-      LastMessage {
+      SavedAccommodation {
         id
-        createdAt
-        text
-        chatRoomId
-        userId
-        updatedAt
-        __typename
-      }
-      Accommodation {
-        id
-        availableDate
-        description
-        images
-        price
-        propertyType
-        rented
-        createdAt
-        title
-        address
-        userId
-        unitFeature
-        latitude
-        longitude
-        savedaccommodations {
+        Accommodations {
           nextToken
           __typename
         }
@@ -229,30 +462,64 @@ export const onCreateChatRoom = /* GraphQL */ `
           createdAt
           updatedAt
           userSavedAccommodationId
+          owner
           __typename
         }
+        createdAt
         updatedAt
+        savedAccommodationUserId
+        owner
         __typename
       }
       createdAt
       updatedAt
-      chatRoomLastMessageId
-      chatRoomAccommodationId
+      userSavedAccommodationId
+      owner
       __typename
     }
   }
 `;
-export const onUpdateChatRoom = /* GraphQL */ `
-  subscription OnUpdateChatRoom($filter: ModelSubscriptionChatRoomFilterInput) {
-    onUpdateChatRoom(filter: $filter) {
+export const onUpdateUser = /* GraphQL */ `
+  subscription OnUpdateUser(
+    $filter: ModelSubscriptionUserFilterInput
+    $owner: String
+  ) {
+    onUpdateUser(filter: $filter, owner: $owner) {
       id
-      Users {
+      name
+      status
+      userType
+      Accommodations {
         items {
           id
-          chatRoomId
+          availableDate
+          description
+          images
+          price
+          propertyType
+          rented
+          createdAt
+          title
+          address
           userId
+          unitFeature
+          latitude
+          longitude
+          updatedAt
+          owner
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      ChatRooms {
+        items {
+          id
+          userId
+          chatRoomId
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -271,31 +538,9 @@ export const onUpdateChatRoom = /* GraphQL */ `
         nextToken
         __typename
       }
-      LastMessage {
+      SavedAccommodation {
         id
-        createdAt
-        text
-        chatRoomId
-        userId
-        updatedAt
-        __typename
-      }
-      Accommodation {
-        id
-        availableDate
-        description
-        images
-        price
-        propertyType
-        rented
-        createdAt
-        title
-        address
-        userId
-        unitFeature
-        latitude
-        longitude
-        savedaccommodations {
+        Accommodations {
           nextToken
           __typename
         }
@@ -307,30 +552,64 @@ export const onUpdateChatRoom = /* GraphQL */ `
           createdAt
           updatedAt
           userSavedAccommodationId
+          owner
           __typename
         }
+        createdAt
         updatedAt
+        savedAccommodationUserId
+        owner
         __typename
       }
       createdAt
       updatedAt
-      chatRoomLastMessageId
-      chatRoomAccommodationId
+      userSavedAccommodationId
+      owner
       __typename
     }
   }
 `;
-export const onDeleteChatRoom = /* GraphQL */ `
-  subscription OnDeleteChatRoom($filter: ModelSubscriptionChatRoomFilterInput) {
-    onDeleteChatRoom(filter: $filter) {
+export const onDeleteUser = /* GraphQL */ `
+  subscription OnDeleteUser(
+    $filter: ModelSubscriptionUserFilterInput
+    $owner: String
+  ) {
+    onDeleteUser(filter: $filter, owner: $owner) {
       id
-      Users {
+      name
+      status
+      userType
+      Accommodations {
         items {
           id
-          chatRoomId
+          availableDate
+          description
+          images
+          price
+          propertyType
+          rented
+          createdAt
+          title
+          address
           userId
+          unitFeature
+          latitude
+          longitude
+          updatedAt
+          owner
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      ChatRooms {
+        items {
+          id
+          userId
+          chatRoomId
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -349,31 +628,9 @@ export const onDeleteChatRoom = /* GraphQL */ `
         nextToken
         __typename
       }
-      LastMessage {
+      SavedAccommodation {
         id
-        createdAt
-        text
-        chatRoomId
-        userId
-        updatedAt
-        __typename
-      }
-      Accommodation {
-        id
-        availableDate
-        description
-        images
-        price
-        propertyType
-        rented
-        createdAt
-        title
-        address
-        userId
-        unitFeature
-        latitude
-        longitude
-        savedaccommodations {
+        Accommodations {
           nextToken
           __typename
         }
@@ -385,15 +642,19 @@ export const onDeleteChatRoom = /* GraphQL */ `
           createdAt
           updatedAt
           userSavedAccommodationId
+          owner
           __typename
         }
+        createdAt
         updatedAt
+        savedAccommodationUserId
+        owner
         __typename
       }
       createdAt
       updatedAt
-      chatRoomLastMessageId
-      chatRoomAccommodationId
+      userSavedAccommodationId
+      owner
       __typename
     }
   }
@@ -437,237 +698,18 @@ export const onDeleteMessage = /* GraphQL */ `
     }
   }
 `;
-export const onCreateAccommodation = /* GraphQL */ `
-  subscription OnCreateAccommodation(
-    $filter: ModelSubscriptionAccommodationFilterInput
-  ) {
-    onCreateAccommodation(filter: $filter) {
+export const onCreateChatRoom = /* GraphQL */ `
+  subscription OnCreateChatRoom($filter: ModelSubscriptionChatRoomFilterInput) {
+    onCreateChatRoom(filter: $filter) {
       id
-      availableDate
-      description
-      images
-      price
-      propertyType
-      rented
-      createdAt
-      title
-      address
-      userId
-      unitFeature
-      latitude
-      longitude
-      savedaccommodations {
+      Users {
         items {
           id
-          savedAccommodationId
-          accommodationId
-          createdAt
-          updatedAt
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      User {
-        id
-        name
-        status
-        userType
-        Accommodations {
-          nextToken
-          __typename
-        }
-        ChatRooms {
-          nextToken
-          __typename
-        }
-        Messages {
-          nextToken
-          __typename
-        }
-        SavedAccommodation {
-          id
-          createdAt
-          updatedAt
-          savedAccommodationUserId
-          __typename
-        }
-        createdAt
-        updatedAt
-        userSavedAccommodationId
-        __typename
-      }
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const onUpdateAccommodation = /* GraphQL */ `
-  subscription OnUpdateAccommodation(
-    $filter: ModelSubscriptionAccommodationFilterInput
-  ) {
-    onUpdateAccommodation(filter: $filter) {
-      id
-      availableDate
-      description
-      images
-      price
-      propertyType
-      rented
-      createdAt
-      title
-      address
-      userId
-      unitFeature
-      latitude
-      longitude
-      savedaccommodations {
-        items {
-          id
-          savedAccommodationId
-          accommodationId
-          createdAt
-          updatedAt
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      User {
-        id
-        name
-        status
-        userType
-        Accommodations {
-          nextToken
-          __typename
-        }
-        ChatRooms {
-          nextToken
-          __typename
-        }
-        Messages {
-          nextToken
-          __typename
-        }
-        SavedAccommodation {
-          id
-          createdAt
-          updatedAt
-          savedAccommodationUserId
-          __typename
-        }
-        createdAt
-        updatedAt
-        userSavedAccommodationId
-        __typename
-      }
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const onDeleteAccommodation = /* GraphQL */ `
-  subscription OnDeleteAccommodation(
-    $filter: ModelSubscriptionAccommodationFilterInput
-  ) {
-    onDeleteAccommodation(filter: $filter) {
-      id
-      availableDate
-      description
-      images
-      price
-      propertyType
-      rented
-      createdAt
-      title
-      address
-      userId
-      unitFeature
-      latitude
-      longitude
-      savedaccommodations {
-        items {
-          id
-          savedAccommodationId
-          accommodationId
-          createdAt
-          updatedAt
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      User {
-        id
-        name
-        status
-        userType
-        Accommodations {
-          nextToken
-          __typename
-        }
-        ChatRooms {
-          nextToken
-          __typename
-        }
-        Messages {
-          nextToken
-          __typename
-        }
-        SavedAccommodation {
-          id
-          createdAt
-          updatedAt
-          savedAccommodationUserId
-          __typename
-        }
-        createdAt
-        updatedAt
-        userSavedAccommodationId
-        __typename
-      }
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const onCreateUser = /* GraphQL */ `
-  subscription OnCreateUser($filter: ModelSubscriptionUserFilterInput) {
-    onCreateUser(filter: $filter) {
-      id
-      name
-      status
-      userType
-      Accommodations {
-        items {
-          id
-          availableDate
-          description
-          images
-          price
-          propertyType
-          rented
-          createdAt
-          title
-          address
           userId
-          unitFeature
-          latitude
-          longitude
-          updatedAt
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      ChatRooms {
-        items {
-          id
           chatRoomId
-          userId
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -686,9 +728,31 @@ export const onCreateUser = /* GraphQL */ `
         nextToken
         __typename
       }
-      SavedAccommodation {
+      LastMessage {
         id
-        Accommodations {
+        createdAt
+        text
+        chatRoomId
+        userId
+        updatedAt
+        __typename
+      }
+      Accommodation {
+        id
+        availableDate
+        description
+        images
+        price
+        propertyType
+        rented
+        createdAt
+        title
+        address
+        userId
+        unitFeature
+        latitude
+        longitude
+        savedaccommodations {
           nextToken
           __typename
         }
@@ -700,56 +764,33 @@ export const onCreateUser = /* GraphQL */ `
           createdAt
           updatedAt
           userSavedAccommodationId
+          owner
           __typename
         }
-        createdAt
         updatedAt
-        savedAccommodationUserId
+        owner
         __typename
       }
       createdAt
       updatedAt
-      userSavedAccommodationId
+      chatRoomLastMessageId
+      chatRoomAccommodationId
       __typename
     }
   }
 `;
-export const onUpdateUser = /* GraphQL */ `
-  subscription OnUpdateUser($filter: ModelSubscriptionUserFilterInput) {
-    onUpdateUser(filter: $filter) {
+export const onUpdateChatRoom = /* GraphQL */ `
+  subscription OnUpdateChatRoom($filter: ModelSubscriptionChatRoomFilterInput) {
+    onUpdateChatRoom(filter: $filter) {
       id
-      name
-      status
-      userType
-      Accommodations {
+      Users {
         items {
           id
-          availableDate
-          description
-          images
-          price
-          propertyType
-          rented
-          createdAt
-          title
-          address
           userId
-          unitFeature
-          latitude
-          longitude
-          updatedAt
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      ChatRooms {
-        items {
-          id
           chatRoomId
-          userId
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -768,9 +809,31 @@ export const onUpdateUser = /* GraphQL */ `
         nextToken
         __typename
       }
-      SavedAccommodation {
+      LastMessage {
         id
-        Accommodations {
+        createdAt
+        text
+        chatRoomId
+        userId
+        updatedAt
+        __typename
+      }
+      Accommodation {
+        id
+        availableDate
+        description
+        images
+        price
+        propertyType
+        rented
+        createdAt
+        title
+        address
+        userId
+        unitFeature
+        latitude
+        longitude
+        savedaccommodations {
           nextToken
           __typename
         }
@@ -782,56 +845,33 @@ export const onUpdateUser = /* GraphQL */ `
           createdAt
           updatedAt
           userSavedAccommodationId
+          owner
           __typename
         }
-        createdAt
         updatedAt
-        savedAccommodationUserId
+        owner
         __typename
       }
       createdAt
       updatedAt
-      userSavedAccommodationId
+      chatRoomLastMessageId
+      chatRoomAccommodationId
       __typename
     }
   }
 `;
-export const onDeleteUser = /* GraphQL */ `
-  subscription OnDeleteUser($filter: ModelSubscriptionUserFilterInput) {
-    onDeleteUser(filter: $filter) {
+export const onDeleteChatRoom = /* GraphQL */ `
+  subscription OnDeleteChatRoom($filter: ModelSubscriptionChatRoomFilterInput) {
+    onDeleteChatRoom(filter: $filter) {
       id
-      name
-      status
-      userType
-      Accommodations {
+      Users {
         items {
           id
-          availableDate
-          description
-          images
-          price
-          propertyType
-          rented
-          createdAt
-          title
-          address
           userId
-          unitFeature
-          latitude
-          longitude
-          updatedAt
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      ChatRooms {
-        items {
-          id
           chatRoomId
-          userId
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -850,9 +890,31 @@ export const onDeleteUser = /* GraphQL */ `
         nextToken
         __typename
       }
-      SavedAccommodation {
+      LastMessage {
         id
-        Accommodations {
+        createdAt
+        text
+        chatRoomId
+        userId
+        updatedAt
+        __typename
+      }
+      Accommodation {
+        id
+        availableDate
+        description
+        images
+        price
+        propertyType
+        rented
+        createdAt
+        title
+        address
+        userId
+        unitFeature
+        latitude
+        longitude
+        savedaccommodations {
           nextToken
           __typename
         }
@@ -864,16 +926,17 @@ export const onDeleteUser = /* GraphQL */ `
           createdAt
           updatedAt
           userSavedAccommodationId
+          owner
           __typename
         }
-        createdAt
         updatedAt
-        savedAccommodationUserId
+        owner
         __typename
       }
       createdAt
       updatedAt
-      userSavedAccommodationId
+      chatRoomLastMessageId
+      chatRoomAccommodationId
       __typename
     }
   }
@@ -881,8 +944,9 @@ export const onDeleteUser = /* GraphQL */ `
 export const onCreateSavedAccommodationAccommodation = /* GraphQL */ `
   subscription OnCreateSavedAccommodationAccommodation(
     $filter: ModelSubscriptionSavedAccommodationAccommodationFilterInput
+    $owner: String
   ) {
-    onCreateSavedAccommodationAccommodation(filter: $filter) {
+    onCreateSavedAccommodationAccommodation(filter: $filter, owner: $owner) {
       id
       savedAccommodationId
       accommodationId
@@ -900,11 +964,13 @@ export const onCreateSavedAccommodationAccommodation = /* GraphQL */ `
           createdAt
           updatedAt
           userSavedAccommodationId
+          owner
           __typename
         }
         createdAt
         updatedAt
         savedAccommodationUserId
+        owner
         __typename
       }
       accommodation {
@@ -934,13 +1000,16 @@ export const onCreateSavedAccommodationAccommodation = /* GraphQL */ `
           createdAt
           updatedAt
           userSavedAccommodationId
+          owner
           __typename
         }
         updatedAt
+        owner
         __typename
       }
       createdAt
       updatedAt
+      owner
       __typename
     }
   }
@@ -948,8 +1017,9 @@ export const onCreateSavedAccommodationAccommodation = /* GraphQL */ `
 export const onUpdateSavedAccommodationAccommodation = /* GraphQL */ `
   subscription OnUpdateSavedAccommodationAccommodation(
     $filter: ModelSubscriptionSavedAccommodationAccommodationFilterInput
+    $owner: String
   ) {
-    onUpdateSavedAccommodationAccommodation(filter: $filter) {
+    onUpdateSavedAccommodationAccommodation(filter: $filter, owner: $owner) {
       id
       savedAccommodationId
       accommodationId
@@ -967,11 +1037,13 @@ export const onUpdateSavedAccommodationAccommodation = /* GraphQL */ `
           createdAt
           updatedAt
           userSavedAccommodationId
+          owner
           __typename
         }
         createdAt
         updatedAt
         savedAccommodationUserId
+        owner
         __typename
       }
       accommodation {
@@ -1001,13 +1073,16 @@ export const onUpdateSavedAccommodationAccommodation = /* GraphQL */ `
           createdAt
           updatedAt
           userSavedAccommodationId
+          owner
           __typename
         }
         updatedAt
+        owner
         __typename
       }
       createdAt
       updatedAt
+      owner
       __typename
     }
   }
@@ -1015,8 +1090,9 @@ export const onUpdateSavedAccommodationAccommodation = /* GraphQL */ `
 export const onDeleteSavedAccommodationAccommodation = /* GraphQL */ `
   subscription OnDeleteSavedAccommodationAccommodation(
     $filter: ModelSubscriptionSavedAccommodationAccommodationFilterInput
+    $owner: String
   ) {
-    onDeleteSavedAccommodationAccommodation(filter: $filter) {
+    onDeleteSavedAccommodationAccommodation(filter: $filter, owner: $owner) {
       id
       savedAccommodationId
       accommodationId
@@ -1034,11 +1110,13 @@ export const onDeleteSavedAccommodationAccommodation = /* GraphQL */ `
           createdAt
           updatedAt
           userSavedAccommodationId
+          owner
           __typename
         }
         createdAt
         updatedAt
         savedAccommodationUserId
+        owner
         __typename
       }
       accommodation {
@@ -1068,13 +1146,16 @@ export const onDeleteSavedAccommodationAccommodation = /* GraphQL */ `
           createdAt
           updatedAt
           userSavedAccommodationId
+          owner
           __typename
         }
         updatedAt
+        owner
         __typename
       }
       createdAt
       updatedAt
+      owner
       __typename
     }
   }
@@ -1082,11 +1163,43 @@ export const onDeleteSavedAccommodationAccommodation = /* GraphQL */ `
 export const onCreateUserChatRoom = /* GraphQL */ `
   subscription OnCreateUserChatRoom(
     $filter: ModelSubscriptionUserChatRoomFilterInput
+    $owner: String
   ) {
-    onCreateUserChatRoom(filter: $filter) {
+    onCreateUserChatRoom(filter: $filter, owner: $owner) {
       id
-      chatRoomId
       userId
+      chatRoomId
+      user {
+        id
+        name
+        status
+        userType
+        Accommodations {
+          nextToken
+          __typename
+        }
+        ChatRooms {
+          nextToken
+          __typename
+        }
+        Messages {
+          nextToken
+          __typename
+        }
+        SavedAccommodation {
+          id
+          createdAt
+          updatedAt
+          savedAccommodationUserId
+          owner
+          __typename
+        }
+        createdAt
+        updatedAt
+        userSavedAccommodationId
+        owner
+        __typename
+      }
       chatRoom {
         id
         Users {
@@ -1122,6 +1235,7 @@ export const onCreateUserChatRoom = /* GraphQL */ `
           latitude
           longitude
           updatedAt
+          owner
           __typename
         }
         createdAt
@@ -1130,37 +1244,9 @@ export const onCreateUserChatRoom = /* GraphQL */ `
         chatRoomAccommodationId
         __typename
       }
-      user {
-        id
-        name
-        status
-        userType
-        Accommodations {
-          nextToken
-          __typename
-        }
-        ChatRooms {
-          nextToken
-          __typename
-        }
-        Messages {
-          nextToken
-          __typename
-        }
-        SavedAccommodation {
-          id
-          createdAt
-          updatedAt
-          savedAccommodationUserId
-          __typename
-        }
-        createdAt
-        updatedAt
-        userSavedAccommodationId
-        __typename
-      }
       createdAt
       updatedAt
+      owner
       __typename
     }
   }
@@ -1168,11 +1254,43 @@ export const onCreateUserChatRoom = /* GraphQL */ `
 export const onUpdateUserChatRoom = /* GraphQL */ `
   subscription OnUpdateUserChatRoom(
     $filter: ModelSubscriptionUserChatRoomFilterInput
+    $owner: String
   ) {
-    onUpdateUserChatRoom(filter: $filter) {
+    onUpdateUserChatRoom(filter: $filter, owner: $owner) {
       id
-      chatRoomId
       userId
+      chatRoomId
+      user {
+        id
+        name
+        status
+        userType
+        Accommodations {
+          nextToken
+          __typename
+        }
+        ChatRooms {
+          nextToken
+          __typename
+        }
+        Messages {
+          nextToken
+          __typename
+        }
+        SavedAccommodation {
+          id
+          createdAt
+          updatedAt
+          savedAccommodationUserId
+          owner
+          __typename
+        }
+        createdAt
+        updatedAt
+        userSavedAccommodationId
+        owner
+        __typename
+      }
       chatRoom {
         id
         Users {
@@ -1208,6 +1326,7 @@ export const onUpdateUserChatRoom = /* GraphQL */ `
           latitude
           longitude
           updatedAt
+          owner
           __typename
         }
         createdAt
@@ -1216,37 +1335,9 @@ export const onUpdateUserChatRoom = /* GraphQL */ `
         chatRoomAccommodationId
         __typename
       }
-      user {
-        id
-        name
-        status
-        userType
-        Accommodations {
-          nextToken
-          __typename
-        }
-        ChatRooms {
-          nextToken
-          __typename
-        }
-        Messages {
-          nextToken
-          __typename
-        }
-        SavedAccommodation {
-          id
-          createdAt
-          updatedAt
-          savedAccommodationUserId
-          __typename
-        }
-        createdAt
-        updatedAt
-        userSavedAccommodationId
-        __typename
-      }
       createdAt
       updatedAt
+      owner
       __typename
     }
   }
@@ -1254,11 +1345,43 @@ export const onUpdateUserChatRoom = /* GraphQL */ `
 export const onDeleteUserChatRoom = /* GraphQL */ `
   subscription OnDeleteUserChatRoom(
     $filter: ModelSubscriptionUserChatRoomFilterInput
+    $owner: String
   ) {
-    onDeleteUserChatRoom(filter: $filter) {
+    onDeleteUserChatRoom(filter: $filter, owner: $owner) {
       id
-      chatRoomId
       userId
+      chatRoomId
+      user {
+        id
+        name
+        status
+        userType
+        Accommodations {
+          nextToken
+          __typename
+        }
+        ChatRooms {
+          nextToken
+          __typename
+        }
+        Messages {
+          nextToken
+          __typename
+        }
+        SavedAccommodation {
+          id
+          createdAt
+          updatedAt
+          savedAccommodationUserId
+          owner
+          __typename
+        }
+        createdAt
+        updatedAt
+        userSavedAccommodationId
+        owner
+        __typename
+      }
       chatRoom {
         id
         Users {
@@ -1294,6 +1417,7 @@ export const onDeleteUserChatRoom = /* GraphQL */ `
           latitude
           longitude
           updatedAt
+          owner
           __typename
         }
         createdAt
@@ -1302,37 +1426,9 @@ export const onDeleteUserChatRoom = /* GraphQL */ `
         chatRoomAccommodationId
         __typename
       }
-      user {
-        id
-        name
-        status
-        userType
-        Accommodations {
-          nextToken
-          __typename
-        }
-        ChatRooms {
-          nextToken
-          __typename
-        }
-        Messages {
-          nextToken
-          __typename
-        }
-        SavedAccommodation {
-          id
-          createdAt
-          updatedAt
-          savedAccommodationUserId
-          __typename
-        }
-        createdAt
-        updatedAt
-        userSavedAccommodationId
-        __typename
-      }
       createdAt
       updatedAt
+      owner
       __typename
     }
   }

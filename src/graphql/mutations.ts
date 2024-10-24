@@ -16,6 +16,7 @@ export const createSavedAccommodation = /* GraphQL */ `
           accommodationId
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -43,16 +44,19 @@ export const createSavedAccommodation = /* GraphQL */ `
           createdAt
           updatedAt
           savedAccommodationUserId
+          owner
           __typename
         }
         createdAt
         updatedAt
         userSavedAccommodationId
+        owner
         __typename
       }
       createdAt
       updatedAt
       savedAccommodationUserId
+      owner
       __typename
     }
   }
@@ -71,6 +75,7 @@ export const updateSavedAccommodation = /* GraphQL */ `
           accommodationId
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -98,16 +103,19 @@ export const updateSavedAccommodation = /* GraphQL */ `
           createdAt
           updatedAt
           savedAccommodationUserId
+          owner
           __typename
         }
         createdAt
         updatedAt
         userSavedAccommodationId
+        owner
         __typename
       }
       createdAt
       updatedAt
       savedAccommodationUserId
+      owner
       __typename
     }
   }
@@ -126,6 +134,7 @@ export const deleteSavedAccommodation = /* GraphQL */ `
           accommodationId
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -153,34 +162,274 @@ export const deleteSavedAccommodation = /* GraphQL */ `
           createdAt
           updatedAt
           savedAccommodationUserId
+          owner
           __typename
         }
         createdAt
         updatedAt
         userSavedAccommodationId
+        owner
         __typename
       }
       createdAt
       updatedAt
       savedAccommodationUserId
+      owner
       __typename
     }
   }
 `;
-export const createChatRoom = /* GraphQL */ `
-  mutation CreateChatRoom(
-    $input: CreateChatRoomInput!
-    $condition: ModelChatRoomConditionInput
+export const createAccommodation = /* GraphQL */ `
+  mutation CreateAccommodation(
+    $input: CreateAccommodationInput!
+    $condition: ModelAccommodationConditionInput
   ) {
-    createChatRoom(input: $input, condition: $condition) {
+    createAccommodation(input: $input, condition: $condition) {
       id
-      Users {
+      availableDate
+      description
+      images
+      price
+      propertyType
+      rented
+      createdAt
+      title
+      address
+      userId
+      unitFeature
+      latitude
+      longitude
+      savedaccommodations {
         items {
           id
-          chatRoomId
-          userId
+          savedAccommodationId
+          accommodationId
           createdAt
           updatedAt
+          owner
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      User {
+        id
+        name
+        status
+        userType
+        Accommodations {
+          nextToken
+          __typename
+        }
+        ChatRooms {
+          nextToken
+          __typename
+        }
+        Messages {
+          nextToken
+          __typename
+        }
+        SavedAccommodation {
+          id
+          createdAt
+          updatedAt
+          savedAccommodationUserId
+          owner
+          __typename
+        }
+        createdAt
+        updatedAt
+        userSavedAccommodationId
+        owner
+        __typename
+      }
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const updateAccommodation = /* GraphQL */ `
+  mutation UpdateAccommodation(
+    $input: UpdateAccommodationInput!
+    $condition: ModelAccommodationConditionInput
+  ) {
+    updateAccommodation(input: $input, condition: $condition) {
+      id
+      availableDate
+      description
+      images
+      price
+      propertyType
+      rented
+      createdAt
+      title
+      address
+      userId
+      unitFeature
+      latitude
+      longitude
+      savedaccommodations {
+        items {
+          id
+          savedAccommodationId
+          accommodationId
+          createdAt
+          updatedAt
+          owner
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      User {
+        id
+        name
+        status
+        userType
+        Accommodations {
+          nextToken
+          __typename
+        }
+        ChatRooms {
+          nextToken
+          __typename
+        }
+        Messages {
+          nextToken
+          __typename
+        }
+        SavedAccommodation {
+          id
+          createdAt
+          updatedAt
+          savedAccommodationUserId
+          owner
+          __typename
+        }
+        createdAt
+        updatedAt
+        userSavedAccommodationId
+        owner
+        __typename
+      }
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const deleteAccommodation = /* GraphQL */ `
+  mutation DeleteAccommodation(
+    $input: DeleteAccommodationInput!
+    $condition: ModelAccommodationConditionInput
+  ) {
+    deleteAccommodation(input: $input, condition: $condition) {
+      id
+      availableDate
+      description
+      images
+      price
+      propertyType
+      rented
+      createdAt
+      title
+      address
+      userId
+      unitFeature
+      latitude
+      longitude
+      savedaccommodations {
+        items {
+          id
+          savedAccommodationId
+          accommodationId
+          createdAt
+          updatedAt
+          owner
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      User {
+        id
+        name
+        status
+        userType
+        Accommodations {
+          nextToken
+          __typename
+        }
+        ChatRooms {
+          nextToken
+          __typename
+        }
+        Messages {
+          nextToken
+          __typename
+        }
+        SavedAccommodation {
+          id
+          createdAt
+          updatedAt
+          savedAccommodationUserId
+          owner
+          __typename
+        }
+        createdAt
+        updatedAt
+        userSavedAccommodationId
+        owner
+        __typename
+      }
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const createUser = /* GraphQL */ `
+  mutation CreateUser(
+    $input: CreateUserInput!
+    $condition: ModelUserConditionInput
+  ) {
+    createUser(input: $input, condition: $condition) {
+      id
+      name
+      status
+      userType
+      Accommodations {
+        items {
+          id
+          availableDate
+          description
+          images
+          price
+          propertyType
+          rented
+          createdAt
+          title
+          address
+          userId
+          unitFeature
+          latitude
+          longitude
+          updatedAt
+          owner
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      ChatRooms {
+        items {
+          id
+          userId
+          chatRoomId
+          createdAt
+          updatedAt
+          owner
           __typename
         }
         nextToken
@@ -199,31 +448,9 @@ export const createChatRoom = /* GraphQL */ `
         nextToken
         __typename
       }
-      LastMessage {
+      SavedAccommodation {
         id
-        createdAt
-        text
-        chatRoomId
-        userId
-        updatedAt
-        __typename
-      }
-      Accommodation {
-        id
-        availableDate
-        description
-        images
-        price
-        propertyType
-        rented
-        createdAt
-        title
-        address
-        userId
-        unitFeature
-        latitude
-        longitude
-        savedaccommodations {
+        Accommodations {
           nextToken
           __typename
         }
@@ -235,33 +462,64 @@ export const createChatRoom = /* GraphQL */ `
           createdAt
           updatedAt
           userSavedAccommodationId
+          owner
           __typename
         }
+        createdAt
         updatedAt
+        savedAccommodationUserId
+        owner
         __typename
       }
       createdAt
       updatedAt
-      chatRoomLastMessageId
-      chatRoomAccommodationId
+      userSavedAccommodationId
+      owner
       __typename
     }
   }
 `;
-export const updateChatRoom = /* GraphQL */ `
-  mutation UpdateChatRoom(
-    $input: UpdateChatRoomInput!
-    $condition: ModelChatRoomConditionInput
+export const updateUser = /* GraphQL */ `
+  mutation UpdateUser(
+    $input: UpdateUserInput!
+    $condition: ModelUserConditionInput
   ) {
-    updateChatRoom(input: $input, condition: $condition) {
+    updateUser(input: $input, condition: $condition) {
       id
-      Users {
+      name
+      status
+      userType
+      Accommodations {
         items {
           id
-          chatRoomId
+          availableDate
+          description
+          images
+          price
+          propertyType
+          rented
+          createdAt
+          title
+          address
           userId
+          unitFeature
+          latitude
+          longitude
+          updatedAt
+          owner
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      ChatRooms {
+        items {
+          id
+          userId
+          chatRoomId
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -280,31 +538,9 @@ export const updateChatRoom = /* GraphQL */ `
         nextToken
         __typename
       }
-      LastMessage {
+      SavedAccommodation {
         id
-        createdAt
-        text
-        chatRoomId
-        userId
-        updatedAt
-        __typename
-      }
-      Accommodation {
-        id
-        availableDate
-        description
-        images
-        price
-        propertyType
-        rented
-        createdAt
-        title
-        address
-        userId
-        unitFeature
-        latitude
-        longitude
-        savedaccommodations {
+        Accommodations {
           nextToken
           __typename
         }
@@ -316,33 +552,64 @@ export const updateChatRoom = /* GraphQL */ `
           createdAt
           updatedAt
           userSavedAccommodationId
+          owner
           __typename
         }
+        createdAt
         updatedAt
+        savedAccommodationUserId
+        owner
         __typename
       }
       createdAt
       updatedAt
-      chatRoomLastMessageId
-      chatRoomAccommodationId
+      userSavedAccommodationId
+      owner
       __typename
     }
   }
 `;
-export const deleteChatRoom = /* GraphQL */ `
-  mutation DeleteChatRoom(
-    $input: DeleteChatRoomInput!
-    $condition: ModelChatRoomConditionInput
+export const deleteUser = /* GraphQL */ `
+  mutation DeleteUser(
+    $input: DeleteUserInput!
+    $condition: ModelUserConditionInput
   ) {
-    deleteChatRoom(input: $input, condition: $condition) {
+    deleteUser(input: $input, condition: $condition) {
       id
-      Users {
+      name
+      status
+      userType
+      Accommodations {
         items {
           id
-          chatRoomId
+          availableDate
+          description
+          images
+          price
+          propertyType
+          rented
+          createdAt
+          title
+          address
           userId
+          unitFeature
+          latitude
+          longitude
+          updatedAt
+          owner
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      ChatRooms {
+        items {
+          id
+          userId
+          chatRoomId
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -361,31 +628,9 @@ export const deleteChatRoom = /* GraphQL */ `
         nextToken
         __typename
       }
-      LastMessage {
+      SavedAccommodation {
         id
-        createdAt
-        text
-        chatRoomId
-        userId
-        updatedAt
-        __typename
-      }
-      Accommodation {
-        id
-        availableDate
-        description
-        images
-        price
-        propertyType
-        rented
-        createdAt
-        title
-        address
-        userId
-        unitFeature
-        latitude
-        longitude
-        savedaccommodations {
+        Accommodations {
           nextToken
           __typename
         }
@@ -397,15 +642,19 @@ export const deleteChatRoom = /* GraphQL */ `
           createdAt
           updatedAt
           userSavedAccommodationId
+          owner
           __typename
         }
+        createdAt
         updatedAt
+        savedAccommodationUserId
+        owner
         __typename
       }
       createdAt
       updatedAt
-      chatRoomLastMessageId
-      chatRoomAccommodationId
+      userSavedAccommodationId
+      owner
       __typename
     }
   }
@@ -458,243 +707,21 @@ export const deleteMessage = /* GraphQL */ `
     }
   }
 `;
-export const createAccommodation = /* GraphQL */ `
-  mutation CreateAccommodation(
-    $input: CreateAccommodationInput!
-    $condition: ModelAccommodationConditionInput
+export const createChatRoom = /* GraphQL */ `
+  mutation CreateChatRoom(
+    $input: CreateChatRoomInput!
+    $condition: ModelChatRoomConditionInput
   ) {
-    createAccommodation(input: $input, condition: $condition) {
+    createChatRoom(input: $input, condition: $condition) {
       id
-      availableDate
-      description
-      images
-      price
-      propertyType
-      rented
-      createdAt
-      title
-      address
-      userId
-      unitFeature
-      latitude
-      longitude
-      savedaccommodations {
+      Users {
         items {
           id
-          savedAccommodationId
-          accommodationId
-          createdAt
-          updatedAt
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      User {
-        id
-        name
-        status
-        userType
-        Accommodations {
-          nextToken
-          __typename
-        }
-        ChatRooms {
-          nextToken
-          __typename
-        }
-        Messages {
-          nextToken
-          __typename
-        }
-        SavedAccommodation {
-          id
-          createdAt
-          updatedAt
-          savedAccommodationUserId
-          __typename
-        }
-        createdAt
-        updatedAt
-        userSavedAccommodationId
-        __typename
-      }
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const updateAccommodation = /* GraphQL */ `
-  mutation UpdateAccommodation(
-    $input: UpdateAccommodationInput!
-    $condition: ModelAccommodationConditionInput
-  ) {
-    updateAccommodation(input: $input, condition: $condition) {
-      id
-      availableDate
-      description
-      images
-      price
-      propertyType
-      rented
-      createdAt
-      title
-      address
-      userId
-      unitFeature
-      latitude
-      longitude
-      savedaccommodations {
-        items {
-          id
-          savedAccommodationId
-          accommodationId
-          createdAt
-          updatedAt
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      User {
-        id
-        name
-        status
-        userType
-        Accommodations {
-          nextToken
-          __typename
-        }
-        ChatRooms {
-          nextToken
-          __typename
-        }
-        Messages {
-          nextToken
-          __typename
-        }
-        SavedAccommodation {
-          id
-          createdAt
-          updatedAt
-          savedAccommodationUserId
-          __typename
-        }
-        createdAt
-        updatedAt
-        userSavedAccommodationId
-        __typename
-      }
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const deleteAccommodation = /* GraphQL */ `
-  mutation DeleteAccommodation(
-    $input: DeleteAccommodationInput!
-    $condition: ModelAccommodationConditionInput
-  ) {
-    deleteAccommodation(input: $input, condition: $condition) {
-      id
-      availableDate
-      description
-      images
-      price
-      propertyType
-      rented
-      createdAt
-      title
-      address
-      userId
-      unitFeature
-      latitude
-      longitude
-      savedaccommodations {
-        items {
-          id
-          savedAccommodationId
-          accommodationId
-          createdAt
-          updatedAt
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      User {
-        id
-        name
-        status
-        userType
-        Accommodations {
-          nextToken
-          __typename
-        }
-        ChatRooms {
-          nextToken
-          __typename
-        }
-        Messages {
-          nextToken
-          __typename
-        }
-        SavedAccommodation {
-          id
-          createdAt
-          updatedAt
-          savedAccommodationUserId
-          __typename
-        }
-        createdAt
-        updatedAt
-        userSavedAccommodationId
-        __typename
-      }
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const createUser = /* GraphQL */ `
-  mutation CreateUser(
-    $input: CreateUserInput!
-    $condition: ModelUserConditionInput
-  ) {
-    createUser(input: $input, condition: $condition) {
-      id
-      name
-      status
-      userType
-      Accommodations {
-        items {
-          id
-          availableDate
-          description
-          images
-          price
-          propertyType
-          rented
-          createdAt
-          title
-          address
           userId
-          unitFeature
-          latitude
-          longitude
-          updatedAt
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      ChatRooms {
-        items {
-          id
           chatRoomId
-          userId
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -713,9 +740,31 @@ export const createUser = /* GraphQL */ `
         nextToken
         __typename
       }
-      SavedAccommodation {
+      LastMessage {
         id
-        Accommodations {
+        createdAt
+        text
+        chatRoomId
+        userId
+        updatedAt
+        __typename
+      }
+      Accommodation {
+        id
+        availableDate
+        description
+        images
+        price
+        propertyType
+        rented
+        createdAt
+        title
+        address
+        userId
+        unitFeature
+        latitude
+        longitude
+        savedaccommodations {
           nextToken
           __typename
         }
@@ -727,59 +776,36 @@ export const createUser = /* GraphQL */ `
           createdAt
           updatedAt
           userSavedAccommodationId
+          owner
           __typename
         }
-        createdAt
         updatedAt
-        savedAccommodationUserId
+        owner
         __typename
       }
       createdAt
       updatedAt
-      userSavedAccommodationId
+      chatRoomLastMessageId
+      chatRoomAccommodationId
       __typename
     }
   }
 `;
-export const updateUser = /* GraphQL */ `
-  mutation UpdateUser(
-    $input: UpdateUserInput!
-    $condition: ModelUserConditionInput
+export const updateChatRoom = /* GraphQL */ `
+  mutation UpdateChatRoom(
+    $input: UpdateChatRoomInput!
+    $condition: ModelChatRoomConditionInput
   ) {
-    updateUser(input: $input, condition: $condition) {
+    updateChatRoom(input: $input, condition: $condition) {
       id
-      name
-      status
-      userType
-      Accommodations {
+      Users {
         items {
           id
-          availableDate
-          description
-          images
-          price
-          propertyType
-          rented
-          createdAt
-          title
-          address
           userId
-          unitFeature
-          latitude
-          longitude
-          updatedAt
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      ChatRooms {
-        items {
-          id
           chatRoomId
-          userId
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -798,9 +824,31 @@ export const updateUser = /* GraphQL */ `
         nextToken
         __typename
       }
-      SavedAccommodation {
+      LastMessage {
         id
-        Accommodations {
+        createdAt
+        text
+        chatRoomId
+        userId
+        updatedAt
+        __typename
+      }
+      Accommodation {
+        id
+        availableDate
+        description
+        images
+        price
+        propertyType
+        rented
+        createdAt
+        title
+        address
+        userId
+        unitFeature
+        latitude
+        longitude
+        savedaccommodations {
           nextToken
           __typename
         }
@@ -812,59 +860,36 @@ export const updateUser = /* GraphQL */ `
           createdAt
           updatedAt
           userSavedAccommodationId
+          owner
           __typename
         }
-        createdAt
         updatedAt
-        savedAccommodationUserId
+        owner
         __typename
       }
       createdAt
       updatedAt
-      userSavedAccommodationId
+      chatRoomLastMessageId
+      chatRoomAccommodationId
       __typename
     }
   }
 `;
-export const deleteUser = /* GraphQL */ `
-  mutation DeleteUser(
-    $input: DeleteUserInput!
-    $condition: ModelUserConditionInput
+export const deleteChatRoom = /* GraphQL */ `
+  mutation DeleteChatRoom(
+    $input: DeleteChatRoomInput!
+    $condition: ModelChatRoomConditionInput
   ) {
-    deleteUser(input: $input, condition: $condition) {
+    deleteChatRoom(input: $input, condition: $condition) {
       id
-      name
-      status
-      userType
-      Accommodations {
+      Users {
         items {
           id
-          availableDate
-          description
-          images
-          price
-          propertyType
-          rented
-          createdAt
-          title
-          address
           userId
-          unitFeature
-          latitude
-          longitude
-          updatedAt
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      ChatRooms {
-        items {
-          id
           chatRoomId
-          userId
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -883,9 +908,31 @@ export const deleteUser = /* GraphQL */ `
         nextToken
         __typename
       }
-      SavedAccommodation {
+      LastMessage {
         id
-        Accommodations {
+        createdAt
+        text
+        chatRoomId
+        userId
+        updatedAt
+        __typename
+      }
+      Accommodation {
+        id
+        availableDate
+        description
+        images
+        price
+        propertyType
+        rented
+        createdAt
+        title
+        address
+        userId
+        unitFeature
+        latitude
+        longitude
+        savedaccommodations {
           nextToken
           __typename
         }
@@ -897,16 +944,17 @@ export const deleteUser = /* GraphQL */ `
           createdAt
           updatedAt
           userSavedAccommodationId
+          owner
           __typename
         }
-        createdAt
         updatedAt
-        savedAccommodationUserId
+        owner
         __typename
       }
       createdAt
       updatedAt
-      userSavedAccommodationId
+      chatRoomLastMessageId
+      chatRoomAccommodationId
       __typename
     }
   }
@@ -937,11 +985,13 @@ export const createSavedAccommodationAccommodation = /* GraphQL */ `
           createdAt
           updatedAt
           userSavedAccommodationId
+          owner
           __typename
         }
         createdAt
         updatedAt
         savedAccommodationUserId
+        owner
         __typename
       }
       accommodation {
@@ -971,13 +1021,16 @@ export const createSavedAccommodationAccommodation = /* GraphQL */ `
           createdAt
           updatedAt
           userSavedAccommodationId
+          owner
           __typename
         }
         updatedAt
+        owner
         __typename
       }
       createdAt
       updatedAt
+      owner
       __typename
     }
   }
@@ -1008,11 +1061,13 @@ export const updateSavedAccommodationAccommodation = /* GraphQL */ `
           createdAt
           updatedAt
           userSavedAccommodationId
+          owner
           __typename
         }
         createdAt
         updatedAt
         savedAccommodationUserId
+        owner
         __typename
       }
       accommodation {
@@ -1042,13 +1097,16 @@ export const updateSavedAccommodationAccommodation = /* GraphQL */ `
           createdAt
           updatedAt
           userSavedAccommodationId
+          owner
           __typename
         }
         updatedAt
+        owner
         __typename
       }
       createdAt
       updatedAt
+      owner
       __typename
     }
   }
@@ -1079,11 +1137,13 @@ export const deleteSavedAccommodationAccommodation = /* GraphQL */ `
           createdAt
           updatedAt
           userSavedAccommodationId
+          owner
           __typename
         }
         createdAt
         updatedAt
         savedAccommodationUserId
+        owner
         __typename
       }
       accommodation {
@@ -1113,13 +1173,16 @@ export const deleteSavedAccommodationAccommodation = /* GraphQL */ `
           createdAt
           updatedAt
           userSavedAccommodationId
+          owner
           __typename
         }
         updatedAt
+        owner
         __typename
       }
       createdAt
       updatedAt
+      owner
       __typename
     }
   }
@@ -1131,8 +1194,39 @@ export const createUserChatRoom = /* GraphQL */ `
   ) {
     createUserChatRoom(input: $input, condition: $condition) {
       id
-      chatRoomId
       userId
+      chatRoomId
+      user {
+        id
+        name
+        status
+        userType
+        Accommodations {
+          nextToken
+          __typename
+        }
+        ChatRooms {
+          nextToken
+          __typename
+        }
+        Messages {
+          nextToken
+          __typename
+        }
+        SavedAccommodation {
+          id
+          createdAt
+          updatedAt
+          savedAccommodationUserId
+          owner
+          __typename
+        }
+        createdAt
+        updatedAt
+        userSavedAccommodationId
+        owner
+        __typename
+      }
       chatRoom {
         id
         Users {
@@ -1168,6 +1262,7 @@ export const createUserChatRoom = /* GraphQL */ `
           latitude
           longitude
           updatedAt
+          owner
           __typename
         }
         createdAt
@@ -1176,37 +1271,9 @@ export const createUserChatRoom = /* GraphQL */ `
         chatRoomAccommodationId
         __typename
       }
-      user {
-        id
-        name
-        status
-        userType
-        Accommodations {
-          nextToken
-          __typename
-        }
-        ChatRooms {
-          nextToken
-          __typename
-        }
-        Messages {
-          nextToken
-          __typename
-        }
-        SavedAccommodation {
-          id
-          createdAt
-          updatedAt
-          savedAccommodationUserId
-          __typename
-        }
-        createdAt
-        updatedAt
-        userSavedAccommodationId
-        __typename
-      }
       createdAt
       updatedAt
+      owner
       __typename
     }
   }
@@ -1218,8 +1285,39 @@ export const updateUserChatRoom = /* GraphQL */ `
   ) {
     updateUserChatRoom(input: $input, condition: $condition) {
       id
-      chatRoomId
       userId
+      chatRoomId
+      user {
+        id
+        name
+        status
+        userType
+        Accommodations {
+          nextToken
+          __typename
+        }
+        ChatRooms {
+          nextToken
+          __typename
+        }
+        Messages {
+          nextToken
+          __typename
+        }
+        SavedAccommodation {
+          id
+          createdAt
+          updatedAt
+          savedAccommodationUserId
+          owner
+          __typename
+        }
+        createdAt
+        updatedAt
+        userSavedAccommodationId
+        owner
+        __typename
+      }
       chatRoom {
         id
         Users {
@@ -1255,6 +1353,7 @@ export const updateUserChatRoom = /* GraphQL */ `
           latitude
           longitude
           updatedAt
+          owner
           __typename
         }
         createdAt
@@ -1263,37 +1362,9 @@ export const updateUserChatRoom = /* GraphQL */ `
         chatRoomAccommodationId
         __typename
       }
-      user {
-        id
-        name
-        status
-        userType
-        Accommodations {
-          nextToken
-          __typename
-        }
-        ChatRooms {
-          nextToken
-          __typename
-        }
-        Messages {
-          nextToken
-          __typename
-        }
-        SavedAccommodation {
-          id
-          createdAt
-          updatedAt
-          savedAccommodationUserId
-          __typename
-        }
-        createdAt
-        updatedAt
-        userSavedAccommodationId
-        __typename
-      }
       createdAt
       updatedAt
+      owner
       __typename
     }
   }
@@ -1305,8 +1376,39 @@ export const deleteUserChatRoom = /* GraphQL */ `
   ) {
     deleteUserChatRoom(input: $input, condition: $condition) {
       id
-      chatRoomId
       userId
+      chatRoomId
+      user {
+        id
+        name
+        status
+        userType
+        Accommodations {
+          nextToken
+          __typename
+        }
+        ChatRooms {
+          nextToken
+          __typename
+        }
+        Messages {
+          nextToken
+          __typename
+        }
+        SavedAccommodation {
+          id
+          createdAt
+          updatedAt
+          savedAccommodationUserId
+          owner
+          __typename
+        }
+        createdAt
+        updatedAt
+        userSavedAccommodationId
+        owner
+        __typename
+      }
       chatRoom {
         id
         Users {
@@ -1342,6 +1444,7 @@ export const deleteUserChatRoom = /* GraphQL */ `
           latitude
           longitude
           updatedAt
+          owner
           __typename
         }
         createdAt
@@ -1350,37 +1453,9 @@ export const deleteUserChatRoom = /* GraphQL */ `
         chatRoomAccommodationId
         __typename
       }
-      user {
-        id
-        name
-        status
-        userType
-        Accommodations {
-          nextToken
-          __typename
-        }
-        ChatRooms {
-          nextToken
-          __typename
-        }
-        Messages {
-          nextToken
-          __typename
-        }
-        SavedAccommodation {
-          id
-          createdAt
-          updatedAt
-          savedAccommodationUserId
-          __typename
-        }
-        createdAt
-        updatedAt
-        userSavedAccommodationId
-        __typename
-      }
       createdAt
       updatedAt
+      owner
       __typename
     }
   }

@@ -1,51 +1,53 @@
-type SavedAccommodation @model @auth(rules: [{allow: public}]) {
+type SavedAccommodation @model @auth(rules: [
+    { allow: owner, operations: [create, read, update, delete] },  # User can manage their saved accommodations
+    {allow: private },
+  ]) {
   id: ID!
   Accommodations: [Accommodation] @manyToMany(relationName: "SavedAccommodationAccommodation")
   User: User @belongsTo
-}
-
-type ChatRoom @model @auth(rules: [{allow: public}]) {
-  id: ID!
-  Users: [User] @manyToMany(relationName: "UserChatRoom")
-  Messages: [Message] @hasMany(indexName: "byChatRoom", fields: ["id"])
-  LastMessage: Message @hasOne
-  Accommodation: Accommodation @hasOne
-}
-
-type Message @model @auth(rules: [{allow: public}]) {
-  id: ID!
-  createdAt: AWSDateTime!
-  text: String!
-  chatRoomId: ID! @index(name: "byChatRoom")
-  userId: ID! @index(name: "byUser")
 }
 
 enum PropertyEnum {
   HDB
   CONDO
   LANDED
+  UNIVERSITY
 }
 
-type Accommodation @model @auth(rules: [{allow: public}]) {
+type Accommodation @model @auth(rules: [
+    # allow all authenticated users ability to create accommodation
+    # allow owners ability to update and delete their accommodation
+    { allow: owner }
+    # allow all authenticated users to read accommodation
+    { allow: private, operations: [read] }
+  ]) {
   id: ID!
   availableDate: AWSDate
   description: String!
-  images: [String!]
+  images: [String]!
   price: Int!
-  propertyType: PropertyEnum
+  propertyType: PropertyEnum!
   rented: Boolean
   createdAt: AWSDateTime!
   title: String!
-  address: AWSJSON
+  # For encryption purpose
+  address: AWSJSON!
+  # address: String!
   userId: ID! @index(name: "byUser")
   unitFeature: [String]
+  # For encryption purpose
   latitude: Float
   longitude: Float
+  # latitude: String
+  # longitude: String
   savedaccommodations: [SavedAccommodation] @manyToMany(relationName: "SavedAccommodationAccommodation")
   User: User @belongsTo(fields: ["userId"])
 }
 
-type User @model @auth(rules: [{allow: public}]) {
+type User @model @auth(rules: [
+    { allow: owner, operations: [read, update, create] },  # only user owner can manage 
+    { allow: private, operations: [read] },  # only user owner can manage 
+  ]) {
   id: ID!
   name: String!
   status: String
@@ -54,4 +56,24 @@ type User @model @auth(rules: [{allow: public}]) {
   ChatRooms: [ChatRoom] @manyToMany(relationName: "UserChatRoom")
   Messages: [Message] @hasMany(indexName: "byUser", fields: ["id"])
   SavedAccommodation: SavedAccommodation @hasOne
+}
+
+type Message @model @auth(rules: [
+    { allow: private}, 
+  ]) {
+  id: ID!
+  createdAt: AWSDateTime!
+  text: String!
+  chatRoomId: ID! @index(name: "byChatRoom", sortKeyFields: ["createdAt"], queryField: "listMessagesByChatRoom")
+  userId: ID! @index(name: "byUser")
+}
+
+type ChatRoom @model @auth(rules: [
+    { allow: private},
+  ]) {
+  id: ID!
+  Users: [User] @manyToMany(relationName: "UserChatRoom")
+  Messages: [Message] @hasMany(indexName: "byChatRoom", fields: ["id"])
+  LastMessage: Message @hasOne
+  Accommodation: Accommodation @hasOne
 }

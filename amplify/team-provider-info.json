@@ -18,19 +18,19 @@
       "function": {
         "accommodationFunction": {
           "deploymentBucketName": "amplify-unirent-staging-195410-deployment",
-          "s3Key": "amplify-builds/accommodationFunction-774f714152775a613331-build.zip"
+          "s3Key": "amplify-builds/accommodationFunction-5738506f37516d525941-build.zip"
         },
         "geocodingHandler": {
           "deploymentBucketName": "amplify-unirent-staging-195410-deployment",
-          "s3Key": "amplify-builds/geocodingHandler-75696a48457143557734-build.zip"
+          "s3Key": "amplify-builds/geocodingHandler-39777a6a476e6c2b524e-build.zip"
         },
         "locationSearchApi": {
           "deploymentBucketName": "amplify-unirent-staging-195410-deployment",
-          "s3Key": "amplify-builds/locationSearchApi-4b5633544e4938785253-build.zip"
+          "s3Key": "amplify-builds/locationSearchApi-6a7a716a7834724a5738-build.zip"
         },
         "recommendationHandler": {
           "deploymentBucketName": "amplify-unirent-staging-195410-deployment",
-          "s3Key": "amplify-builds/recommendationHandler-32664c564d5a74436f6b-build.zip"
+          "s3Key": "amplify-builds/recommendationHandler-726e587555504a4e3555-build.zip"
         }
       },
       "storage": {
