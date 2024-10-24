@@ -8,6 +8,9 @@ export function encryptMessage(plainText, key) {
 } 
 
 export function decryptMessage(cipherText, key){
+    if (cipherText == null || cipherText == "") {
+        return "";
+    }
     var bytes  = CryptoJS.AES.decrypt(cipherText, key);
     var originalText = bytes.toString(CryptoJS.enc.Utf8);
     

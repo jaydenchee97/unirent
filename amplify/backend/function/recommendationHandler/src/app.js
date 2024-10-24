@@ -11,6 +11,16 @@ const axios = require("axios");
 const bodyParser = require("body-parser");
 const express = require("express");
 const geolib = require("geolib");
+// Decryption Changes
+const { KmsKeyringNode, buildClient, CommitmentPolicy } = require("@aws-crypto/client-node");
+
+// Decryption Changes
+const { encrypt, decrypt } = buildClient(CommitmentPolicy.REQUIRE_ENCRYPT_REQUIRE_DECRYPT);
+const generatorKeyId = process.env.DEK;
+const keyIds = [process.env.KEK];
+const keyring = new KmsKeyringNode({ generatorKeyId, keyIds });
+const context = { stage: "staging", purpose: "security", origin: "ap-southeast-1" };
+
 
 // declare a new express app
 const app = express();
@@ -48,10 +58,10 @@ const query = /* GraphQL */ `
     }
   }
 `;
-const headers = {
-  "x-api-key": apiKey,
-  "Content-Type": "application/json",
-};
+// const headers = {
+//   "x-api-key": apiKey,
+//   "Content-Type": "application/json",
+// };
 
 /**********************
  * Example get method *
@@ -69,24 +79,50 @@ app.get("/recommendation/*", function (req, res) {
 
 // code start
 app.post("/recommendation", async function (req, res) {
-  console.log("recommendation start...");
 
-  console.log(req.body);
+  console.log("recommendation start...");
+  console.log("req.body: " + JSON.stringify(req.body, null, 2));
+
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: req.headers.authorization || '', // Authorization token (if needed)
+  };
 
   let data;
   try {
     const response = await axios.post(endpoint, { query }, { headers });
     data = response.data?.data?.listAccommodations?.items;
-    console.log(data);
+    console.log("data: " + JSON.stringify(data, null, 2));
   } catch (error) {
     console.error(error);
   }
 
   const map = new Map();
+  const userCoords = {
+    latitude: req.body.coords.latitude,
+    longitude: req.body.coords.longitude
+  };
+
+  // TODO: Check the structure of address and find out how to decrpyt data
   for (let i = 0; i < data.length; i++) {
+
     const address = JSON.parse(data[i].address);
-    const dist = geolib.getDistance(req.body.coords, address.geo);
+    console.log(`address[${i}]: ` + JSON.stringify(address, null, 2));
+
+    const addressCoords = {
+      latitude: address.geo.geometry.location.lat,
+      longitude: address.geo.geometry.location.lng
+    };
+
+    console.log(`userCoords[${i}]: ` + JSON.stringify(userCoords, null, 2));
+    console.log(`addressCoords[${i}]: ` + JSON.stringify(userCoords, null, 2));
+
+    // const dist = geolib.getDistance(req.body.coords, address.geo);
+    const dist = geolib.getDistance(userCoords, addressCoords);
+    console.log(`dist[${i}]: ` + dist);
+
     map.set(data[i], dist);
+
   }
 
   // sort by dist asc
@@ -108,6 +144,8 @@ app.post("/recommendation", async function (req, res) {
     element.distance = value;
     finalArray.push(element);
   });
+
+  console.log("finalArray");
   console.log(finalArray);
 
   res.json(finalArray);
@@ -145,6 +183,22 @@ app.delete("/recommendation/*", function (req, res) {
   // Add your code here
   res.json({ success: "delete call succeed!", url: req.url });
 });
+
+
+// Encryption Changes
+// NOTE: The variable name for encrypt/decrypt function must be called result
+// isBase64() check is required for existing data that hasn't been encrypted
+async function decryptData(result) { 
+  console.log("result: " + result);
+  const { plaintext, messageHeader } = isBase64(result) ? await decrypt(keyring, result) : result;
+  console.log("plaintext: " + plaintext);
+  return plaintext ;
+}
+
+function isBase64(str) {
+  const base64Pattern = /^(?:[A-Za-z0-9+/=]+)$/; // Basic base64 pattern
+  return typeof str === "string" && base64Pattern.test(str);
+}
 
 app.listen(3000, function () {
   console.log("App started");

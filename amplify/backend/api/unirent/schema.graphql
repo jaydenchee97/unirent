@@ -30,11 +30,16 @@ type Accommodation @model @auth(rules: [
   rented: Boolean
   createdAt: AWSDateTime!
   title: String!
+  # For encryption purpose
   address: AWSJSON!
+  # address: String!
   userId: ID! @index(name: "byUser")
   unitFeature: [String]
+  # For encryption purpose
   latitude: Float
   longitude: Float
+  # latitude: String
+  # longitude: String
   savedaccommodations: [SavedAccommodation] @manyToMany(relationName: "SavedAccommodationAccommodation")
   User: User @belongsTo(fields: ["userId"])
 }
