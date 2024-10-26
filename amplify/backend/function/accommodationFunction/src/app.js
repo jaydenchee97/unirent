@@ -18,6 +18,10 @@ const {
 const awsServerlessExpressMiddleware = require("aws-serverless-express/middleware");
 const bodyParser = require("body-parser");
 const express = require("express");
+const axios = require("axios");
+const validator = require('validator');
+// Encryption Changes
+const { KmsKeyringNode, buildClient, CommitmentPolicy } = require("@aws-crypto/client-node");
 
 const ddbClient = new DynamoDBClient({ region: process.env.TABLE_REGION });
 const ddbDocClient = DynamoDBDocumentClient.from(ddbClient);
@@ -26,6 +30,13 @@ let tableName = "accommodationTable";
 if (process.env.ENV && process.env.ENV !== "NONE") {
   tableName = tableName + "-" + process.env.ENV;
 }
+
+// Encryption Changes
+const { encrypt, decrypt } = buildClient(CommitmentPolicy.REQUIRE_ENCRYPT_REQUIRE_DECRYPT);
+const generatorKeyId = process.env.DEK;
+const keyIds = [process.env.KEK];
+const keyring = new KmsKeyringNode({ generatorKeyId, keyIds });
+const context = { stage: "staging", purpose: "security", origin: "ap-southeast-1" };
 
 const userIdPresent = false; // TODO: update in case is required to use that definition
 const partitionKeyName = "id";
@@ -59,6 +70,212 @@ const convertUrlType = (param, type) => {
       return param;
   }
 };
+
+const endpoint = process.env.GRAPHQL_ENDPOINT;
+const apiKey = process.env.GRAPHQL_API_KEY;
+
+const deleteQuery = /* GraphQL */ `
+  mutation DeleteAccommodation(
+    $input: DeleteAccommodationInput!
+    $condition: ModelAccommodationConditionInput
+  ) {
+    deleteAccommodation(input: $input, condition: $condition) {
+      id
+      availableDate
+      description
+      images
+      price
+      propertyType
+      rented
+      createdAt
+      title
+      address
+      userId
+      unitFeature
+      latitude
+      longitude
+      savedaccommodations {
+        items {
+          id
+          savedAccommodationId
+          accommodationId
+          createdAt
+          updatedAt
+          owner
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      User {
+        id
+        name
+        status
+        userType
+        Accommodations {
+          nextToken
+          __typename
+        }
+        ChatRooms {
+          nextToken
+          __typename
+        }
+        Messages {
+          nextToken
+          __typename
+        }
+        SavedAccommodation {
+          id
+          createdAt
+          updatedAt
+          savedAccommodationUserId
+          owner
+          __typename
+        }
+        createdAt
+        updatedAt
+        userSavedAccommodationId
+        owner
+        __typename
+      }
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+
+const createQuery = /* GraphQL */ `
+  mutation CreateAccommodation(
+    $input: CreateAccommodationInput!
+    $condition: ModelAccommodationConditionInput
+  ) {
+    createAccommodation(input: $input, condition: $condition) {
+      id
+      availableDate
+      description
+      images
+      price
+      propertyType
+      rented
+      createdAt
+      title
+      address
+      userId
+      unitFeature
+      latitude
+      longitude
+      savedaccommodations {
+        items {
+          id
+          savedAccommodationId
+          accommodationId
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      User {
+        id
+        name
+        status
+        userType
+        Accommodations {
+          nextToken
+          __typename
+        }
+        ChatRooms {
+          nextToken
+          __typename
+        }
+        Messages {
+          nextToken
+          __typename
+        }
+        SavedAccommodation {
+          id
+          createdAt
+          updatedAt
+          savedAccommodationUserId
+          __typename
+        }
+        createdAt
+        updatedAt
+        userSavedAccommodationId
+        __typename
+      }
+      updatedAt
+      __typename
+    }
+  }
+`;
+
+const updateQuery = /* GraphQL */ `
+  mutation UpdateSavedAccommodation(
+    $input: UpdateSavedAccommodationInput!
+    $condition: ModelSavedAccommodationConditionInput
+  ) {
+    updateSavedAccommodation(input: $input, condition: $condition) {
+      id
+      Accommodations {
+        items {
+          id
+          savedAccommodationId
+          accommodationId
+          createdAt
+          updatedAt
+          owner
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      User {
+        id
+        name
+        status
+        userType
+        Accommodations {
+          nextToken
+          __typename
+        }
+        ChatRooms {
+          nextToken
+          __typename
+        }
+        Messages {
+          nextToken
+          __typename
+        }
+        SavedAccommodation {
+          id
+          createdAt
+          updatedAt
+          savedAccommodationUserId
+          owner
+          __typename
+        }
+        createdAt
+        updatedAt
+        userSavedAccommodationId
+        owner
+        __typename
+      }
+      createdAt
+      updatedAt
+      savedAccommodationUserId
+      owner
+      __typename
+    }
+  }
+`;
+
+// const headers = {
+//   "x-api-key": apiKey,
+//   "Content-Type": "application/json",
+// };
 
 /************************************
  * HTTP Get method to list objects *
@@ -178,103 +395,498 @@ app.get(
  *************************************/
 
 app.put(path, async function (req, res) {
+
   if (userIdPresent) {
     req.body["userId"] =
       req.apiGateway.event.requestContext.identity.cognitoIdentityId || UNAUTH;
   }
 
-  const date = new Date().toISOString();
-  req.body.dateTimeCreated = date;
-  req.body.dateTimeUpdated = date;
-
-  const putItemParams = {
-    TableName: tableName,
-    Item: req.body,
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: req.headers.authorization || '', // Authorization token (if needed)
   };
-  console.log(putItemParams);
 
-  try {
-    const data = await ddbDocClient.send(new PutCommand(putItemParams));
-    res.json({ success: "put call succeed!", url: req.url, data });
-  } catch (err) {
-    res.statusCode = 500;
-    res.json({ error: err, url: req.url, body: req.body });
+  // Encryption Changes
+  // const { id, title, address, propertyType, images, description, price, rented, availableDate, unitFeature, latitude, longitude, userId } = req.body;
+  const { id, title, propertyType, images, description, price, rented, availableDate, unitFeature, userId } = req.body;
+  let { address, latitude, longitude } = req.body;        
+  
+  if (!validator.isUUID(userId, 4)) {
+    return res.status(400).json({ error: 'Invalid user ID' });
   }
+
+  // Input validation
+  if (!validator.isAlphanumeric(title, 'en-US', { ignore: ' ' })) {
+    return res.status(400).json({ error: 'Invalid title' });
+  }
+
+  if (!validator.isFloat(price.toString())) {
+    return res.status(400).json({ error: 'Invalid price' });
+  }
+
+  // Sanitize inputs
+  const sanitizedTitle = validator.escape(title);
+  const sanitizedDescription = validator.escape(description)
+  
+  // Encryption Changes
+  // const addressString = JSON.stringify(address);
+  // const latitudeString = String(latitude);
+  // const longitudeString = String(longitude);
+
+  // address = await encryptData(addressString);
+  // latitude = await encryptData(latitudeString);
+  // longitude = await encryptData(longitudeString);
+
+  // Prepare the item for DynamoDB
+  const accomm = {
+    id: id || uuidv4(), // Generate UUID if not provided
+    title: sanitizedTitle,
+    address: JSON.stringify(address),
+    propertyType,
+    images: images,
+    description: sanitizedDescription,
+    price: price,
+    rented: rented || false,
+    availableDate: availableDate,
+    unitFeature: unitFeature,
+    latitude: latitude,
+    longitude: longitude,
+    userId: userId,
+    createdAt: new Date().toISOString(),
+  };
+
+  console.log("accomm");
+  console.log(accomm);
+
+  const payload = {
+    query: updateQuery,
+    variables: {
+      input: accomm
+    }
+  }
+  console.log("payload");
+  console.log(payload);
+
+
+  let data;
+  try {
+    const response = await axios.post(endpoint, payload, { headers });
+    data = response.data?.data?.listAccommodations?.items;
+    console.log(JSON.stringify(response.data, null, 2));
+    res.json({ success: "Accommodation update successfully", data: data });
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to update accommodation", details: err });
+  }
+
+  // try {
+  //   const data = await ddbDocClient.send(new PutCommand(putItemParams));
+  //   res.json({ success: "put call succeed!", url: req.url, data });
+  // } catch (err) {
+  //   res.statusCode = 500;
+  //   res.json({ error: err, url: req.url, body: req.body });
+  // }
+
+});
+
+app.put('/accommodations/university', async function (req, res) {
+
+  if (userIdPresent) {
+    req.body["userId"] =
+      req.apiGateway.event.requestContext.identity.cognitoIdentityId || UNAUTH;
+  }
+
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: req.headers.authorization || '', // Authorization token (if needed)
+  };
+
+  // Encryption Changes
+  // const { id, title, address, images, description, price, rented, availableDate, unitFeature, latitude, longitude, userId } = req.body;
+  const { id, title,  images, description, price, rented, availableDate, unitFeature, userId } = req.body;
+  let { address, latitude, longitude } = req.body;       
+
+  if (!validator.isUUID(userId, 4)) {
+    return res.status(400).json({ error: 'Invalid user ID' });
+  }
+
+  // Input validation
+  if (!validator.isAlphanumeric(title, 'en-US', { ignore: ' ' })) {
+    return res.status(400).json({ error: 'Invalid title' });
+  }
+
+  if (!validator.isFloat(price.toString())) {
+    return res.status(400).json({ error: 'Invalid price' });
+  }
+
+  // Sanitize inputs
+  const sanitizedTitle = validator.escape(title);
+  const sanitizedDescription = validator.escape(description);
+
+  // Encryption Changes
+  const addressString = JSON.stringify(address);
+  const latitudeString = String(latitude);
+  const longitudeString = String(longitude);
+
+  address = await encryptData(addressString);
+  latitude = await encryptData(latitudeString);
+  longitude = await encryptData(longitudeString);
+
+  const newAccomm = {
+    id: id || uuidv4(), // Generate UUID if not provided
+    title: sanitizedTitle,
+    address: JSON.stringify(address),
+    propertyType: 'UNIVERSITY',
+    images: images,
+    description: sanitizedDescription,
+    price: price,
+    rented: rented || false,
+    availableDate: availableDate,
+    unitFeature: unitFeature,
+    latitude: latitude,
+    longitude: longitude,
+    userId: userId,
+    createdAt: new Date().toISOString(),
+  };
+
+
+  const payload = {
+    query: updateQuery,
+    variables: {
+      input: newAccomm
+    }
+  }
+
+  let data;
+  try {
+    const response = await axios.post(endpoint, payload, { headers });
+    console.log(JSON.stringify(response.data, null, 2));
+    data = response.data?.data?.listAccommodations?.items;
+    res.json({ success: "Accommodation update successfully", data });
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to update accommodation", details: err });
+  }
+
 });
 
 /************************************
  * HTTP post method for insert object *
  *************************************/
-
 app.post(path, async function (req, res) {
+
+  console.log("In app.post() for " + path);
+  console.log("req.body: " + JSON.stringify(req.body, null, 2));
+
   if (userIdPresent) {
     req.body["userId"] =
       req.apiGateway.event.requestContext.identity.cognitoIdentityId || UNAUTH;
   }
 
-  let putItemParams = {
-    TableName: tableName,
-    Item: req.body,
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: req.headers.authorization || '', // Authorization token (if needed)
   };
+
+  // Encryption Changes
+  const { id, title, address, propertyType, images, description, price, rented, availableDate, unitFeature, latitude, longitude, userId } = req.body;
+  // const { id, title, propertyType, images, description, price, rented, availableDate, unitFeature, userId } = req.body;
+  // let { address, latitude, longitude } = req.body;                                              
+
+  if (!validator.isUUID(userId, 4)) {
+    return res.status(400).json({ error: 'Invalid user ID' });
+  }
+
+  // Input validation
+  if (!validator.isAlphanumeric(title, 'en-US', { ignore: ' ' })) {
+    return res.status(400).json({ error: 'Invalid title' });
+  }
+
+  if (!validator.isFloat(price.toString())) {
+    return res.status(400).json({ error: 'Invalid price' });
+  }
+
+  // Sanitize inputs
+  const sanitizedTitle = validator.escape(title);
+  const sanitizedDescription = validator.escape(description)
+  
+  // Encryption Changes
+  // const addressString = JSON.stringify(address);
+  // const latitudeString = String(latitude);
+  // const longitudeString = String(longitude);
+
+  // address = await encryptData(addressString);
+  // latitude = await encryptData(latitudeString);
+  // longitude = await encryptData(longitudeString);
+
+  // Prepare the item for DynamoDB
+  const newAccomm = {
+    id: id || uuidv4(), // Generate UUID if not provided
+    title: sanitizedTitle,
+    address: JSON.stringify(address),
+    propertyType,
+    images: images,
+    description: sanitizedDescription,
+    price: price,
+    rented: rented || false,
+    availableDate: availableDate,
+    unitFeature: unitFeature,
+    latitude: latitude,
+    longitude: longitude,
+    userId: userId,
+    createdAt: new Date().toISOString(),
+  };
+
+  // console.log("typeof address: " + typeof address);
+  // console.log("newAccomm: " + JSON.stringify(newAccomm, null, 2));
+  // for (const key in newAccomm) {
+  //   console.log(`Field: ${key}, Type: ${typeof newAccomm[key]}`);
+  // }
+
+  const payload = {
+    query: createQuery,
+    variables: {
+      input: newAccomm
+    }
+  }
+
+  console.log("accomm");
+  console.log(JSON.stringify(newAccomm, null, 2));
+
+  console.log("payload");
+  console.log(payload);
+
+  let data;
   try {
-    let data = await ddbDocClient.send(new PutCommand(putItemParams));
-    res.json({ success: "post call succeed!", url: req.url, data: data });
-  } catch (err) {
-    res.statusCode = 500;
-    res.json({ error: err, url: req.url, body: req.body });
+    const response = await axios.post(endpoint, payload, { headers });
+    console.log("response: " + JSON.stringify(response.data, null, 2));
+    const data = response.data?.data?.createAccommodation;
+    res.json({ status: "Accommodation created successfully", data: data });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ status: "Failed to create accommodation", details: err });
+  }
+
+  // try {
+  //   const data = await ddbDocClient.send(new PutCommand(putItemParams));
+  //   res.json({ success: "Accommodation created successfully", data });
+  // } catch (err) {
+  //   res.status(500).json({ error: "Failed to create accommodation", details: err });
+  // }
+});
+
+app.post('/accommodations/university', async function (req, res) {
+
+  console.log("In app.post() for " + "/accommodations/university");
+
+  // Encryption Changes
+  const { title, address, images, description, price, availableDate, unitFeature, latitude, longitude, userId } = req.body;  // Input validation
+  // const { title, images, description, price, availableDate, unitFeature, userId } = req.body;   
+  // let { address, latitude, longitude } = req.body;                                              
+  
+  if (!validator.isAlphanumeric(title, 'en-US', { ignore: ' ' })) {
+    return res.status(400).json({ error: 'Invalid title' });
+  }
+
+  if (!validator.isFloat(price.toString())) {
+    return res.status(400).json({ error: 'Invalid price' });
+  }
+
+  // Sanitize inputs
+  const sanitizedTitle = validator.escape(title);
+  const sanitizedDescription = validator.escape(description)
+
+  if (!validator.isUUID(userId, 4)) {
+    return res.status(400).json({ error: 'Invalid user ID' });
+  }
+ 
+  // Encryption Changes
+  // const addressString = JSON.stringify(address);
+  // const latitudeString = String(latitude);
+  // const longitudeString = String(longitude);
+
+  // address = await encryptData(addressString);
+  // latitude = await encryptData(latitudeString);
+  // longitude = await encryptData(longitudeString);
+
+  const newAccomm = {
+    id: id || uuidv4(), // Generate UUID if not provided
+    title: sanitizedTitle,
+    address: JSON.stringify(address),
+    propertyType: 'UNIVERSITY',
+    images: images,
+    description: sanitizedDescription,
+    price: price,
+    rented: rented || false,
+    availableDate: availableDate,
+    unitFeature: unitFeature,
+    latitude: latitude,
+    longitude: longitude,
+    userId: userId,
+    createdAt: new Date().toISOString(),
+  };
+
+
+  const payload = {
+    query: createQuery,  // Assuming you have a GraphQL mutation for creating accommodation
+    variables: { input: newAccomm }
+  };
+
+  try {
+    const response = await axios.post(endpoint, payload, { headers });
+    console.log(JSON.stringify(response.data, null, 2));
+    const data = response.data?.data?.createAccommodation;
+    res.json({ success: "University Accommodation created successfully", data: data });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to create university accommodation", details: error });
   }
 });
 
 /**************************************
  * HTTP remove method to delete object *
  ***************************************/
+// Delete accommodation
+app.delete(`${path}/:accommodationId`, async function (req, res) {
 
-app.delete(
-  path + "/object" + hashKeyPath + sortKeyPath,
-  async function (req, res) {
-    const params = {};
-    if (userIdPresent && req.apiGateway) {
-      params[partitionKeyName] =
-        req.apiGateway.event.requestContext.identity.cognitoIdentityId ||
-        UNAUTH;
+  const { accommodationId } = req.params;
+
+  // Validate the accommodation ID
+  if (!validator.isUUID(accommodationId, 4)) {
+    return res.status(400).json({ error: 'Invalid accommodation ID' });
+  }
+
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: req.headers.authorization || '', // Authorization token (if needed)
+  };
+
+  // Create the payload for the GraphQL mutation
+  const payload = {
+    query: deleteQuery,
+    variables: {
+      input: {
+        id: accommodationId, // Pass the accommodation ID
+      },
+    },
+  };
+
+  // Send the delete request to the GraphQL API
+  try {
+    const response = await axios.post(endpoint, payload, { headers });
+    const data = response.data?.data?.deleteAccommodation;
+
+    if (data) {
+      res.json({ success: "Accommodation deleted successfully", data });
+      console.log("Deleted accommodation:", data);
     } else {
-      params[partitionKeyName] = req.params[partitionKeyName];
-      try {
-        params[partitionKeyName] = convertUrlType(
-          req.params[partitionKeyName],
-          partitionKeyType,
-        );
-      } catch (err) {
-        res.statusCode = 500;
-        res.json({ error: "Wrong column type " + err });
-      }
+      res.status(404).json({ error: "Accommodation not found or deletion failed" });
     }
-    if (hasSortKey) {
-      try {
-        params[sortKeyName] = convertUrlType(
-          req.params[sortKeyName],
-          sortKeyType,
-        );
-      } catch (err) {
-        res.statusCode = 500;
-        res.json({ error: "Wrong column type " + err });
-      }
-    }
+  } catch (error) {
+    console.error("Error deleting accommodation:", error);
+    res.status(500).json({ error: "Failed to delete accommodation", details: error.message });
+  }
+});
 
-    let removeItemParams = {
-      TableName: tableName,
-      Key: params,
-    };
+// Delete university accommodation
+app.delete(`${path}/university/:accommodationId`, async function (req, res) {
 
-    try {
-      let data = await ddbDocClient.send(new DeleteCommand(removeItemParams));
-      res.json({ url: req.url, data: data });
-    } catch (err) {
-      res.statusCode = 500;
-      res.json({ error: err, url: req.url });
+  const { accommodationId } = req.params;
+
+  // Validate the accommodation ID
+  if (!validator.isUUID(accommodationId, 4)) {
+    return res.status(400).json({ error: 'Invalid accommodation ID' });
+  }
+  
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: req.headers.authorization || '', // Authorization token (if needed)
+  };
+
+  // Create the payload for the GraphQL mutation
+  const payload = {
+    query: deleteQuery,
+    variables: {
+      input: {
+        id: accommodationId, // Pass the accommodation ID
+      },
+    },
+  };
+
+  // Send the delete request to the GraphQL API
+  try {
+    const response = await axios.post(endpoint, payload, { headers });
+    const data = response.data?.data?.deleteAccommodation;
+
+    if (data) {
+      res.json({ success: "Accommodation deleted successfully", data });
+      console.log("Deleted accommodation:", data);
+    } else {
+      res.status(404).json({ error: "Accommodation not found or deletion failed" });
     }
-  },
-);
+  } catch (error) {
+    console.error("Error deleting accommodation:", error);
+    res.status(500).json({ error: "Failed to delete accommodation", details: error.message });
+  }
+});
+
+// app.delete(
+//   path + "/object" + hashKeyPath + sortKeyPath,
+//   async function (req, res) {
+//     const params = {};
+//     if (userIdPresent && req.apiGateway) {
+//       params[partitionKeyName] =
+//         req.apiGateway.event.requestContext.identity.cognitoIdentityId ||
+//         UNAUTH;
+//     } else {
+//       params[partitionKeyName] = req.params[partitionKeyName];
+//       try {
+//         params[partitionKeyName] = convertUrlType(
+//           req.params[partitionKeyName],
+//           partitionKeyType,
+//         );
+//       } catch (err) {
+//         res.statusCode = 500;
+//         res.json({ error: "Wrong column type " + err });
+//       }
+//     }
+//     if (hasSortKey) {
+//       try {
+//         params[sortKeyName] = convertUrlType(
+//           req.params[sortKeyName],
+//           sortKeyType,
+//         );
+//       } catch (err) {
+//         res.statusCode = 500;
+//         res.json({ error: "Wrong column type " + err });
+//       }
+//     }
+
+//     let removeItemParams = {
+//       TableName: tableName,
+//       Key: params,
+//     };
+
+//     try {
+//       let data = await ddbDocClient.send(new DeleteCommand(removeItemParams));
+//       res.json({ url: req.url, data: data });
+//     } catch (err) {
+//       res.statusCode = 500;
+//       res.json({ error: err, url: req.url });
+//     }
+//   },
+// );
+
+// Encryption Changes
+// NOTE: The variable name for encrypt/decrypt function must be called result
+async function encryptData(plaintext) { 
+  console.log("plaintext: " + plaintext);
+  const { result } = await encrypt(keyring, plaintext, { encryptionContext: context });
+  const ciphertext = result.toString("base64");
+  console.log("ciphertext: " + ciphertext);
+  return ciphertext ;
+}
 
 app.listen(3000, function () {
   console.log("App started");

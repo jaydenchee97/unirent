@@ -4,10 +4,8 @@
     "apiName": "unirent",
     "serviceName": "AppSync",
     "defaultAuthType": {
-      "mode": "API_KEY",
-      "expirationTime": 365,
-      "apiKeyExpirationDate": "2025-07-31T15:44:56.006Z",
-      "keyDescription": "unirent-api-key"
+      "mode": "AMAZON_COGNITO_USER_POOLS",
+      "cognitoUserPoolId": "authunirenta9aa32e0"
     },
     "additionalAuthTypes": [
       {

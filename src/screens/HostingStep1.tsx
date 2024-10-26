@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -17,6 +17,7 @@ import Counter from "../components/Counter";
 import EPropertyType from "../model/EPropertyType";
 import IAddress from "../model/IAddress";
 import { useHostStore } from "../store/host";
+import { Auth } from "aws-amplify";
 
 export default function HostingStep1({ navigation, route }) {
   if (route.state) {
@@ -29,6 +30,8 @@ export default function HostingStep1({ navigation, route }) {
 
   const [propertyType, setPropertyType] = useState("");
   const [address, setAddress] = useState<IAddress>();
+  const [userType, setUserType] = useState<string | null>(null);  // State to store userType
+
   // const [guest, setGuest] = useState(0);
   // const [bed, setBed] = useState(0);
   // const [bath, setBath] = useState(0);
@@ -55,23 +58,29 @@ export default function HostingStep1({ navigation, route }) {
     navigation.navigate("HostingStep2");
   };
 
-  return (
-    <KeyboardAvoidingView
-      style={styles.view}
-      behavior={Platform.OS === "ios" || "android" ? "padding" : "height"}
-      keyboardVerticalOffset={Platform.OS === "ios" || "android" ? 100 : -300}
-    >
-      <ScrollView style={styles.scroll}>
-        <Text
-          variant="headlineMedium"
-          style={{ marginBottom: 10, marginTop: 20 }}
-        >
-          Which of these best describes your place?
-        </Text>
+  const propertyTypeButton = () => {
 
+    if (userType == "universityPartner") {
+      return (
         <SegmentedButtons
           value={propertyType}
           onValueChange={setPropertyType}
+          style={{ marginVertical: 20 }}
+          buttons={[
+            {
+              value: EPropertyType.UNIVERSITY,
+              label: EPropertyType.UNIVERSITY,
+              icon: "book-education-outline",
+            }
+          ]}
+        />
+      );
+    } else {
+      return(
+        <SegmentedButtons
+          value={propertyType}
+          onValueChange={setPropertyType}
+          style={{ marginVertical: 20 }}
           buttons={[
             {
               value: EPropertyType.Condo,
@@ -90,6 +99,39 @@ export default function HostingStep1({ navigation, route }) {
             },
           ]}
         />
+      );
+    }
+
+  }
+
+  useEffect(() => {
+    const fetchUserType = async () => {
+      try {
+        const authUser = await Auth.currentAuthenticatedUser();
+        setUserType(authUser.attributes['custom:userType']);  // Set userType
+      } catch (error) {
+        console.log("Error fetching user type:", error);
+      }
+    };
+
+    fetchUserType();
+  }, []);
+
+  return (
+    <KeyboardAvoidingView
+      style={styles.view}
+      behavior={Platform.OS === "ios" || "android" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" || "android" ? 100 : -300}
+    >
+      <ScrollView style={styles.scroll}>
+        <Text
+          variant="headlineMedium"
+          style={{ marginBottom: 10, marginTop: 20 }}
+        >
+          Which of these best describes your place?
+        </Text>
+
+        {propertyTypeButton()}
 
         <Text
           variant="headlineMedium"

@@ -17,8 +17,7 @@ export type AmplifyDependentResourcesAttributes = {
     },
     "unirent": {
       "GraphQLAPIEndpointOutput": "string",
-      "GraphQLAPIIdOutput": "string",
-      "GraphQLAPIKeyOutput": "string"
+      "GraphQLAPIIdOutput": "string"
     }
   },
   "auth": {
@@ -34,6 +33,13 @@ export type AmplifyDependentResourcesAttributes = {
   },
   "function": {
     "accommodationFunction": {
+      "Arn": "string",
+      "LambdaExecutionRole": "string",
+      "LambdaExecutionRoleArn": "string",
+      "Name": "string",
+      "Region": "string"
+    },
+    "generateEncryptionKeyAPI": {
       "Arn": "string",
       "LambdaExecutionRole": "string",
       "LambdaExecutionRoleArn": "string",

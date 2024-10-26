@@ -13,7 +13,8 @@ export async function getGeocode(request) {
 
   try {
     const response = await API.post(apiName, path, myInit);
-    return response;
+    console.log(response.geometry.location)
+    return response.geometry.location;
   } catch (error) {
     console.error("Error in google maps API: " + error);
   }

@@ -8,7 +8,8 @@
     "@googlemaps/google-maps-services-js": "^3.3.39",
     "aws-serverless-express": "^3.3.5",
     "body-parser": "^1.19.1",
-    "express": "^4.17.2"
+    "express": "^4.17.2",
+    "geocodinghandler": "file:"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.92"

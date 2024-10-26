@@ -2,3 +2,4 @@
 node_modules
 amplify-codegen-temp\models\models
 .github
+src\models\models
