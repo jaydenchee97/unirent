@@ -111,6 +111,11 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
+    "generateEncryptionKeyAPI": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "geocodingHandler": {
       "build": true,
       "providerPlugin": "awscloudformation",
@@ -141,6 +146,22 @@
         {
           "category": "function",
           "resourceName": "accommodationFunction"
+        }
+      ]
+    },
+    "AMPLIFY_function_generateEncryptionKeyAPI_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "generateEncryptionKeyAPI"
+        }
+      ]
+    },
+    "AMPLIFY_function_generateEncryptionKeyAPI_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "generateEncryptionKeyAPI"
         }
       ]
     },

@@ -55,14 +55,22 @@ const ListingDetailScreen = ({ navigation, route }) => {
         .catch((err) => console.log("Error downloading file:" + err));
     }
     setDetails(data);
+
+    data.address = JSON.parse(JSON.parse(data.address));
+    console.log("data.address");
+    console.log(data.address);
+    console.log(data.address.geo);
+    console.log(array);
+
     setUriArray(array);
-    setAddress(JSON.parse(data.address));
+    setAddress(data.address);
     setLoading(false);
 
-    console.log("Listing details");
-    console.log(data);
-    console.log(array);
-    console.log(JSON.parse(data.address));
+    // console.log("Listing details");
+    // console.log(data);
+    // console.log(array);
+    // console.log(JSON.parse(data.address));
+
   }
 
   // useEffect(() => {
