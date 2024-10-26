@@ -3,10 +3,10 @@ frontend:
   phases:
     preBuild:
       commands:
-        - npm install --quiet --global expo-cli
+        - npm install --quiet expo-cli  # Local installation
         - >
           if [ -f yarn.lock ]; then
-            yarn
+            yarn --frozen-lockfile
           elif [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ]; then
             npm ci
           else
@@ -15,7 +15,7 @@ frontend:
     build:
       commands:
         - echo "EXPO_PUBLIC_GOOGLE_MAPS_API_KEY=$GOOGLE_MAPS_API_KEY" >> .env
-        - npx expo export --platform web
+        - EXPO_NO_SPAWN=1 npx expo export --platform web
   artifacts:
     baseDirectory: dist
     files:
@@ -23,5 +23,3 @@ frontend:
   cache:
     paths:
       - node_modules/**/*
-      - $(npm root --global)/**/*
-
