@@ -15,7 +15,7 @@ export default function HomeStack() {
     });
 
     console.log("authUser");
-    console.log(authUser);
+    console.log(JSON.stringify(authUser,null,2));
 
     const userData = await API.graphql(
       graphqlOperation(getUser, { id: authUser.attributes.sub }),
