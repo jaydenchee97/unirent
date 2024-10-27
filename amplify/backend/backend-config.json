@@ -22,6 +22,20 @@
       "providerPlugin": "awscloudformation",
       "service": "API Gateway"
     },
+    "generateEncryptionKeyAPI": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "generateEncryptionKeyAPI"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "API Gateway"
+    },
     "googleMapsApi": {
       "dependsOn": [
         {

@@ -34,7 +34,7 @@
         },
         "generateEncryptionKeyAPI": {
           "deploymentBucketName": "amplify-unirent-staging-195410-deployment",
-          "s3Key": "amplify-builds/generateEncryptionKeyAPI-4c544d3658454135734e-build.zip"
+          "s3Key": "amplify-builds/generateEncryptionKeyAPI-2b547a3341756d69574e-build.zip"
         }
       },
       "storage": {
