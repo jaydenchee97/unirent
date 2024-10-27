@@ -5,6 +5,11 @@ import HomeStack from './HomeStack';
 import { Dimensions, StyleSheet } from "react-native";
 import { useTheme } from 'react-native-paper';
 import LandingScreen from '../screens/LandingScreen';
+import { getEncryptionKey } from '../api/EncryptionKeyAPI';
+import * as SecureStore from 'expo-secure-store';
+import { decrypt, encrypt } from '../utils/SecurityUtils';
+import { Platform } from 'react-native';
+import { isWeb } from '../utils';
 
 const Stack = createStackNavigator();
 
@@ -40,6 +45,39 @@ export default function AppStack() {
     }
   };
 
+  const handleEncryption = async () => {
+    try {
+      const { plaintextKey, ciphertextKey } = await getEncryptionKey();
+      console.log("plaintextKey:" + plaintextKey);
+      console.log("ciphertextKey:" + ciphertextKey);
+      if (isWeb) {
+        localStorage.setItem("ciphertextKey", ciphertextKey);
+        console.log("ciphertextKey stored in local storage successfully.");
+      } else {
+        await SecureStore.setItemAsync("ciphertextKey", ciphertextKey);
+        console.log("ciphertextKey stored in secure store successfully.");
+      }   
+    } catch (error) {
+      console.error("Error in axios.post test:", error);
+    }
+  };
+
+  // Testing security functions [start]
+  // const handleEncryptionTest = async () => {
+  //   console.log("Encryption Test");
+  //   const test = "test";
+  //   const ciphertext = await encrypt(test);
+  //   console.log("ciphertext of test: " + ciphertext);
+  // }
+
+  // const handleDecryptionTest = async () => {
+  //   console.log("Decryption Test");
+  //   const test = "U2FsdGVkX1+5u3VeHlexkuyNy6t0iJQfpUHHoWbkvSw=";
+  //   const plaintext = await decrypt(test);
+  //   console.log("plaintext of test:", plaintext);
+  // };
+  // Testing security functions [End]
+
   useEffect(() => {
     const unsubscribe = Hub.listen("auth", ({ payload: { event, data }}) => {
       switch (event) {
@@ -56,6 +94,11 @@ export default function AppStack() {
     });
 
     handleAuth();
+    handleEncryption();
+    // Testing security functions [Start]
+    // handleEncryption().then(handleEncryptionTest);
+    // handleEncryption().then(handleDecryptionTest);
+    // Testing security functions [End]
 
     return () => unsubscribe();
   }, []);
