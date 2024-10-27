@@ -103,22 +103,24 @@ app.post("/recommendation", async function (req, res) {
     longitude: req.body.coords.longitude
   };
 
-  // TODO: Check the structure of address and find out how to decrpyt data
   for (let i = 0; i < data.length; i++) {
 
     const address = JSON.parse(data[i].address);
     console.log(`address[${i}]: ` + JSON.stringify(address, null, 2));
 
-    const addressCoords = {
-      latitude: address.geo.geometry.location.lat,
-      longitude: address.geo.geometry.location.lng
-    };
+    // const addressCoords = {
+    //   latitude: address.geo.geometry.location.lat,
+    //   longitude: address.geo.geometry.location.lng
+    // };
+
+    const jsonAddress = JSON.parse(address);
 
     console.log(`userCoords[${i}]: ` + JSON.stringify(userCoords, null, 2));
-    console.log(`addressCoords[${i}]: ` + JSON.stringify(userCoords, null, 2));
+    console.log(`jsonAddress.geo[${i}]: ` + JSON.stringify(jsonAddress.geo, null, 2));
 
     // const dist = geolib.getDistance(req.body.coords, address.geo);
-    const dist = geolib.getDistance(userCoords, addressCoords);
+    // const dist = geolib.getDistance(userCoords, addressCoords);
+    const dist = geolib.getDistance(userCoords, jsonAddress.geo);
     console.log(`dist[${i}]: ` + dist);
 
     map.set(data[i], dist);

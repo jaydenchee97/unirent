@@ -30,7 +30,11 @@
         },
         "recommendationHandler": {
           "deploymentBucketName": "amplify-unirent-staging-195410-deployment",
-          "s3Key": "amplify-builds/recommendationHandler-726e587555504a4e3555-build.zip"
+          "s3Key": "amplify-builds/recommendationHandler-2f4134666c38362f412f-build.zip"
+        },
+        "generateEncryptionKeyAPI": {
+          "deploymentBucketName": "amplify-unirent-staging-195410-deployment",
+          "s3Key": "amplify-builds/generateEncryptionKeyAPI-6e485850772b754e5056-build.zip"
         }
       },
       "storage": {
