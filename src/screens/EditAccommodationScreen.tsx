@@ -14,7 +14,6 @@ import {
 import { getGeocode } from "../api/GoogleMapsAPI";
 import alert from "../components/Alert";
 import ImageInputList from "../components/ImageInputList";
-import { updateAccommodation } from "../graphql/mutations";
 import EPropertyType from "../model/EPropertyType";
 import IAddress from "../model/IAddress";
 import IGeo from "../model/IGeo";
@@ -26,6 +25,9 @@ import {
   getFeatureLabel,
 } from "../utils/UnitFeatureUtil";
 
+import { updateAccommodation, updateUniAccommodation } from "../api/AccommodationAPI";
+import EditImageInputList from "../components/EditImageInputList";
+
 const EditAccommodationScreen = (props: any, uriArray: string[]) => {
   const navigation = useNavigation();
 
@@ -36,6 +38,8 @@ const EditAccommodationScreen = (props: any, uriArray: string[]) => {
   const [unitFeature, setUnitFeature] = useState<IUnitFeature>({});
   const [address, setAddress] = useState<IAddress>();
   const [propertyType, setPropertyType] = useState("");
+  const [userType, setUserType] = useState<string | null>(null);  // State to store userType
+
 
   const invokeGoogleMaps = async (address: object) => {
     const resp = await getGeocode(address);
@@ -57,16 +61,18 @@ const EditAccommodationScreen = (props: any, uriArray: string[]) => {
   };
 
   const presetAllValue = () => {
+    
     const details = props.route.params.details;
+    console.log("details");
     console.log(details);
     setTitle(details.title);
     setDescription(details.description);
     setPropertyType(details.propertyType);
     setPrice(details.price.toString());
-    setAddress(JSON.parse(details.address));
+    setAddress(details.address);
     setUnitFeature(convertArrayToUnitFeature(details.unitFeature));
 
-    setImageUris(props.route.params.uriArray);
+    // setImageUris(props.route.params.uriArray);
   };
 
   const CheckboxGroup = ({ unitFeature, setUnitFeature }) => {
@@ -92,6 +98,52 @@ const EditAccommodationScreen = (props: any, uriArray: string[]) => {
     );
   };
 
+  const propertyTypeButton = () => {
+
+    if (userType == "universityPartner") {
+      return (
+        <SegmentedButtons
+          value={propertyType}
+          onValueChange={setPropertyType}
+          style={{ marginVertical: 20 }}
+          buttons={[
+            {
+              value: EPropertyType.UNIVERSITY,
+              label: EPropertyType.UNIVERSITY,
+              icon: "book-education-outline",
+            }
+          ]}
+        />
+      );
+    } else {
+      return(
+        <SegmentedButtons
+          value={propertyType}
+          onValueChange={setPropertyType}
+          style={{ marginVertical: 20 }}
+          buttons={[
+            {
+              value: EPropertyType.Condo,
+              label: EPropertyType.Condo,
+              icon: "home-city-outline",
+            },
+            {
+              value: EPropertyType.Landed,
+              label: EPropertyType.Landed,
+              icon: "home-outline",
+            },
+            {
+              value: EPropertyType.HDB,
+              label: EPropertyType.HDB,
+              icon: "office-building-outline",
+            },
+          ]}
+        />
+      );
+    }
+
+  }
+
   const onNavigate = async () => {
     console.log("Publish");
     const authUser = await Auth.currentAuthenticatedUser();
@@ -99,6 +151,7 @@ const EditAccommodationScreen = (props: any, uriArray: string[]) => {
     const geocode = await invokeGoogleMaps(address);
     address.geo = geocode;
     console.log("geo");
+    console.log(geocode);
     console.log(address.geo);
     const s3ObjectKeys = await uploadToStorage(
       imageUris,
@@ -116,13 +169,20 @@ const EditAccommodationScreen = (props: any, uriArray: string[]) => {
       availableDate: new Date().toISOString().substring(0, 10),
       unitFeature: convertUnitFeatureToArray(unitFeature),
       userId: authUser.attributes.sub,
+      latitude: geocode.lat,
+      longitude: geocode.lng,
     };
     console.log("newAccomm");
     console.log(newAccomm);
-    const newAccommData = await API.graphql(
-      graphqlOperation(updateAccommodation, { input: newAccomm }),
-    );
-    if (newAccommData.data.updateAccommodation) {
+    // const newAccommData = await API.graphql(
+    //   graphqlOperation(updateAccommodation, { input: newAccomm }),
+    // );
+
+    console.log(authUser);
+    console.log(authUser.attributes['custom:userType']);
+    const newAccommData = await updateAccommodation(newAccomm);
+
+    if (newAccommData.success) {
       alert("Update Listing", "Update successful!", [
         {
           text: "OK",
@@ -143,10 +203,14 @@ const EditAccommodationScreen = (props: any, uriArray: string[]) => {
 
   async function uploadToStorage(imageUris: any[], uuid: string) {
     const stored = [];
+    console.log("uploadToStorage");
+    console.log(uuid);
+    console.log(imageUris);
     for (let index = 0; index < imageUris.length; index++) {
       const imageUri = imageUris[index];
       try {
         const response = await fetch(imageUri);
+        console.log(response);
         const blob = await response.blob();
         const resp = await Storage.put(uuid + "/image_" + index, blob, {
           contentType: "image/jpeg",
@@ -176,9 +240,20 @@ const EditAccommodationScreen = (props: any, uriArray: string[]) => {
   // }
 
   useEffect(() => {
+    const fetchUserType = async () => {
+      try {
+        const authUser = await Auth.currentAuthenticatedUser();
+        setUserType(authUser.attributes['custom:userType']);  // Set userType
+      } catch (error) {
+        console.log("Error fetching user type:", error);
+      }
+    };
+
+    fetchUserType();
     console.log("edit accommodation");
     console.log(props);
     setImageUris(props.route.params.uriArray);
+    // setImageUris(props.route.params.details.images);
     presetAllValue();
     // console.log(price);
   }, []);
@@ -197,28 +272,7 @@ const EditAccommodationScreen = (props: any, uriArray: string[]) => {
           <Text variant="headlineMedium" style={{ marginTop: 10 }}>
             Accommodation Details
           </Text>
-          <SegmentedButtons
-            value={propertyType}
-            onValueChange={setPropertyType}
-            style={{ marginVertical: 20 }}
-            buttons={[
-              {
-                value: EPropertyType.Condo,
-                label: EPropertyType.Condo,
-                icon: "home-city-outline",
-              },
-              {
-                value: EPropertyType.Landed,
-                label: EPropertyType.Landed,
-                icon: "home-outline",
-              },
-              {
-                value: EPropertyType.HDB,
-                label: EPropertyType.HDB,
-                icon: "office-building-outline",
-              },
-            ]}
-          />
+          {propertyTypeButton()}
           <TextInput
             label="Title"
             placeholder="Enter Title"
