@@ -19,11 +19,9 @@
         "accommodationFunction": {
           "deploymentBucketName": "amplify-unirent-staging-195410-deployment",
           "s3Key": "amplify-builds/accommodationFunction-5738506f37516d525941-build.zip"
-          "s3Key": "amplify-builds/accommodationFunction-5738506f37516d525941-build.zip"
         },
         "geocodingHandler": {
           "deploymentBucketName": "amplify-unirent-staging-195410-deployment",
-          "s3Key": "amplify-builds/geocodingHandler-39777a6a476e6c2b524e-build.zip"
           "s3Key": "amplify-builds/geocodingHandler-39777a6a476e6c2b524e-build.zip"
         },
         "locationSearchApi": {
@@ -36,7 +34,7 @@
         },
         "generateEncryptionKeyAPI": {
           "deploymentBucketName": "amplify-unirent-staging-195410-deployment",
-          "s3Key": "amplify-builds/generateEncryptionKeyAPI-2b547a3341756d69574e-build.zip"
+          "s3Key": "amplify-builds/generateEncryptionKeyAPI-59415770416a747a5757-build.zip"
         }
       },
       "storage": {
