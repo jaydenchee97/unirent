@@ -36,10 +36,32 @@ Amplify.configure({
 
 export default function App() {
 
-  // const test = "test";
-  // const cipherText = encrypt(test);
-  // console.log("cipherText:" + cipherText);
+  const [appState, setAppState] = useState(AppState.currentState);
+  const [showMask, setShowMask] = useState(false);
 
+  useEffect(() => {
+    const handleAppStateChange = (nextAppState) => {
+      if (
+        appState.match(/active/) &&
+        nextAppState.match(/inactive|background/)
+      ) {
+        setShowMask(true);
+      } else if (nextAppState === "active") {
+        setShowMask(false);
+      }
+      setAppState(nextAppState);
+    };
+
+    const subscription = AppState.addEventListener(
+      "change",
+      handleAppStateChange,
+    );
+
+    return () => {
+      subscription.remove();
+    };
+  }, [appState]);
+  
   return (
     <PaperProvider>
       <SafeAreaProvider>
