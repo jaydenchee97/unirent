@@ -166,10 +166,10 @@ const SearchScreen = (props: any) => {
     // Prepare the search criteria as an object
     const searchCriteria = {
       ...selectedPropertyTypes,
-      minLat: latitude - 0.03,
-      maxLat: latitude + 0.03,
-      minLong: longitude - 0.03,
-      maxLong: longitude + 0.03,
+      minLat: latitude - 0.05,
+      maxLat: latitude + 0.05,
+      minLong: longitude - 0.05,
+      maxLong: longitude + 0.05,
       query,
     };
 

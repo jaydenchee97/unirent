@@ -216,7 +216,7 @@ const ListingDetailScreen = ({ navigation, route }) => {
             <Map latitude={address.geo.lat} longitude={address.geo.lng} />
 
             <Text variant="titleMedium" style={{ fontWeight: "bold" }}>
-              441B Clementi Avenue
+              {address.unitNo} {address.street}
             </Text>
             <Text variant="bodyMedium" style={{}}>
               {address.country} {address.postalCode}

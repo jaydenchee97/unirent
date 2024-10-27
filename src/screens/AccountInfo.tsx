@@ -22,8 +22,8 @@ export default function AccountInfo({ navigation }) {
       <Divider />
       <List.Item title="Email" description={user.attributes.email} />
       <Divider />
-      <List.Item title="Password" description="Tap to edit" />
-      <Divider />
+      {/* <List.Item title="Password" description="Tap to edit" /> */}
+      {/* <Divider /> */}
     </List.Section>
   );
 }
