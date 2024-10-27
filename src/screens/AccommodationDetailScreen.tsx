@@ -58,7 +58,7 @@ export default function AccommodationDetailScreen({ navigation, route }) {
     }
     setDetails(data);
     setUriArray(array);
-    setAddress(JSON.parse(data.address));
+    setAddress(JSON.parse(JSON.parse(data.address)));
     setLoading(false);
 
     console.log("data");
@@ -165,8 +165,8 @@ export default function AccommodationDetailScreen({ navigation, route }) {
               <Text variant="bodyMedium">{details.availableDate} </Text>
             </View>
 
-            <Text variant="bodyMedium"> 441B Clementi Avenue </Text>
-            <Text variant="bodyMedium"> Clementi Road 1 </Text>
+            <Text variant="bodyMedium"> {address.unitNo} {address.street} </Text>
+            <Text variant="bodyMedium"> {address.country} </Text>
           </View>
           <Divider />
           <View style={{ marginHorizontal: 10, marginVertical: 15 }}>
@@ -209,7 +209,7 @@ export default function AccommodationDetailScreen({ navigation, route }) {
             )}
 
             <Text variant="titleMedium" style={{ fontWeight: "bold" }}>
-              441B Clementi Avenue
+              {address.unitNo}
             </Text>
             <Text variant="bodyMedium" style={{}}>
               {address.country} {address.postalCode}

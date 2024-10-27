@@ -14,6 +14,7 @@ import Message from "../components/Message";
 import { createMessage, updateChatRoom } from "../graphql/mutations";
 import { listMessagesByChatRoom } from "../graphql/queries";
 import { onCreateMessage } from "../graphql/subscriptions";
+import { encryptMessage } from "../utils/cryptoJs";
 
 export default function ChatScreen({ navigation, route }) {
   const chatroomID = route.params.id;
@@ -27,6 +28,7 @@ export default function ChatScreen({ navigation, route }) {
 
   const scrollViewRef = useRef();
 
+
   // fetch Messages
   useEffect(() => {
     console.log("chatroom Id: " + chatroomID)
@@ -36,6 +38,8 @@ export default function ChatScreen({ navigation, route }) {
         sortDirection: "DESC",
       }),
     ).then((result) => {
+      console.log("result kx: ")
+      console.log(result.data?.listMessagesByChatRoom?.items)
       setMessages(result.data?.listMessagesByChatRoom?.items);
     });
 
@@ -62,10 +66,11 @@ export default function ChatScreen({ navigation, route }) {
     console.log("on send: " + event.key)
     if ((event.key === "Enter" && !event.shiftKey) || event.type === "click") {
       const authUser = await Auth.currentAuthenticatedUser();
-
+      let cipherText = encryptMessage(text, chatroomID)
+    
       const newMessage = {
         chatRoomId: chatroomID,
-        text,
+        text: cipherText,
         userId: authUser.attributes.sub,
       };
       const newMessageData = await API.graphql(
@@ -149,6 +154,9 @@ export default function ChatScreen({ navigation, route }) {
             }}
           >
             {messages.toReversed().map((message, index) => {
+              console.log("message")
+              console.log(message)
+              console.log(index)
               return <Message {...message} key={index} />;
             })}
           </ScrollView>

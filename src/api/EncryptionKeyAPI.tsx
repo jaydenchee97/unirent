@@ -12,8 +12,8 @@ export async function getEncryptionKey() {
   // const myInit = { headers: headers, body: {} };
   const myInit = { };
   try {
-    console.log("egin")
-    const response = await API.get(apiName, path, myInit);
+    console.log("begin")
+    const response = await API.post(apiName, path, myInit);
     console.log("response: " + response)
     return response;
   } catch (error) {
