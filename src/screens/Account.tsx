@@ -1,15 +1,29 @@
 import { useAuthenticator } from "@aws-amplify/ui-react-native";
 import { Auth } from "aws-amplify";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Platform, Linking } from "react-native";
 import { Divider, List, Text } from "react-native-paper";
 
 export default function Account({ navigation }) {
-
   const handleSignOut = async () => {
     try {
-      await Auth.signOut({ global: true });
+      const authUser = await Auth.currentAuthenticatedUser({
+        bypassCache: true,
+      });
+      const isPartner = authUser.username.substring(0, 6) === "google";
+      if (isPartner) {
+        const signOutUrl = "https://accounts.google.com/Logout";
+        if (Platform.OS === "web") {
+          window.open(signOutUrl);
+          await Auth.signOut({ global: true });
+        } else {
+          await Auth.signOut({ global: true });
+          Linking.openURL(signOutUrl);
+        }
+      } else {
+        await Auth.signOut({ global: true });
+      }
     } catch (error) {
-      console.log('Error signing out: ', error);
+      console.log("Error signing out: ", error);
     }
   };
 

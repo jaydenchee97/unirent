@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`AccommodationCard renders correctly 1`] = `
+exports[`AccommodationCard renders correctly and matches snapshot 1`] = `
 <View
   collapsable={false}
   style={
@@ -146,7 +146,7 @@ exports[`AccommodationCard renders correctly 1`] = `
                 "paddingLeft": 16,
               },
               {
-                "minHeight": 50,
+                "minHeight": 72,
               },
               {
                 "flex": 1,
@@ -164,7 +164,80 @@ exports[`AccommodationCard renders correctly 1`] = `
                 },
               ]
             }
-          />
+          >
+            <Text
+              numberOfLines={1}
+              style={
+                [
+                  {
+                    "textAlign": "left",
+                  },
+                  {
+                    "color": "rgba(28, 27, 31, 1)",
+                    "writingDirection": "ltr",
+                  },
+                  [
+                    {
+                      "fontFamily": "System",
+                      "fontSize": 16,
+                      "fontWeight": "400",
+                      "letterSpacing": 0.15,
+                      "lineHeight": 24,
+                    },
+                    [
+                      {
+                        "minHeight": 30,
+                        "paddingRight": 16,
+                      },
+                      {
+                        "marginBottom": 0,
+                      },
+                      {
+                        "color": "gray",
+                      },
+                    ],
+                  ],
+                ]
+              }
+            >
+              Test Accommodation
+            </Text>
+            <Text
+              numberOfLines={1}
+              style={
+                [
+                  {
+                    "textAlign": "left",
+                  },
+                  {
+                    "color": "rgba(28, 27, 31, 1)",
+                    "writingDirection": "ltr",
+                  },
+                  [
+                    {
+                      "fontFamily": "System",
+                      "fontSize": 12,
+                      "fontWeight": "500",
+                      "letterSpacing": 0.5,
+                      "lineHeight": 16,
+                    },
+                    [
+                      {
+                        "marginVertical": 0,
+                        "minHeight": 20,
+                        "paddingRight": 16,
+                      },
+                      {
+                        "color": "gray",
+                      },
+                    ],
+                  ],
+                ]
+              }
+            >
+              Test Apt
+            </Text>
+          </View>
           <View />
         </View>
         <View
@@ -338,8 +411,9 @@ exports[`AccommodationCard renders correctly 1`] = `
           }
         >
           S$ 
-          0
+          1200
            / month • Available from 
+          2024-12-01
         </Text>
       </View>
       <View
@@ -475,7 +549,7 @@ exports[`AccommodationCard renders correctly 1`] = `
               }
             >
               Listed By 
-              test
+              User Test
             </Text>
             <Text
               style={
@@ -499,7 +573,7 @@ exports[`AccommodationCard renders correctly 1`] = `
                 ]
               }
             >
-              a month
+              10 months
                ago
             </Text>
           </View>
