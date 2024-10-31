@@ -44,7 +44,8 @@ const EditAccommodationScreen = (props: any, uriArray: string[]) => {
   const invokeGoogleMaps = async (address: object) => {
     const resp = await getGeocode(address);
     console.log("geo resp");
-    return resp;
+    return resp?.geometry?.location;
+    // return resp;
   };
 
   const handleAdd = (uri) => {
@@ -180,7 +181,12 @@ const EditAccommodationScreen = (props: any, uriArray: string[]) => {
 
     console.log(authUser);
     console.log(authUser.attributes['custom:userType']);
-    const newAccommData = await updateAccommodation(newAccomm);
+    let newAccommData = null;
+    if (propertyType == "UNIVERSITY") {
+      newAccommData = await updateUniAccommodation(newAccomm);
+    } else {
+      newAccommData = await updateAccommodation(newAccomm);
+    }
 
     if (newAccommData.success) {
       alert("Update Listing", "Update successful!", [

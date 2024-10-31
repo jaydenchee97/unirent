@@ -14,7 +14,7 @@ export async function getGeocode(request) {
   try {
     const response = await API.post(apiName, path, myInit);
     console.log(response.geometry.location)
-    return response.geometry.location;
+    return response;
   } catch (error) {
     console.error("Error in google maps API: " + error);
   }
