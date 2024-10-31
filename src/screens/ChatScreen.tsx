@@ -28,18 +28,17 @@ export default function ChatScreen({ navigation, route }) {
 
   const scrollViewRef = useRef();
 
-
   // fetch Messages
   useEffect(() => {
-    console.log("chatroom Id: " + chatroomID)
+    console.log("chatroom Id: " + chatroomID);
     API.graphql(
       graphqlOperation(listMessagesByChatRoom, {
         chatRoomId: chatroomID,
         sortDirection: "DESC",
       }),
     ).then((result) => {
-      console.log("result kx: ")
-      console.log(result.data?.listMessagesByChatRoom?.items)
+      console.log("result kx: ");
+      console.log(result.data?.listMessagesByChatRoom?.items);
       setMessages(result.data?.listMessagesByChatRoom?.items);
     });
 
@@ -61,12 +60,17 @@ export default function ChatScreen({ navigation, route }) {
       subscription.unsubscribe();
     };
   }, [chatroomID]);
-
+  const sanitizeText = (input) => {
+    return input.replace(/[^\x00-\x7F]/g, ""); // Keeps only ASCII characters
+  };
   const onSend = async (event) => {
-    console.log("on send: " + event.key)
-    if ((event.key === "Enter" && !event.shiftKey) || event.type === "click") {
+    // console.log("on send: " + event.key)
+    // if ((event.key === "Enter" && !event.shiftKey) || event.type === "click") {
+
+    console.log("on send: " + text);
+    if (text.trim() !== "") {
       const authUser = await Auth.currentAuthenticatedUser();
-      let cipherText = encryptMessage(text, chatroomID)
+      let cipherText = encryptMessage(text, chatroomID);
     
       const newMessage = {
         chatRoomId: chatroomID,
@@ -153,21 +157,24 @@ export default function ChatScreen({ navigation, route }) {
               padding: 10,
             }}
           >
-            {messages.toReversed().map((message, index) => {
-              console.log("message")
-              console.log(message)
-              console.log(index)
-              return <Message {...message} key={index} />;
-            })}
+            {messages
+              .slice()
+              .reverse()
+              .map((message, index) => {
+                console.log("message");
+                console.log(message);
+                console.log(index);
+                return <Message {...message} key={index} />;
+              })}
           </ScrollView>
 
           <TextInput
             placeholder="Type here..."
             right={<TextInput.Icon icon="send" onPress={onSend} />}
             value={text}
-            onChangeText={setText}
+            onChangeText={(input) => setText(sanitizeText(input))}
             multiline
-            onKeyPress={onSend}
+            // onKeyPress={onSend}
           />
         </View>
       </View>
