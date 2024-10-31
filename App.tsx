@@ -35,6 +35,7 @@ Amplify.configure({
 // Amplify.configure({awsExports});
 
 export default function App() {
+
   const [appState, setAppState] = useState(AppState.currentState);
   const [showMask, setShowMask] = useState(false);
 
@@ -60,7 +61,7 @@ export default function App() {
       subscription.remove();
     };
   }, [appState]);
-
+  
   return (
     <PaperProvider>
       <SafeAreaProvider>

@@ -1,22 +1,24 @@
 import { API, Auth } from "aws-amplify";
 
-const apiName = "generateEncryptionKeyAPI ";
-const path = "/generateKey";
+const apiName = "generateEncryptionKeyAPI";
 
 export async function getEncryptionKey() {
-  console.log("Trigger encryptionKeyAPI...");
-  // const jwtToken = (await Auth.currentSession()).getAccessToken().getJwtToken();
-  // const headers = {
-  //   Authorization: "Bearer " + jwtToken
-  // };
-  // const myInit = { headers: headers, body: {} };
-  const myInit = { };
+  console.log("In getEncryptionKey() ...");
   try {
-    console.log("begin")
-    const response = await API.post(apiName, path, myInit);
-    console.log("response: " + response)
+    const response = await API.post(apiName, "/generateKey", { });
     return response;
   } catch (error) {
     console.error("Error in encryptionKeyAPI: " + error);
   }
+}
+
+export async function getPlaintextKey(encryptedKey) { 
+  console.log("In getPlaintextKey() ...");
+  const myInit = { body: { encryptedKey } };  
+  try {
+    const response = await API.post(apiName, "/decryptCiphertextKey", myInit);
+    return response;
+  } catch (error) {
+    console.error("Error in encryptionKeyAPI: " + error);
+  } 
 }

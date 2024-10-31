@@ -115,6 +115,7 @@ export default function HostingStep1({ navigation, route }) {
     };
 
     fetchUserType();
+
   }, []);
 
   return (

@@ -21,7 +21,7 @@ import IAccommodation from "../model/IAccommodation";
 import IGeo from "../model/IGeo";
 import { useHostStore } from "../store/host";
 import { isWeb } from "../utils";
-import { postAccommodation } from "../api/AccommodationAPI";
+import { postAccommodation, postUniAccommodation } from "../api/AccommodationAPI";
 
 const { width, height } = Dimensions.get("window");
 
@@ -130,8 +130,13 @@ export default function HostingStep4({ navigation }) {
     // const newAccommData = await API.graphql(
     //   graphqlOperation(createAccommodation, { input: newAccomm }),
     // );
+    let newAccommData = null;
+    if (propertyType == "UNIVERSITY") {
+      newAccommData = await postUniAccommodation(newAccomm);
+    } else {
+      newAccommData = await postAccommodation(newAccomm);
+    }
     
-    const newAccommData = await postAccommodation(newAccomm);
 
     console.log("newAccommData: " + JSON.stringify(newAccommData, null, 2));
 
