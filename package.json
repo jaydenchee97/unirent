@@ -46,7 +46,6 @@
     "@aws-amplify/ui-react-native": "^1.2.24",
     "@react-google-maps/api": "^2.19.2",
     "@react-native-async-storage/async-storage": "1.18.2",
-    "@react-native-community/netinfo": "^11.4.1",
     "@react-navigation/native": "^6.1.7",
     "@react-navigation/stack": "^6.3.17",
     "@types/react": "~18.2.14",
