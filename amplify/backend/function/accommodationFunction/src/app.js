@@ -213,13 +213,26 @@ const createQuery = /* GraphQL */ `
 `;
 
 const updateQuery = /* GraphQL */ `
-  mutation UpdateSavedAccommodation(
-    $input: UpdateSavedAccommodationInput!
-    $condition: ModelSavedAccommodationConditionInput
+  mutation UpdateAccommodation(
+    $input: UpdateAccommodationInput!
+    $condition: ModelAccommodationConditionInput
   ) {
-    updateSavedAccommodation(input: $input, condition: $condition) {
+    updateAccommodation(input: $input, condition: $condition) {
       id
-      Accommodations {
+      availableDate
+      description
+      images
+      price
+      propertyType
+      rented
+      createdAt
+      title
+      address
+      userId
+      unitFeature
+      latitude
+      longitude
+      savedaccommodations {
         items {
           id
           savedAccommodationId
@@ -263,9 +276,7 @@ const updateQuery = /* GraphQL */ `
         owner
         __typename
       }
-      createdAt
       updatedAt
-      savedAccommodationUserId
       owner
       __typename
     }
@@ -407,10 +418,13 @@ app.put(path, async function (req, res) {
   };
 
   // Encryption Changes
-  // const { id, title, address, propertyType, images, description, price, rented, availableDate, unitFeature, latitude, longitude, userId } = req.body;
-  const { id, title, propertyType, images, description, price, rented, availableDate, unitFeature, userId } = req.body;
-  let { address, latitude, longitude } = req.body;        
-  
+  const { id, title, address, propertyType, images, description, price, rented, availableDate, unitFeature, latitude, longitude, userId } = req.body;
+  // const { id, title, propertyType, images, description, price, rented, availableDate, unitFeature, userId } = req.body;
+  // let { address, latitude, longitude } = req.body; 
+  const jsonAddress = JSON.parse(address);
+  console.log(jsonAddress);
+  console.log(jsonAddress.country);
+
   if (!validator.isUUID(userId, 4)) {
     return res.status(400).json({ error: 'Invalid user ID' });
   }
@@ -426,22 +440,19 @@ app.put(path, async function (req, res) {
 
   // Sanitize inputs
   const sanitizedTitle = validator.escape(title);
-  const sanitizedDescription = validator.escape(description)
-  
-  // Encryption Changes
-  // const addressString = JSON.stringify(address);
-  // const latitudeString = String(latitude);
-  // const longitudeString = String(longitude);
+  const sanitizedDescription = validator.escape(description);
 
-  // address = await encryptData(addressString);
-  // latitude = await encryptData(latitudeString);
-  // longitude = await encryptData(longitudeString);
+  jsonAddress.country = validator.escape(jsonAddress.country);
+  jsonAddress.unitNo = validator.escape(jsonAddress.unitNo);
+  jsonAddress.addressLine1 = validator.escape(jsonAddress.addressLine1);
+  jsonAddress.addressLine2 = validator.escape(jsonAddress.addressLine2);
+  jsonAddress.street = validator.escape(jsonAddress.street);
 
   // Prepare the item for DynamoDB
   const accomm = {
     id: id || uuidv4(), // Generate UUID if not provided
     title: sanitizedTitle,
-    address: JSON.stringify(address),
+    address: JSON.stringify(JSON.stringify(jsonAddress)),
     propertyType,
     images: images,
     description: sanitizedDescription,
@@ -505,7 +516,10 @@ app.put('/accommodations/university', async function (req, res) {
   // Encryption Changes
   // const { id, title, address, images, description, price, rented, availableDate, unitFeature, latitude, longitude, userId } = req.body;
   const { id, title,  images, description, price, rented, availableDate, unitFeature, userId } = req.body;
-  let { address, latitude, longitude } = req.body;       
+  let { address, latitude, longitude } = req.body;   
+  const jsonAddress = JSON.parse(address);
+  console.log(jsonAddress);
+  console.log(jsonAddress.country);    
 
   if (!validator.isUUID(userId, 4)) {
     return res.status(400).json({ error: 'Invalid user ID' });
@@ -524,14 +538,12 @@ app.put('/accommodations/university', async function (req, res) {
   const sanitizedTitle = validator.escape(title);
   const sanitizedDescription = validator.escape(description);
 
-  // Encryption Changes
-  const addressString = JSON.stringify(address);
-  const latitudeString = String(latitude);
-  const longitudeString = String(longitude);
-
-  address = await encryptData(addressString);
-  latitude = await encryptData(latitudeString);
-  longitude = await encryptData(longitudeString);
+  jsonAddress.country = validator.escape(jsonAddress.country);
+  jsonAddress.unitNo = validator.escape(jsonAddress.unitNo);
+  jsonAddress.addressLine1 = validator.escape(jsonAddress.addressLine1);
+  jsonAddress.addressLine2 = validator.escape(jsonAddress.addressLine2);
+  jsonAddress.street = validator.escape(jsonAddress.street);
+  
 
   const newAccomm = {
     id: id || uuidv4(), // Generate UUID if not provided
@@ -593,7 +605,10 @@ app.post(path, async function (req, res) {
   // Encryption Changes
   const { id, title, address, propertyType, images, description, price, rented, availableDate, unitFeature, latitude, longitude, userId } = req.body;
   // const { id, title, propertyType, images, description, price, rented, availableDate, unitFeature, userId } = req.body;
-  // let { address, latitude, longitude } = req.body;                                              
+  // let { address, latitude, longitude } = req.body;             
+  const jsonAddress = JSON.parse(address);
+  console.log(jsonAddress);
+  console.log(jsonAddress.country);                                 
 
   if (!validator.isUUID(userId, 4)) {
     return res.status(400).json({ error: 'Invalid user ID' });
@@ -612,20 +627,18 @@ app.post(path, async function (req, res) {
   const sanitizedTitle = validator.escape(title);
   const sanitizedDescription = validator.escape(description)
   
-  // Encryption Changes
-  // const addressString = JSON.stringify(address);
-  // const latitudeString = String(latitude);
-  // const longitudeString = String(longitude);
-
-  // address = await encryptData(addressString);
-  // latitude = await encryptData(latitudeString);
-  // longitude = await encryptData(longitudeString);
+  jsonAddress.country = validator.escape(jsonAddress.country);
+  jsonAddress.unitNo = validator.escape(jsonAddress.unitNo);
+  jsonAddress.addressLine1 = validator.escape(jsonAddress.addressLine1);
+  jsonAddress.addressLine2 = validator.escape(jsonAddress.addressLine2);
+  jsonAddress.street = validator.escape(jsonAddress.street);
+  
 
   // Prepare the item for DynamoDB
   const newAccomm = {
     id: id || uuidv4(), // Generate UUID if not provided
     title: sanitizedTitle,
-    address: JSON.stringify(address),
+    address: JSON.stringify(jsonAddress),
     propertyType,
     images: images,
     description: sanitizedDescription,
@@ -679,13 +692,32 @@ app.post(path, async function (req, res) {
 
 app.post('/accommodations/university', async function (req, res) {
 
-  console.log("In app.post() for " + "/accommodations/university");
+  console.log("In app.post() for " + path);
+  console.log("req.body: " + JSON.stringify(req.body, null, 2));
+
+  if (userIdPresent) {
+    req.body["userId"] =
+      req.apiGateway.event.requestContext.identity.cognitoIdentityId || UNAUTH;
+  }
+
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: req.headers.authorization || '', // Authorization token (if needed)
+  };
 
   // Encryption Changes
-  const { title, address, images, description, price, availableDate, unitFeature, latitude, longitude, userId } = req.body;  // Input validation
-  // const { title, images, description, price, availableDate, unitFeature, userId } = req.body;   
-  // let { address, latitude, longitude } = req.body;                                              
-  
+  const { id, title, address, propertyType, images, description, price, rented, availableDate, unitFeature, latitude, longitude, userId } = req.body;
+  // const { id, title, propertyType, images, description, price, rented, availableDate, unitFeature, userId } = req.body;
+  // let { address, latitude, longitude } = req.body;  
+  const jsonAddress = JSON.parse(address);
+  console.log(jsonAddress);
+  console.log(jsonAddress.country);                                                
+
+  if (!validator.isUUID(userId, 4)) {
+    return res.status(400).json({ error: 'Invalid user ID' });
+  }
+
+  // Input validation
   if (!validator.isAlphanumeric(title, 'en-US', { ignore: ' ' })) {
     return res.status(400).json({ error: 'Invalid title' });
   }
@@ -697,25 +729,19 @@ app.post('/accommodations/university', async function (req, res) {
   // Sanitize inputs
   const sanitizedTitle = validator.escape(title);
   const sanitizedDescription = validator.escape(description)
+  
+  jsonAddress.country = validator.escape(jsonAddress.country);
+  jsonAddress.unitNo = validator.escape(jsonAddress.unitNo);
+  jsonAddress.addressLine1 = validator.escape(jsonAddress.addressLine1);
+  jsonAddress.addressLine2 = validator.escape(jsonAddress.addressLine2);
+  jsonAddress.street = validator.escape(jsonAddress.street);
 
-  if (!validator.isUUID(userId, 4)) {
-    return res.status(400).json({ error: 'Invalid user ID' });
-  }
- 
-  // Encryption Changes
-  // const addressString = JSON.stringify(address);
-  // const latitudeString = String(latitude);
-  // const longitudeString = String(longitude);
-
-  // address = await encryptData(addressString);
-  // latitude = await encryptData(latitudeString);
-  // longitude = await encryptData(longitudeString);
-
+  // Prepare the item for DynamoDB
   const newAccomm = {
     id: id || uuidv4(), // Generate UUID if not provided
     title: sanitizedTitle,
-    address: JSON.stringify(address),
-    propertyType: 'UNIVERSITY',
+    address: JSON.stringify(jsonAddress),
+    propertyType: "UNIVERSITY",
     images: images,
     description: sanitizedDescription,
     price: price,
@@ -728,21 +754,35 @@ app.post('/accommodations/university', async function (req, res) {
     createdAt: new Date().toISOString(),
   };
 
+  // console.log("typeof address: " + typeof address);
+  // console.log("newAccomm: " + JSON.stringify(newAccomm, null, 2));
+  // for (const key in newAccomm) {
+  //   console.log(`Field: ${key}, Type: ${typeof newAccomm[key]}`);
+  // }
 
   const payload = {
-    query: createQuery,  // Assuming you have a GraphQL mutation for creating accommodation
-    variables: { input: newAccomm }
-  };
+    query: createQuery,
+    variables: {
+      input: newAccomm
+    }
+  }
 
+  console.log("accomm");
+  console.log(JSON.stringify(newAccomm, null, 2));
+
+  console.log("payload");
+  console.log(payload);
+
+  let data;
   try {
     const response = await axios.post(endpoint, payload, { headers });
-    console.log(JSON.stringify(response.data, null, 2));
+    console.log("response: " + JSON.stringify(response.data, null, 2));
     const data = response.data?.data?.createAccommodation;
-    res.json({ success: "University Accommodation created successfully", data: data });
+    res.json({ status: "University Accommodation created successfully", data: data });
   } catch (error) {
-    res.status(500).json({ error: "Failed to create university accommodation", details: error });
-  }
-});
+    console.error(error);
+    res.status(500).json({ status: "Failed to create university accommodation", details: err });
+  }});
 
 /**************************************
  * HTTP remove method to delete object *

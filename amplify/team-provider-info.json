@@ -18,7 +18,7 @@
       "function": {
         "accommodationFunction": {
           "deploymentBucketName": "amplify-unirent-staging-195410-deployment",
-          "s3Key": "amplify-builds/accommodationFunction-5738506f37516d525941-build.zip"
+          "s3Key": "amplify-builds/accommodationFunction-6158595a387255715647-build.zip"
         },
         "generateEncryptionKeyAPI": {
           "deploymentBucketName": "amplify-unirent-staging-195410-deployment",
