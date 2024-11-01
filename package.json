@@ -95,11 +95,5 @@
     "superagent": "^8.1.2",
     "supertest": "^6.3.3"
   },
-  "private": true,
-  "react-native": {
-    "crypto": "react-native-crypto"
-  },
-  "browser": {
-    "crypto": "react-native-crypto"
-  }
+  "private": true
 }
