@@ -181,6 +181,7 @@ const EditAccommodationScreen = (props: any, uriArray: string[]) => {
 
     console.log(authUser);
     console.log(authUser.attributes['custom:userType']);
+    console.log(propertyType);
     let newAccommData = null;
     if (propertyType == "UNIVERSITY") {
       newAccommData = await updateUniAccommodation(newAccomm);
